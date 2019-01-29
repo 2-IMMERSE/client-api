@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+
+<!--
+/************************************************************************/
+/* FILE:                DMAppDebugDisplayComponent.html                 */
+/* DESCRIPTION:         Debug display component                         */
+/* VERSION:             (see git)                                       */
+/* DATE:                (see git)                                       */
+/* AUTHOR:              Jonathan Rennison <jonathan.rennison@bt.com>    */
+/*                                                                      */
+/*                      © British Telecommunications plc 2018           */
+/*                                                                      */
+/* Licensed under the Apache License, Version 2.0 (the "License");      */
+/* you may not use this file except in compliance with the License.     */
+/* You may obtain a copy of the License at                              */
+/*                                                                      */
+/*   http://www.apache.org/licenses/LICENSE-2.0                         */
+/*                                                                      */
+/* Unless required by applicable law or agreed to in writing, software  */
+/* distributed under the License is distributed on an "AS IS" BASIS,    */
+/* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or      */
+/* implied.                                                             */
+/* See the License for the specific language governing permissions and  */
+/* limitations under the License.                                       */
+/************************************************************************/
+-->
+
+<dom-module id="dmapp-debug-display-component">
+<template strip-whitespace>
+	<style>
+		:host {
+			all: initial;
+			display: none;
+			overflow: auto;
+			outline: 2px dashed black;
+			box-shadow: 0px 0px 0px 2px yellow;
+			padding: 5px;
+			padding-top: 0px;
+			background-color: white;
+			z-index: 9001;
+			position: absolute;
+			margin: 10px;
+			box-sizing: border-box;
+			max-width: calc(100% - 20px);
+			max-height: 400px;
+		}
+
+		@media screen and (max-height: 420px) {
+			:host {
+				max-height: calc(100% - 20px);
+			}
+		}
+
+		:host:not(.bind-right) {
+			left: 0px;
+		}
+		:host.bind-right {
+			right: 0px;
+		}
+
+		:host:not(.bind-bottom) {
+			top: 0px;
+		}
+		:host.bind-bottom {
+			bottom: 0px;
+		}
+
+		:host.bind-fill {
+			max-height: calc(100% - 20px) !important;
+		}
+
+		#info_section {
+			margin-top: 1em;
+			margin-bottom: 1em;
+		}
+
+		.msg_section label {
+			width: 15em;
+			display: inline-block;
+		}
+
+		.msg_section input[type=text] {
+			width: 25em;
+		}
+
+		.log_line {
+			white-space: pre;
+			text-indent: -1em;
+			padding-left: 1em;
+		}
+
+		#btn_section {
+			position: absolute;
+			top: 5px;
+			right: 5px;
+		}
+
+		#app2app_result_body.raw {
+			border-left: 1px solid grey;
+			padding-left: 1em;
+		}
+	</style>
+	<div id="main_div">
+		<p><b>Debug Display Component</b></p>
+		<div id="info_section">
+			<div>Device ID: <span id="device_id"></span>, Instance ID: <span id="instance_id"></span></div>
+			<div>Context ID: <span id="context_id"></span>, DMApp ID: <span id="dmapp_id"></span></div>
+			<div id="interctx_block" style="display: none">Inter-context ID: <span id="interctx_id"></span></div>
+			<div id="session_block" style="display: none">Session ID: <span id="session_id"></span></div>
+		</div>
+		<div id="btn_section">
+			<div style="text-align: right;">
+				<span id="bind_right_btn">&#x21c6;</span>
+				<span id="bind_bottom_btn">&#x21c5;</span>
+				<span id="bind_fill_btn">&#x2195;</span>
+			</div>
+			<div id="btn_section_user"></div>
+		</div>
+	</div>
+	<div style="display: none">
+		<div id="app2app_msg_section" class="msg_section">
+			<div>
+				<label for="app2app_to_device">Send To: Device ID</label>
+				<input id="app2app_to_device" type="text" list="app2app_to_device_list" />
+				<datalist id="app2app_to_device_list">
+					<option value="@self"></option>
+				</datalist>
+			</div>
+			<div>
+				<label for="app2app_to_component">Send To: Component ID</label>
+				<input id="app2app_to_component" type="text" list="app2app_to_component_list" />
+				<datalist id="app2app_to_component_list">
+				</datalist>
+			</div>
+			<div>
+				<label for="app2app_msg_body">Message Body: JSON</label>
+				<input id="app2app_msg_body" type="text" />
+			</div>
+			<div>
+				<button id="app2app_send_msg">Send</button>
+			</div>
+			<div>Result: <b id="app2app_result_type"></b>
+				<pre id="app2app_result_body"></pre>
+			</div>
+		</div>
+		<div id="timeline_event_section" class="msg_section">
+			<div>
+				<label for="timeline_event_id">Event ID</label>
+				<input id="timeline_event_id" type="text" />
+			</div>
+			<div>
+				<button id="timeline_event_send">Send</button>
+			</div>
+			<div>Result: <b id="timeline_event_result"></b></div>
+		</div>
+	</div>
+</template>
+<script>
+(function() {
+	"use strict";
+
+	const DMAppClientLib = require('DMAppClientLib');
+	const $ = DMAppClientLib.deps.jquery;
+	const ListenerTracker = DMAppClientLib.deps.listenerTracker;
+
+	DMAppClientLib.dMAppComponentTypes.DMAppDebugDisplayComponent = Polymer({
+
+		is: "dmapp-debug-display-component",
+
+		ready: function() {
+			this.main_div = this.$$('#main_div');
+			this.device_id_div = this.$$('#device_id');
+			this.instance_id_div = this.$$('#instance_id');
+			this.context_id_div = this.$$('#context_id');
+			this.dmapp_id_div = this.$$('#dmapp_id');
+			this.interctx_block_div = this.$$('#interctx_block');
+			this.interctx_id_div = this.$$('#interctx_id');
+			this.session_block_div = this.$$('#session_block');
+			this.session_id_div = this.$$('#session_id');
+			this.btn_section_user_div = this.$$('#btn_section_user');
+			DMAppClientLib.DMAppComponentBehaviour.ready.call(this);
+		},
+
+		initDMAppComponent: function(dMAppController, id, typeName, config) {
+			const self = this;
+			DMAppClientLib.DMAppComponentBehaviour.initDMAppComponent.apply(this, arguments);
+
+			Object.defineProperty(self, 'debugDumpCbToken',   { value: dMAppController.generateRandomIdString(8) });
+
+			const layoutEvent = this.listenerTracker.subscribeTo(this.dMAppController.layout);
+
+			layoutEvent.on("contextChange", function(info) {
+				const msg = "Context ID changed from " + info.previousContextId + " to " + info.newContextId;
+				self.logger.debug(msg);
+				if (self.context_id_div) self.context_id_div.textContent = info.newContextId;
+			});
+
+			layoutEvent.on("dmAppChange", function(info) {
+				const msg = "DM App ID changed from " + info.previousDMAppId + " to " + info.newDMAppId;
+				self.logger.debug(msg);
+				if (self.dmapp_id_div) self.dmapp_id_div.textContent = info.newDMAppId;
+			});
+
+			const interCtxHandler = function() {
+				if (self.interctx_id_div) self.interctx_id_div.textContent = self.dMAppController.layout.interContextId;
+				if (self.interctx_block_div) self.interctx_block_div.style.display = self.dMAppController.layout.interContextId ? 'block' : 'none';
+			};
+			this.listenerTracker.subscribeTo(this.dMAppController.layout._interCtxIdSignal).on('change', interCtxHandler);
+
+			const sessionIdHandler = function() {
+				if (self.session_id_div) self.session_id_div.textContent = self.dMAppController.sessionId;
+				if (self.session_block_div) self.session_block_div.style.display = self.dMAppController.sessionId ? 'block' : 'none';
+			};
+			this.listenerTracker.subscribeTo(this.dMAppController._sessionIdSignal).on('change', sessionIdHandler);
+
+			self.readyPromise.done(function() {
+				self._clockPollHandlers = [];
+				self.trackerSet = new Set();
+				self.dumper = new DumperHelper(self.main_div, null, {
+					trackerSet: self.trackerSet,
+					debugComp: self,
+					componentContainerMap: new WeakMap(),
+					otherComponentMap: new WeakMap(),
+				});
+				self.dumper.cacheStart();
+				self.destructorFunctions.push(self.dumper.clearState.bind(self.dumper));
+
+				self.dumper.componentContainer(self.dMAppController.layout.componentContainer, "Components:", false);
+				self.controller_dumper = self.dumper.subcategory("Controller:", false);
+				self.layout_dumper = self.dumper.subcategory("Layout:", false);
+				self.clock_dumper = self.dumper.subcategory("Clocks:", false);
+				self.ic_sync_dumper = self.dumper.subcategory("Inter-Context Sync:", false);
+				self.timeline_dumper = self.dumper.subcategory("Timeline:", false);
+				self.dmapp_dumper = self.dumper.subcategory("DMApp:", false);
+				self.url_dumper = self.dumper.subcategory("Service URLs:", false);
+				self.signal_dumper = self.dumper.subcategory("Signals:", false);
+
+				self.dumper.subcategory("App2App Messaging:", false).parent_div.appendChild(self.$$('#app2app_msg_section'));
+				self._setupApp2AppMsg();
+
+				self.dumper.subcategory("Timeline Events:", false).parent_div.appendChild(self.$$('#timeline_event_section'));
+				self._setupTimelineEventSection();
+
+				self.device_dumper = self.dumper.subcategory("Devices:", false);
+				self.device_dumper_list = self.device_dumper.subcategory("Connected devices");
+				self.device_dumper_snapshots = self.device_dumper.subcategory("Debug snapshots", false);
+				self.device_dumper_get_snapshot = self.device_dumper_snapshots.subcategory("Get snapshot", false);
+				self.debug_dump_snapshot_map = new Map();
+
+				self.device_id_div.textContent = self.dMAppController.getDeviceId();
+				self.instance_id_div.textContent = self.dMAppController.instanceId;
+				self.context_id_div.textContent = self.dMAppController.layout.contextId;
+				self.dmapp_id_div.textContent = self.dMAppController.layout.dmAppId;
+
+				self.dMAppController.dumpServiceUrlDebugInfo(self.url_dumper);
+				interCtxHandler();
+				sessionIdHandler();
+
+				self._repeatFillDump(self.layout_dumper, dMAppController.layout.dumpDebugInfo.bind(dMAppController.layout), dMAppController.layout.setupComponentDebugEvents.bind(dMAppController.layout));
+				self._repeatFillDump(self.controller_dumper, dMAppController.dumpDebugInfo.bind(dMAppController), dMAppController.setupDumpDebugEvents.bind(dMAppController));
+				self._repeatFillDump(self.signal_dumper, dMAppController.dumpDebugSignalInfo.bind(dMAppController), dMAppController.setupDumpDebugSignalEvents.bind(dMAppController));
+
+				const clocks = self.dMAppController.timeline.enumerateClocks();
+				for (let i = 0; i < clocks.length; i++) {
+					self._handleNewClock(clocks[i], self.clock_dumper, true);
+				}
+				self._clockIntervalTimer = window.setInterval(function() {
+					for (let i = 0; i < self._clockPollHandlers.length; i++) {
+						self._clockPollHandlers[i]();
+					}
+				}, 500);
+
+				const ic_sync_update = function() {
+					self.ic_sync_dumper.cacheStart();
+					if (self.dMAppController.timeline._interContextSyncCtl) {
+						self.dMAppController.timeline._interContextSyncCtl.dumpDebugInfo(self.ic_sync_dumper);
+					}
+					self.ic_sync_dumper.cacheStop();
+				};
+				const ic_sync_handler = function() {
+					self.ic_sync_dumper.outer_div.style.display = self.dMAppController.timeline._interContextSyncId ? "block" : "none";
+					ic_sync_update();
+				};
+				self.listenerTracker.subscribeTo(self.dMAppController.timeline).on('interContextSyncIdChange', ic_sync_handler);
+				self.listenerTracker.subscribeTo(self.dMAppController.timeline).on('interContextSyncUpdate', ic_sync_update);
+				ic_sync_handler();
+
+				const timeline_dumper_update = function() {
+					while (self.timeline_dumper.parent_div.firstChild) self.timeline_dumper.parent_div.removeChild(self.timeline_dumper.parent_div.firstChild);
+					self.dMAppController.timeline.dumpDebugInfo(self.timeline_dumper);
+				};
+				self.dMAppController.timeline.setupDumpDebugEvents(self.listenerTracker, timeline_dumper_update);
+				timeline_dumper_update();
+
+				const dmapp_dumper_update = function() {
+					self.dmapp_dumper.cacheStart();
+					self.dmapp_dumper.outer_div.style.display = self.dMAppController.layout.dmAppObj ? "block" : "none";
+					self.dMAppController.layout.dumpDMAppDebugInfo(self.dmapp_dumper);
+					self.dmapp_dumper.cacheStop();
+				};
+				self.dMAppController.layout.setupDMAppDebugEvents(self.listenerTracker, dmapp_dumper_update);
+				dmapp_dumper_update();
+
+				const device_list = $(self.$$('#app2app_to_device_list'));
+				self.deviceListCb = self.createApp2AppCallback(function(msgBody) {
+					device_list.empty();
+					device_list.append($('<option value="@self"></option>'));
+					device_list.append($('<option value="@master"></option>'));
+					for (let i = 0; i < msgBody.length; i++) {
+						device_list.append($('<option value="' + msgBody[i] + '"></option>'));
+					}
+
+					self.device_dumper_list.cacheStart();
+					self.device_dumper_get_snapshot.cacheStart();
+					for (let i = 0; i < msgBody.length; i++) {
+						const deviceId = msgBody[i];
+						self.device_dumper_list.value(deviceId);
+						self.device_dumper_get_snapshot.button("Get debug snapshot: " +  deviceId, function() {
+							const signals = [];
+							const cb = self.createApp2AppCallback(function(msgBody) {
+								if (signals[msgBody.id]) signals[msgBody.id].setValue(msgBody.value);
+							});
+							self.sendApp2AppMsg({ cbToken: self.debugDumpCbToken, signalUpdateCb: cb }, deviceId, '**get_debug_summary').then(function(info) {
+								if (self._destructing) return;
+								let cat = self.debug_dump_snapshot_map.get(deviceId);
+								if (cat) {
+									cat.clearState();
+									self.dMAppController.app2appMsgBusCtl.removeCallback(cat.signalUpdateCallbackId);
+									cat.cacheStart();
+								} else {
+									cat = self.device_dumper_snapshots.subcategory("Snapshot: " + deviceId);
+									cat.parent_div.style.outline =  "2px solid red";
+									self.debug_dump_snapshot_map.set(deviceId, cat);
+								}
+								cat.title_node.textContent = "Snapshot: " + deviceId + ", at: " + (new Date()).toISOString();
+								cat.signalUpdateCallbackId = cb;
+								self._dumpSerialisedDebugDump(deviceId, cat, info, signals);
+							}).catch(self.logger.deferredConcat('debug', 'Failed to get debug summary snapshot from \'' + deviceId + '\''));
+						});
+					}
+					self.device_dumper_get_snapshot.cacheStop();
+					self.device_dumper_list.cacheStop();
+				});
+				self._setupDeviceListFill();
+				self.listenerTracker.subscribeTo(self.dMAppController.app2appMsgBusCtl).on('upstreamChange', self._setupDeviceListFill.bind(self));
+				self.listenerTracker.subscribeTo(self.dMAppController.app2appMsgBusCtl).on('enabledStateChange', self._setupDeviceListFill.bind(self));
+
+				const component_list = $(self.$$('#app2app_to_component_list'));
+				const component_tb = self.$$('#app2app_to_component');
+				let remote_components = [];
+				let remote_special_components = [];
+				let sub_component_list;
+				const get_current_list = function(value) {
+					const slash_index = value.lastIndexOf('/');
+					if (slash_index !== -1) {
+						const leading_part = value.substr(0, slash_index);
+						const has_star = value[slash_index + 1] === '*';
+						const deviceId = self.$$('#app2app_to_device').value;
+						if (sub_component_list && sub_component_list._key === leading_part && sub_component_list._dev === deviceId) {
+							return has_star ? sub_component_list : sub_component_list._filtered;
+						}
+						self.sendApp2AppMsg(null, deviceId, leading_part + '/*list').then(function(msgBody) {
+							sub_component_list = msgBody.map(function(val) {
+								return leading_part + '/' + val;
+							});
+							sub_component_list._key = leading_part;
+							sub_component_list._dev = deviceId;
+							sub_component_list._filtered = sub_component_list.filter(function(v) {
+								return !v.startsWith(leading_part + '/*');
+							});
+							self.write_component_list();
+						}).catch(self.logger.deferredConcat('debug', 'Failed to get device \'' + deviceId + '\' component \'' + leading_part + '\' sub-component list'));
+						return [];
+					}
+					if (value.startsWith('%') || value.startsWith('#')) {
+						const target = "**callback_id_list";
+						const deviceId = self.$$('#app2app_to_device').value;
+						if (sub_component_list && sub_component_list._key === target && sub_component_list._dev === deviceId) {
+							return sub_component_list;
+						}
+						self.sendApp2AppMsg(null, deviceId, target).then(function(msgBody) {
+							sub_component_list = msgBody.slice();
+							sub_component_list._key = target;
+							sub_component_list._dev = deviceId;
+							self.write_component_list();
+						}).catch(self.logger.deferredConcat('debug', 'Failed to get device \'' + deviceId + '\' callback ID list'));
+						return [];
+					}
+					return value.startsWith('*') ? remote_special_components : remote_components;
+				};
+				const write_component_list = function() {
+					component_list.empty();
+					const list = get_current_list(component_tb.value);
+					for (let i = 0; i < list.length; i++) {
+						component_list.append($('<option value="' + list[i] + '"></option>'));
+					}
+				};
+				self.write_component_list = write_component_list;
+
+				let component_tb_prev_list;
+				$(component_tb).on('input', function() {
+					const list = get_current_list(component_tb.value);
+					if (component_tb_prev_list !== list) {
+						write_component_list();
+						component_tb_prev_list = list;
+					}
+				});
+
+				self.componentListHandler = function(msgBody) {
+					remote_components = msgBody;
+					write_component_list();
+				};
+				self.specialComponentListHandler = function(msgBody) {
+					remote_special_components = msgBody;
+					write_component_list();
+				};
+				self.clearRemoteComponents = function() {
+					remote_components = remote_special_components = [];
+					component_list.empty();
+				};
+				self.listenerTracker.subscribeTo(self.dMAppController.app2appMsgBusCtl).on('upstreamChange', self._setupComponentListFill.bind(self));
+				self.listenerTracker.subscribeTo(self.dMAppController.app2appMsgBusCtl).on('enabledStateChange', self._setupComponentListFill.bind(self));
+				$(self.$$('#app2app_to_device')).on('change', self._setupComponentListFill.bind(self));
+
+				const handle_comp = function(compcontroller) {
+					self.createInfoSectionDiv().then(function(div) {
+						const updateInfo = function() {
+							$(div).text(compcontroller.getJoinStateMessage());
+						};
+						updateInfo();
+						compcontroller.on("remoteJoinStateChange", updateInfo);
+					});
+
+					const dumper = self.dumper.subcategory("Companion (DMAppComp):", false);
+					self._repeatFillDump(dumper, compcontroller.dumpDebugInfo.bind(compcontroller), compcontroller.setupDumpDebugEvents.bind(compcontroller));
+				};
+				self.listenerTracker.subscribeTo(self.dMAppController).on('_debugNewDmAppCompInstance', handle_comp);
+				if (dMAppController._debugDmAppCompInstances) {
+					for (let i = 0; i < dMAppController._debugDmAppCompInstances.length; i++) {
+						handle_comp(dMAppController._debugDmAppCompInstances[i]);
+					}
+				}
+
+				const divWrapper = document.createElement('div');
+				divWrapper.style.all = 'initial';
+				const shButton = $('<button>DEBUG</button>');
+				shButton.css('position', 'absolute');
+				shButton.css('right', '3px');
+				shButton.css('bottom', '3px');
+				shButton.css('outline', '3px dashed black');
+				shButton.css('box-shadow', '0px 0px 0px 3px yellow');
+				shButton.css('z-index', '9001');
+				shButton.click(function() {
+					$(self).css('display', $(self).css('display') === "block" ? "none" : "block");
+				});
+				divWrapper.appendChild(shButton[0]);
+				document.body.appendChild(divWrapper);
+				self.destructorFunctions.push(function() {
+					$(divWrapper).remove();
+				});
+
+				self.$$('#bind_right_btn').addEventListener("click", function() {
+					Polymer.dom(self.getComponentElement()).classList.toggle('bind-right');
+				});
+				self.$$('#bind_bottom_btn').addEventListener("click", function() {
+					Polymer.dom(self.getComponentElement()).classList.toggle('bind-bottom');
+				});
+				self.$$('#bind_fill_btn').addEventListener("click", function() {
+					Polymer.dom(self.getComponentElement()).classList.toggle('bind-fill');
+				});
+
+				const posSignal = self.dMAppController.localSignalMap.getSignal('_debug_component_/position');
+				posSignal.onImmediate('change', function() {
+					const cfg = posSignal.getValue() || {};
+					['bind-right', 'bind-bottom', 'bind-fill'].forEach(function(prop) {
+						if (cfg[prop] != null) Polymer.dom(self.getComponentElement()).classList.toggle(prop, cfg[prop]);
+					});
+				}, self.listenerTracker);
+			});
+		},
+
+		deinitDMAppComponent: function() {
+			this.logger.warn("debug component deinitDMAppComponent");
+
+			if (this.trackerSet) {
+				for (let t of this.trackerSet) {
+					t.removeAllListeners();
+				}
+				this.trackerSet.clear();
+			}
+
+			if (this._clockIntervalTimer) window.clearTimeout(this._clockIntervalTimer);
+
+			DMAppClientLib.DMAppComponentBehaviour.deinitDMAppComponent.call(this);
+		},
+
+		_repeatFillDump: function(dumper, dumpFunc, eventFunc) {
+			const self = this;
+			dumper.cacheStart();
+			dumpFunc(dumper);
+			dumper.cacheStop();
+			eventFunc(self.listenerTracker, function() {
+				dumper.cacheStart();
+				dumpFunc(dumper);
+				dumper.cacheStop();
+			});
+		},
+
+		_dumpSerialisedDebugDump: function(deviceId, dumper, info, signals) {
+			const self = this;
+			for (let i = 0; i < info.length; i++) {
+				const item = info[i];
+				if (item.type === "subcategory") {
+					self._dumpSerialisedDebugDump(deviceId, dumper.subcategory(item.name, item.defaultShown), item.content, signals);
+				} else if (item.type === "keyValue") {
+					dumper.keyValue(item.key, item.value);
+				} else if (item.type === "value") {
+					dumper.value(item.value);
+				} else if (item.type === "checkboxOption") {
+					if (item.cb && item.signalId != null) {
+						const signal = new DMAppClientLib.Signal.SettableSignal(item.value, { boolean: true });
+						dumper._checkboxOptionIntl(item.label, signal, function(event) {
+							window.setTimeout(function() {
+								self.sendApp2AppMsg(!signal.getValue(), deviceId, item.cb).catch(self.logger.deferredConcat('debug', 'Failed to send remote checkbox option update \'' + item.cb + '\' to \'' + deviceId + '\''));
+							}, 0);
+							event.preventDefault();
+						});
+						signals[item.signalId] = signal;
+					}
+				} else if (item.type === "multiChoiceOption") {
+					if (item.cb && item.signalId != null) {
+						const signal = new DMAppClientLib.Signal.SettableSignal(item.value);
+						dumper._multiChoiceOptionIntl(item.label, signal, item.choiceList, function(selectedItem, event) {
+							window.setTimeout(function() {
+								self.sendApp2AppMsg({ value: selectedItem.value }, deviceId, item.cb).catch(self.logger.deferredConcat('debug', 'Failed to send remote multi-choice option update \'' + item.cb + '\' to \'' + deviceId + '\''));
+							}, 0);
+							event.preventDefault();
+						});
+						signals[item.signalId] = signal;
+					}
+				} else if (item.type === "button") {
+					if (item.cb) {
+						dumper.button(item.label, function() {
+							self.sendApp2AppMsg(null, deviceId, item.cb).catch(self.logger.deferredConcat('debug', 'Failed to send remote snapshot button \'' + item.cb + '\' to \'' + deviceId + '\''));
+						});
+					}
+				} else if (item.type === "stringInput") {
+					if (item.cb) {
+						dumper.stringInput(item.label, function(text) {
+							self.sendApp2AppMsg(text, deviceId, item.cb).catch(self.logger.deferredConcat('debug', 'Failed to send remote snapshot stringInput \'' + item.cb + '\' to \'' + deviceId + '\''));
+						}, item.initial, item.buttonText);
+					}
+				} else if (item.type === "multiInput") {
+					if (item.cb) {
+						dumper.multiInput(item.label, item.inputList, function(values) {
+							self.sendApp2AppMsg(values, deviceId, item.cb).catch(self.logger.deferredConcat('debug', 'Failed to send remote snapshot multiInput \'' + item.cb + '\' to \'' + deviceId + '\''));
+						}, item.buttonText);
+					}
+				} else {
+					self.logger.debug("_dumpSerialisedDebugDump: Unexpected item type: " + item.type);
+				}
+			}
+		},
+
+		_setupDeviceListFill: function() {
+			const self = this;
+			if (this.dMAppController.app2appMsgBusCtl.isEnabled()) {
+				this.sendApp2AppMsg({ cb: this.deviceListCb }, '@master', '**device_list_sub').catch(this.logger.deferredConcat('debug', 'Failed to subscribe to master device list changes'));
+			}
+			if (self.dMAppController.app2appMsgBusCtl.isEnabled() && self.dMAppController.app2appMsgBusCtl.isMaster()) {
+				if (!self.app2appMasterDevListDivPromise) {
+					self.app2appMasterDevListDivPromise = self.createInfoSectionDiv();
+					self.app2appMasterDevListDivPromise.then(function(div) {
+						const update = function() {
+							const devs = self.dMAppController.app2appMsgBusCtl._getDeviceIdList();
+							$(div).text(devs.length + " device(s) connected: " + devs.join(", "));
+						};
+						update();
+						self.listenerTracker.subscribeTo(self.dMAppController.app2appMsgBusCtl).on('deviceSocketChange', update);
+					});
+				}
+			}
+		},
+
+		_setupComponentListFill: function() {
+			const deviceId = this.$$('#app2app_to_device').value;
+			if (this.componentListCb != null) {
+				this.dMAppController.app2appMsgBusCtl.removeCallback(this.componentListCb);
+				delete this.componentListCb;
+			}
+			this.componentListHandler([]);
+			if (!deviceId) return;
+			this.componentListCb = this.createApp2AppCallback(this.componentListHandler);
+			if (this.dMAppController.app2appMsgBusCtl.isEnabled() || this.dMAppController.app2appMsgBusCtl.isDeviceIdSelf(deviceId)) {
+				this.clearRemoteComponents();
+				this.sendApp2AppMsg({ cb: this.componentListCb }, deviceId, '**component_list_sub').catch(
+						this.logger.deferredConcat('debug', 'Failed to subscribe to device \'' + deviceId + '\' component list changes'));
+				this.sendApp2AppMsg({}, deviceId, '**special_component_list').then(this.specialComponentListHandler).catch(
+						this.logger.deferredConcat('debug', 'Failed to subscribe to device \'' + deviceId + '\' component list changes'));
+			}
+		},
+
+		_handleNewClock: function(clockInfo, dumper, detail) {
+			const info = {
+				dumper: dumper.subcategory(clockInfo.name, false),
+			};
+			let listener, func;
+
+			let active = false;
+			const add = function() {
+				if (active) return;
+				active = true;
+				if (!listener) {
+					listener = this.listenerTracker.subscribeTo(clockInfo.clock);
+					func = DMAppClientLib.deps.debounce(this._fillClockInfo.bind(this, clockInfo.clock, info, detail), 100, true);
+					this._fillClockInfo(clockInfo.clock, info, detail);
+				}
+				listener.on('change', func);
+				listener.on('available', func);
+				listener.on('unavailable', func);
+				listener.on('debuginfochange', func);
+				this._clockPollHandlers.push(func);
+			}.bind(this);
+			const remove = function() {
+				if (!active) return;
+				active = false;
+				listener.removeListener('change', func);
+				listener.removeListener('available', func);
+				listener.removeListener('unavailable', func);
+				listener.removeListener('debuginfochange', func);
+				const index = this._clockPollHandlers.indexOf(func);
+				if (index >= 0) this._clockPollHandlers.splice(index, 1);
+			}.bind(this);
+
+			info.dumper.addOpenStateChangeCallback(function(enabled) {
+				if (enabled && !active) {
+					add();
+				} else if (!enabled && active) {
+					remove();
+				}
+			});
+
+			return function() {
+				if (active) remove();
+			};
+		},
+
+		_fillClockInfo: function(clock, info, detail) {
+			if (!info || !info.dumper) return;
+
+			try {
+				info.dumper.cacheStart();
+				this.dMAppController.timeline.dumpClockInfo(clock, info.dumper, true, detail);
+				info.dumper.cacheStop();
+			} catch(e) {
+				this.logger.error("Exception in _fillClockInfo: ", e);
+			}
+		},
+
+		createInfoSectionDiv: function() {
+			const self = this;
+			return self.readyPromise.then(function() {
+				const div = document.createElement('div');
+				Polymer.dom(self.$$('#info_section')).appendChild(div);
+				return div;
+			});
+		},
+
+		getUserBtnSectionDiv: function() {
+			const self = this;
+			return self.readyPromise.then(function() {
+				return self.btn_section_user_div;
+			});
+		},
+
+		_setupApp2AppMsg: function() {
+			const self = this;
+			const type_elem = self.$$('#app2app_result_type');
+			const result_elem = self.$$('#app2app_result_body');
+			const button = self.$$('#app2app_send_msg');
+			button.addEventListener("click", function() {
+				const dev = self.$$('#app2app_to_device').value;
+				const comp = self.$$('#app2app_to_component').value;
+				let body;
+				try {
+					const val = self.$$('#app2app_msg_body').value;
+					if (val === "") {
+						body = null;
+					} else {
+						body = JSON.parse(val);
+					}
+				} catch (e) {
+					type_elem.textContent = "JSON parse failed";
+					result_elem.textContent = "";
+					Polymer.dom(result_elem).classList.toggle('raw', false);
+					return;
+				}
+				button.disabled = true;
+				self.logger.debug("Sending message to: ", dev, comp);
+				const format_reply = function(msg) {
+					if (msg && typeof msg === "string" && msg.indexOf("\n") !== -1) {
+						result_elem.textContent = msg;
+						Polymer.dom(result_elem).classList.toggle('raw', true);
+					} else {
+						result_elem.textContent = JSON.stringify(msg, null, 4);
+						Polymer.dom(result_elem).classList.toggle('raw', false);
+					}
+				};
+				self.sendApp2AppMsg(body, dev, comp).finally(function() {
+					button.disabled = false;
+				}).then(function(ack) {
+					type_elem.textContent = "ACK";
+					format_reply(ack);
+				}, function(nack) {
+					type_elem.textContent = "NACK";
+					if (nack instanceof Error) {
+						Polymer.dom(result_elem).classList.toggle('raw', false);
+						result_elem.textContent = nack.toString();
+					} else {
+						format_reply(nack);
+					}
+				});
+			});
+		},
+
+		_setupTimelineEventSection: function() {
+			const self = this;
+			const id_elem = self.$$('#timeline_event_id');
+			const result_elem = self.$$('#timeline_event_result');
+			const button = self.$$('#timeline_event_send');
+			button.addEventListener("click", function() {
+				button.disabled = true;
+				self.logger.debug("Sending timeline event: ", id_elem.value);
+				new DMAppClientLib.deps.promise(function(resolve, reject) {
+					resolve(self.dMAppController.layout.io.postDMAppComponentTimelineEvent('debug', id_elem.value));
+				}).finally(function() {
+					button.disabled = false;
+				}).then(function(ack) {
+					result_elem.textContent = "OK";
+				}, function(nack) {
+					if (nack instanceof Error) {
+						result_elem.textContent = "Failed: " + nack.toString();
+					} else {
+						result_elem.textContent = "Failed: " + JSON.stringify(nack, null, 4);
+					}
+				});
+			});
+		},
+
+		behaviors: [ DMAppClientLib.DMAppComponentBehaviour ],
+
+	});
+
+	function DumperHelper(parent_div, checkStore, baseInfo) {
+		this.parent_div = parent_div;
+		if (!checkStore) checkStore = {};
+		this.checkStore = checkStore;
+		this.baseInfo = baseInfo;
+	}
+
+	DumperHelper.prototype.subcategory = function(name, shown) /* -> DumperHelper */ {
+		const cached = this.getCached("sc_" + name);
+		if (cached) {
+			return cached.dh;
+		}
+
+		if (shown == null) shown = true;
+		const check = document.createElement('input');
+		check.type = 'checkbox';
+		let substore;
+		const store = this.checkStore;
+		if (store.hasOwnProperty("check_" + name)) {
+			check.checked = store["check_" + name];
+			substore = store["sub_" + name];
+		} else {
+			check.checked = shown;
+			substore = store["sub_" + name] = {};
+		}
+		const outer = document.createElement('div');
+		const inner = document.createElement('div');
+		const title = document.createElement('span');
+		title.textContent = name;
+		inner.style.paddingLeft = '4em';
+		Polymer.dom(outer).appendChild(check);
+		Polymer.dom(outer).appendChild(title);
+		Polymer.dom(outer).appendChild(inner);
+
+		const openStateChangeCallbacks = [];
+		this.openStateChangeCallbacks = openStateChangeCallbacks;
+		const handler = function() {
+			const checked = check.checked;
+			store["check_" + name] = checked;
+			inner.style.display = checked ? "block" : "none";
+			for (let i = 0; i < openStateChangeCallbacks.length; i++) {
+				openStateChangeCallbacks[i](checked);
+			}
+		};
+		handler();
+		check.addEventListener("change", handler);
+		check.addEventListener("click", handler);
+
+		const cat = new DumperHelper(inner, substore, this.baseInfo);
+		cat.outer_div = outer;
+		cat.title_node = title;
+		this.addNode(outer, "sc_" + name, cat);
+		cat.addOpenStateChangeCallback = function(cb) {
+			openStateChangeCallbacks.push(cb);
+			cb(check.checked);
+		};
+		return cat;
+	};
+
+	DumperHelper.prototype.keyValue = function(k, v) {
+		const cached = this.getCached("kv");
+		if (cached) {
+			const children = Polymer.dom(cached.node).children;
+			children[0].textContent = k;
+			children[1].textContent = v;
+			return;
+		}
+		const wrap = document.createElement('div');
+		const key = document.createElement('div');
+		key.textContent = k;
+		key.style.display = "inline-block";
+		key.style.minWidth = "15em";
+		key.style.paddingRight = "1em";
+		key.style.boxSizing = "border-box";
+		key.style.verticalAlign = "top";
+		const value = document.createElement('div');
+		value.textContent = v;
+		value.style.display = "inline-block";
+		value.style.whiteSpace = "pre";
+		value.style.verticalAlign = "top";
+		Polymer.dom(wrap).appendChild(key);
+		Polymer.dom(wrap).appendChild(value);
+		this.addNode(wrap, "kv");
+	};
+
+	DumperHelper.prototype.value = function(v) {
+		const cached = this.getCached("v");
+		if (cached) {
+			cached.node.textContent = v;
+			return;
+		}
+		const value = document.createElement('div');
+		value.textContent = v;
+		value.style.whiteSpace = "pre";
+		this.addNode(value, "v");
+	};
+
+	DumperHelper.prototype.checkboxOption = function(label, signal) {
+		this._checkboxOptionIntl(label, signal, function() {
+			signal.setValue(this.checked);
+		});
+	};
+
+	DumperHelper.prototype._checkboxOptionIntl = function(label, signal, handler) {
+		const cached = this.getCached("co_" + label);
+		if (cached) {
+			return;
+		}
+
+		const lt = ListenerTracker.createTracker();
+		const wrap = document.createElement('div');
+		const key = document.createElement('div');
+		key.textContent = label;
+		key.style.display = "inline-block";
+		key.style.minWidth = "15em";
+		key.style.paddingRight = "1em";
+		key.style.boxSizing = "border-box";
+		key.style.color = 'blue';
+		const check = document.createElement('input');
+		check.type = 'checkbox';
+		check.checked = !!signal.getValue();
+		lt.subscribeTo(signal).on("toggle", function() {
+			check.checked = !!signal.getValue();
+		});
+		Polymer.dom(wrap).appendChild(key);
+		Polymer.dom(wrap).appendChild(check);
+
+		check.addEventListener("change", handler.bind(check));
+		check.addEventListener("click", handler.bind(check));
+		this.addNode(wrap, "co_" + label, null, lt);
+	};
+
+	let rb_group_num = 0;
+
+	DumperHelper.prototype.multiChoiceOption = function(label, signal, choiceList) {
+		this._multiChoiceOptionIntl(label, signal, choiceList, function(item) {
+			signal.setValue(item.value);
+		});
+	};
+
+	DumperHelper.prototype._multiChoiceOptionIntl = function(label, signal, choiceList, handler) {
+		const id = "mco_" + label + "\x21F6" + JSON.stringify(choiceList);
+
+		const cached = this.getCached(id);
+		if (cached) {
+			return;
+		}
+
+		const group = "debug_component_dh_mco_" + (rb_group_num++);
+
+		const lt = ListenerTracker.createTracker();
+		const wrap = document.createElement('div');
+		const key = document.createElement('div');
+		key.textContent = label;
+		key.style.display = "inline-block";
+		key.style.minWidth = "15em";
+		key.style.paddingRight = "1em";
+		key.style.boxSizing = "border-box";
+		key.style.color = 'blue';
+		key.style.verticalAlign = "top";
+		const opts = document.createElement('div');
+		opts.style.display = "inline-block";
+		const items = [];
+		for (let i = 0; i < choiceList.length; i++) {
+			const label = document.createElement('label');
+			label.style.display = "block";
+			label.textContent = choiceList[i].name;
+			const rb = document.createElement('input');
+			rb.type = 'radio';
+			rb.name = group;
+			label.insertBefore(rb, label.firstChild);
+			opts.appendChild(label);
+			items.push({
+				node: rb,
+				value: choiceList[i].value,
+			});
+		}
+		signal.onImmediate("change", function() {
+			for (let i = 0; i < items.length; i++) {
+				items[i].node.checked = DMAppClientLib.deps.deepEql(signal.getValue(), items[i].value);
+			}
+		}, lt);
+		Polymer.dom(wrap).appendChild(key);
+		Polymer.dom(wrap).appendChild(opts);
+
+		for (let i = 0; i < items.length; i++) {
+			items[i].node.addEventListener("click", handler.bind(null, items[i]));
+		}
+		this.addNode(wrap, id, null, lt);
+	};
+
+	DumperHelper.prototype.button = function(label, callback) {
+		const cached = this.getCached("btn_" + label);
+		if (cached) {
+			return;
+		}
+
+		const wrap = document.createElement('div');
+		const button = document.createElement('button');
+		button.textContent = label;
+		button.type = "button";
+		Polymer.dom(wrap).appendChild(button);
+		button.addEventListener("click", callback);
+		this.addNode(wrap, "btn_" + label);
+	};
+
+	DumperHelper.prototype.stringInput = function(label, callback, initial, buttonText) {
+		const cached = this.getCached("si_" + label);
+		if (cached) {
+			return;
+		}
+
+		const wrap = document.createElement('div');
+		const key = document.createElement('div');
+		key.textContent = label;
+		key.style.display = "inline-block";
+		key.style.minWidth = "15em";
+		key.style.paddingRight = "1em";
+		key.style.boxSizing = "border-box";
+		key.style.color = 'blue';
+		const textInput = document.createElement('input');
+		textInput.type = 'text';
+		if (initial) textInput.value = initial;
+		const submit = document.createElement('button');
+		submit.textContent = buttonText || "Submit";
+		submit.type = "button";
+		submit.addEventListener("click", function() {
+			callback(textInput.value);
+		});
+		Polymer.dom(wrap).appendChild(key);
+		Polymer.dom(wrap).appendChild(textInput);
+		Polymer.dom(wrap).appendChild(submit);
+		this.addNode(wrap, "si_" + label);
+	};
+
+	DumperHelper.prototype.multiInput = function(label, inputList, callback, buttonText) {
+		const cacheKey = "mi_" + label + "\x21F6" + JSON.stringify(inputList);
+		const cached = this.getCached(cacheKey);
+		if (cached) {
+			return;
+		}
+
+		const outer = document.createElement('div');
+
+		if (label) {
+			const text = document.createElement('div');
+			text.textContent = label;
+			Polymer.dom(outer).appendChild(text);
+		}
+
+		const addInputTagLine = function(label, type, initial) {
+			const wrap = document.createElement('div');
+			const key = document.createElement('div');
+			key.textContent = label;
+			key.style.display = "inline-block";
+			key.style.minWidth = "15em";
+			key.style.paddingRight = "1em";
+			key.style.boxSizing = "border-box";
+			key.style.color = 'blue';
+			const textInput = document.createElement('input');
+			textInput.type = type;
+			if (initial) textInput.value = initial;
+			Polymer.dom(wrap).appendChild(key);
+			Polymer.dom(wrap).appendChild(textInput);
+			Polymer.dom(outer).appendChild(wrap);
+			return function() {
+				return textInput.value;
+			};
+		};
+		const addCheckBox = function(label, value) {
+			const wrap = document.createElement('div');
+			const key = document.createElement('div');
+			key.textContent = label;
+			key.style.display = "inline-block";
+			key.style.minWidth = "15em";
+			key.style.paddingRight = "1em";
+			key.style.boxSizing = "border-box";
+			key.style.color = 'blue';
+			const check = document.createElement('input');
+			check.type = 'checkbox';
+			check.checked = value;
+			Polymer.dom(wrap).appendChild(key);
+			Polymer.dom(wrap).appendChild(check);
+			Polymer.dom(outer).appendChild(wrap);
+			return function() {
+				return check.checked;
+			};
+		};
+		const addMultiChoice = function(label, choiceList, value) {
+			const group = "debug_component_dh_mco_" + (rb_group_num++);
+			const wrap = document.createElement('div');
+			const key = document.createElement('div');
+			key.textContent = label;
+			key.style.display = "inline-block";
+			key.style.minWidth = "15em";
+			key.style.paddingRight = "1em";
+			key.style.boxSizing = "border-box";
+			key.style.color = 'blue';
+			key.style.verticalAlign = "top";
+			const opts = document.createElement('div');
+			opts.style.display = "inline-block";
+			const handler = function(v) {
+				value = v;
+			};
+			for (let i = 0; i < choiceList.length; i++) {
+				const label = document.createElement('label');
+				label.style.display = "block";
+				label.textContent = choiceList[i].name;
+				const rb = document.createElement('input');
+				rb.type = 'radio';
+				rb.name = group;
+				label.insertBefore(rb, label.firstChild);
+				opts.appendChild(label);
+				rb.checked = (choiceList[i].value === value);
+				rb.addEventListener("click", handler.bind(null, choiceList[i].value));
+			}
+			Polymer.dom(wrap).appendChild(key);
+			Polymer.dom(wrap).appendChild(opts);
+			Polymer.dom(outer).appendChild(wrap);
+			return function() {
+				return value;
+			};
+		};
+		const outputs = inputList.map(function(info) {
+			switch (info.type) {
+				case 'string':
+					return addInputTagLine(info.label, "text", info.initial);
+
+				case 'number':
+					return addInputTagLine(info.label, "number", info.initial);
+
+				case 'checkBox':
+					return addCheckBox(info.label, info.initial);
+
+				case 'multiChoice':
+					return addMultiChoice(info.label, info.choiceList, info.initial);
+
+				default:
+					return function() { return null; };
+			}
+		});
+
+		const submit = document.createElement('button');
+		submit.textContent = buttonText || "Submit";
+		submit.type = "button";
+		submit.addEventListener("click", function() {
+			callback(outputs.map(function(f) { return f(); }));
+		});
+
+		Polymer.dom(outer).appendChild(submit);
+		this.addNode(outer, cacheKey);
+	};
+
+	const DumperHelperContainerFillComponentRefInfo = function(state, cr) {
+		const info = state.crMap.get(cr);
+		if (!info || !info.dumper) return;
+
+		try {
+			info.dumper.cacheStart();
+			if (cr.failed) info.dumper.keyValue("Failed", cr.failureReason);
+			if (cr.creating) info.dumper.value("Creating");
+			if (cr.speculative) info.dumper.value("Speculative");
+			if (cr.layoutIndependent) info.dumper.value("Layout Independent");
+			if (cr.masqueradeDestroyed) info.dumper.value("Masquerade Destroyed");
+			info.dumper.cacheStop();
+		} catch(e) {
+			state.dumper.baseInfo.debugComp.logger.error("Exception in _fillCRInfo: ", cr.name, ", ", e);
+		}
+	};
+
+	const DumperHelperHandleNewComponentRef = function(state, cr) {
+		if (state.crMap.get(cr)) return;
+
+		if (cr.component) return;
+
+		const info = {
+			dumper: state.dumper.subcategory(cr.name, false),
+			tracker: ListenerTracker.createTracker(),
+		};
+		state.crMap.set(cr, info);
+
+		DumperHelperContainerFillComponentRefInfo(state, cr);
+
+		const remove = function() {
+			const compInfo = state.crMap.get(cr);
+			if (compInfo && compInfo.dumper) {
+				state.dumper.parent_div.removeChild(compInfo.dumper.outer_div);
+				state.crMap.delete(cr);
+			}
+			info.tracker.removeAllListeners(cr);
+		};
+
+		const crTracker = info.tracker.subscribeTo(cr);
+		crTracker.on("destroy", remove);
+		const func = DMAppClientLib.deps.debounce(DumperHelperContainerFillComponentRefInfo.bind(null, state, cr), 1);
+		crTracker.on("change", function() {
+			if (cr.component) {
+				remove();
+			} else {
+				func();
+			}
+		});
+	};
+
+	const DumperHelperHandleNewComponent = function(state, component) {
+		if (state.componentMap.get(component)) return;
+
+		const info = {
+			dumper: state.dumper._staticComponent(component, false),
+		};
+		state.componentMap.set(component, info);
+	};
+
+	DumperHelper.prototype.componentContainer = function(componentContainer, label, shown) {
+		const baseInfo = this.baseInfo;
+		const cached = this.getCached(componentContainer);
+		if (cached) {
+			return;
+		}
+
+		const div = document.createElement('div');
+		let inner = baseInfo.componentContainerMap.get(componentContainer);
+		if (!inner) {
+			inner = document.createElement('div');
+			this.baseInfo.componentContainerMap.set(componentContainer, inner);
+			const subdump = new DumperHelper(inner, {}, baseInfo);
+
+			const cat = subdump.subcategory(label, shown);
+			const state = {
+				componentMap: new WeakMap(),
+				crMap: new WeakMap(), // todo
+				tracker: ListenerTracker.createTracker(),
+				dumper: cat,
+			};
+			baseInfo.trackerSet.add(state.tracker);
+
+			const containerTracker = state.tracker.subscribeTo(componentContainer);
+			containerTracker.on("createdComponent", function(info) {
+				DumperHelperHandleNewComponent(state, info.component);
+			});
+
+			containerTracker.on("destroyingComponent", function(info) {
+				const compInfo = state.componentMap.get(info.component);
+				if (compInfo) {
+					if (compInfo.dumper) {
+						cat.parent_div.removeChild(compInfo.dumper.outer_div);
+					}
+					state.componentMap.delete(info.component);
+				}
+			});
+
+			containerTracker.on("destroy", function() {
+				if (state.tracker) {
+					state.tracker.removeAllListeners();
+					baseInfo.trackerSet.delete(state.tracker);
+					delete state.tracker;
+				}
+			});
+
+			containerTracker.on("_createdCR", function(info) {
+				DumperHelperHandleNewComponentRef(state, info.cr);
+			});
+
+			const components = componentContainer.getComponents();
+
+			for (const id in components) {
+				DumperHelperHandleNewComponent(state, components[id]);
+			}
+
+			for (const cr of componentContainer.getComponentMap().values()) {
+				DumperHelperHandleNewComponentRef(state, cr);
+			}
+		}
+		div.appendChild(inner);
+
+		this.addNode(div, componentContainer);
+	};
+
+	const DumperHelperContainerFillComponentInfo = function(state, component) {
+		const dumper = state.dumper;
+		const baseInfo = dumper.baseInfo;
+		try {
+			dumper.cacheStart();
+			if (component._destructing) {
+				dumper.cacheStop();
+				return;
+			}
+			component.dumpDebugInfo(dumper);
+			if (state.componentReferenceClockRemoveFunc) {
+				state.componentReferenceClockRemoveFunc();
+			}
+			if (state.componentTimelineClockRemoveFunc) {
+				state.componentTimelineClockRemoveFunc();
+			}
+			state.componentReferenceClockRemoveFunc = baseInfo.debugComp._handleNewClock({ clock: component.referenceClock, name: "Component Reference Clock" }, dumper);
+			state.componentTimelineClockRemoveFunc = baseInfo.debugComp._handleNewClock({ clock: component.componentTimelineClock, name: "Component Timeline Clock" }, dumper);
+			dumper.cacheStop();
+		} catch(e) {
+			baseInfo.debugComp.logger.error("Exception in DumperHelperContainerFillComponentInfo: ", component.getName(), ", ", e);
+		}
+	};
+
+	DumperHelper.prototype._staticComponent = function(component, shown) {
+		const baseInfo = this.baseInfo;
+		const cat = this.subcategory(component.getName(), shown);
+		const state = {
+			tracker: ListenerTracker.createTracker(),
+			dumper: cat,
+		};
+		baseInfo.trackerSet.add(state.tracker);
+
+		DumperHelperContainerFillComponentInfo(state, component);
+		try {
+			const func = DMAppClientLib.deps.debounce(DumperHelperContainerFillComponentInfo.bind(null, state, component), 1);
+			component.setupComponentDebugEvents(state.tracker, func);
+		} catch(e) {
+			baseInfo.debugComp.logger.error("Exception in DumperHelper.prototype.component: ", component.getName(), ", ", e);
+		}
+
+		state.tracker.subscribeTo(component.event).on("destroy", function() {
+			if (state.tracker) {
+				state.tracker.removeAllListeners();
+				baseInfo.trackerSet.delete(state.tracker);
+				delete state.tracker;
+			}
+			if (state.componentReferenceClockRemoveFunc) {
+				state.componentReferenceClockRemoveFunc();
+			}
+			if (state.componentTimelineClockRemoveFunc) {
+				state.componentTimelineClockRemoveFunc();
+			}
+		});
+		return cat;
+	};
+
+	DumperHelper.prototype.component = function(component, shown) {
+		const baseInfo = this.baseInfo;
+		const cached = this.getCached(component);
+		if (cached) {
+			return;
+		}
+
+		const div = document.createElement('div');
+		let inner = baseInfo.otherComponentMap.get(component);
+		if (!inner) {
+			inner = document.createElement('div');
+			baseInfo.otherComponentMap.set(component, inner);
+			const subdump = new DumperHelper(inner, {}, baseInfo);
+			subdump._staticComponent(component, shown);
+		}
+		div.appendChild(inner);
+
+		this.addNode(div, component);
+	};
+
+	DumperHelper.prototype.addNode = function(node, type, dh, lt) {
+		Polymer.dom(this.parent_div).appendChild(node);
+		if (this.cache) {
+			this.cache.push({
+				node: node,
+				type: type,
+				dh: dh,
+				lt: lt,
+			});
+			if (dh) dh.cacheStart();
+		} else if (lt) {
+			this.baseInfo.debugComp.logger.warn("DumperHelper: caching not enabled for node with lt of type: " + type);
+		}
+	};
+
+	DumperHelper.prototype.getCached = function(type) {
+		if (this.cachePrev && this.cachePrev.length) {
+			const first = this.cachePrev.shift();
+			if (first.type === type) {
+				this.cache.push(first);
+				if (first.dh) first.dh.cacheStart();
+				return first;
+			}
+			const removeEntry = this._getEntryRemover();
+			removeEntry(first);
+			while (this.cachePrev.length) removeEntry(this.cachePrev.shift());
+		}
+	};
+
+	DumperHelper.prototype.cacheStart = function() {
+		if (this.cachePrev) this.cacheStop();
+		this.cachePrev = this.cache;
+		this.cache = [];
+	};
+
+	DumperHelper.prototype.cacheStop = function() {
+		for (let i = 0; i < this.cache.length; i++) {
+			if (this.cache[i].dh) this.cache[i].dh.cacheStop();
+		}
+		if (this.cachePrev) {
+			const removeEntry = this._getEntryRemover();
+			while (this.cachePrev.length) removeEntry(this.cachePrev.shift());
+			delete this.cachePrev;
+		}
+	};
+
+	DumperHelper.prototype.clearState = function() {
+		const removeEntry = this._getEntryRemover();
+		if (this.cache) {
+			while (this.cache.length) removeEntry(this.cache.shift());
+			delete this.cache;
+		}
+		if (this.cachePrev) {
+			while (this.cachePrev.length) removeEntry(this.cachePrev.shift());
+			delete this.cachePrev;
+		}
+	};
+
+	DumperHelper.prototype._getEntryRemover = function() {
+		const pnode = Polymer.dom(this.parent_div);
+		return function(entry) {
+			pnode.removeChild(entry.node);
+			if (entry.dh) entry.dh.clearState();
+			if (entry.lt) entry.lt.removeAllListeners();
+		};
+	};
+
+})();
+</script>
+</dom-module>

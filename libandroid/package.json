@@ -1,0 +1,10 @@
+{
+  "name": "DMAppAndroid",
+  "version": "0.0.1",
+  "main": "main.js",
+  "dependencies": {
+  },
+  "scripts": {
+    "build": "make -C .. libandroid"
+  }
+}

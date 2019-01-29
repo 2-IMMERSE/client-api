@@ -1,0 +1,87 @@
+<html>
+<head>
+	<meta charset='utf-8'>
+	<script src="[CLIENT_API_URL]/dist/deps/deps/webcomponentsjs/webcomponents-lite.min.js"></script>
+	<link rel="import" href="[CLIENT_API_URL]/dist/bundle/dist/standalone-bundle.html" />
+
+	<link rel="import" href="./minimal-polymer-1.html" />
+	<link rel="import" href="./minimal-polymer-2.html" />
+	<link rel="import" href="./minimal-polymer-3.html" />
+	<link rel="import" href="./minimal-webcomponent-1.html" />
+	<link rel="import" href="./minimal-webcomponent-wrapped-1.html" />
+
+	<script>
+	(function() {
+		"use strict";
+		window.addEventListener('WebComponentsReady', function(e) {
+			const DMAppClientLib = require('DMAppClientLib');
+
+			const controller = new DMAppClientLib.DMAppController({
+				deviceIdPrefix: "test",
+				deviceIdNamespace: "test",
+				deviceType: "test",
+			});
+
+			controller.layout.testResetLayoutComponents([
+				{
+					"componentId": "1",
+					"config": {
+						"url": "",
+						"class": "ExampleMinimalPolymer1",
+					},
+					"layout": {
+						"startTime": 0,
+					},
+				},
+				{
+					"componentId": "2",
+					"config": {
+						"url": "",
+						"class": "ExampleMinimalPolymer2",
+					},
+					"layout": {
+						"startTime": 0,
+					},
+				},
+				{
+					"componentId": "3",
+					"config": {
+						"url": "",
+						"class": "example-minimal-polymer-three",
+					},
+					"layout": {
+						"startTime": 0,
+					},
+				},
+				{
+					"componentId": "4",
+					"config": {
+						"url": "",
+						"class": "example-webcomponent-one",
+					},
+					"layout": {
+						"startTime": 0,
+					},
+				},
+				{
+					"componentId": "5",
+					"config": {
+						"url": "",
+						"class": "ExampleWebComponentWrapped1",
+					},
+					"layout": {
+						"startTime": 0,
+					},
+				},
+			]);
+
+			controller.timeline.setDefaultClockSource(controller.timeline.timelineStartClock);
+		});
+	})();
+	</script>
+
+	<title>Test File</title>
+</head>
+<body>
+</body>
+</html>

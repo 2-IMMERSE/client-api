@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="eu.immerse2.android.general.test1" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>2-Immerse Android General Test</name>
+    <description>
+        2-Immerse Android General Test
+    </description>
+    <author href="http://2immerse.eu">
+        2-Immerse
+    </author>
+    <content src="index.html" />
+    <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="ws://*/*" />
+    <allow-intent href="wss://*/*" />
+    <platform name="android">
+        <config-file parent="/*" target="AndroidManifest.xml">
+            <uses-permission android:name="android.permission.CAMERA" />
+            <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+            <uses-permission android:name="android.permission.RECORD_AUDIO" />
+            <uses-permission android:name="android.permission.RECORD_VIDEO" />
+        </config-file>
+    </platform>
+    <preference name="LoadUrlTimeoutValue" value="-1" />
+    <hook src="scripts/pre-build.sh" type="before_build" />
+    <hook src="scripts/pre-build.sh" type="before_run" />
+    <engine name="android" spec="^6.4.0" />
+    <plugin name="cordova-plugin-whitelist" spec="1" />
+    <plugin name="cordova-plugin-device" spec="^2.0.2" />
+    <plugin name="cordova-plugin-android-permissions" spec="^1.0.0" />
+    <plugin name="cordova-custom-config" spec="^5.0.2" />
+    <plugin name="cordova-plugin-console" spec="^1.1.0" />
+    <plugin name="de.fhg.fokus.famium.hbbtv" spec="file:cordova-plugin-hbbtv" />
+    <plugin name="ionic-plugin-videosettings" spec="git+https://github.com/lfitzgerald/ionic-plugin-videosettings.git#3a847c0115baddc9b4aa1710e802739eb067a153" />
+    <plugin name="de.irt.androidsynckit" spec="file:synckit/android" />
+    <plugin name="cordova-plugin-fullscreen" spec="^1.2.0" />
+</widget>

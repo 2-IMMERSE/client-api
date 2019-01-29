@@ -1,0 +1,9 @@
+{
+	"extends": "../.jshintrc",
+	"browser": true,
+	"browserify": true,
+	"globals": {
+		"Polymer": false,
+		"dashjs": false
+	}
+}

@@ -1,0 +1,12 @@
+{
+  "name": "DMAppTvEmuLib",
+  "version": "0.0.1",
+  "main": "main.js",
+  "dependencies": {
+    "dvbcsstv-lib": "git+https://github.com/2-IMMERSE/dvbcsstv-lib.git#1f7f85a44122770cb2bec01963b88f51611df0b2",
+    "reconnectingwebsocket": "^1.0.0"
+  },
+  "scripts": {
+    "build": "make -C .. libtvemu"
+  }
+}

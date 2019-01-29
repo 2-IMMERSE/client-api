@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+
+<!--
+/************************************************************************/
+/* FILE:                TestConfigTestComponent.html                    */
+/* DESCRIPTION:         Test config test component                      */
+/* VERSION:             (see git)                                       */
+/* DATE:                (see git)                                       */
+/* AUTHOR:              Jonathan Rennison <jonathan.rennison@bt.com>    */
+/*                                                                      */
+/*                      © British Telecommunications plc 2018           */
+/*                                                                      */
+/* Licensed under the Apache License, Version 2.0 (the "License");      */
+/* you may not use this file except in compliance with the License.     */
+/* You may obtain a copy of the License at                              */
+/*                                                                      */
+/*   http://www.apache.org/licenses/LICENSE-2.0                         */
+/*                                                                      */
+/* Unless required by applicable law or agreed to in writing, software  */
+/* distributed under the License is distributed on an "AS IS" BASIS,    */
+/* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or      */
+/* implied.                                                             */
+/* See the License for the specific language governing permissions and  */
+/* limitations under the License.                                       */
+/************************************************************************/
+-->
+
+<link rel="import" href="./TestVideoTestComponent.html" />
+<link rel="import" href="../../components/bundle.html" />
+
+<dom-module id="test-config-test-component">
+<template strip-whitespace>
+	<style>
+		:host {
+			display: block;
+			overflow: auto;
+			border: 1px solid black;
+			padding: 3px;
+		}
+
+		#main_div {
+			visibility: hidden;
+		}
+
+		.div_p {
+			margin-top: 0.5em;
+			margin-bottom: 0.5em;
+		}
+
+		.div_ss {
+			margin-top: 0.5em;
+		}
+
+		.url_label {
+			width: 20em;
+			display: inline-block;
+		}
+
+		input[type=url] {
+			width: 25em;
+		}
+
+		.adv_hidden {
+			display: none !important;
+		}
+
+		#service_input_url_block {
+			display: none;
+			margin-left: 2em;
+		}
+
+		.link_block button, .link_block a {
+			margin-left: 1.5em;
+		}
+
+		#component_url_transforms_tb:disabled {
+			display: none;
+		}
+
+		#time_warning {
+			margin: 5px;
+			font-size: 200%;
+			outline: 5px dashed red;
+			box-shadow: 0px 0px 0px 5px yellow;
+			animation: 1s testComponentTimeWarningAnimateBorder step-end infinite;
+			display: none;
+		}
+		@keyframes testComponentTimeWarningAnimateBorder {
+			50% {
+				outline: 5px dashed yellow;
+				box-shadow: 0px 0px 0px 5px red;
+			}
+		}
+
+		#time_warning_now {
+			font-weight: bold;
+		}
+
+		.cc_block_enabled::after {
+			color: blue;
+			content: "\2714";
+		}
+
+		.doc_cc_block_enabled::after {
+			color: blue;
+			content: "\2714";
+		}
+
+		.tah_link_block {
+			margin-left: 1.5em;
+		}
+
+		.info_block {
+			margin-left: 0.5em;
+		}
+	</style>
+	<div id="main_div">
+		<div id="time_warning">
+			Notice: Current system time is probably incorrect: <span id="time_warning_now"></span>
+		</div>
+		<p><b>Test Config Component</b></p>
+		<p id="version_field"></p>
+		<p id="build_date" style="display: none"></p>
+		<p id="browser_version_field" class="very_adv"></p>
+		<div class="div_ss"><label><input id="adv_opt" type="checkbox" />Advanced Options...</label></div>
+		<div class="adv"><label><input id="very_adv_opt" type="checkbox" />Very Advanced Options...</label></div>
+		<br>
+		<hr />
+		<b>Input Document</b>
+		<br>
+		<div class="div_p">
+			<div class="info_block">&#x26a0; Note: settings<span id="input_doc_setting_warn_msg_prefix"></span> specified in the "General Settings" section below do not apply to input document test instances launched using the button below.</div>
+			<div class="adv"><label><input id="input_doc_adv_mode_cb" type="checkbox" />Adv mode (partial document/debug overrides)</label></div>
+			<div class="adv"><label><input id="input_doc_remember_settings_cb" type="checkbox" />Remember variations of last input document</label></div>
+			<div>
+				<div class="url_label" style="vertical-align: top;">Sample URLs:</div>
+				<div id="input_doc_url_presets" style="display: inline-block;"></div>
+			</div>
+			<div>
+				<label for="input_doc_tb" class="url_label">Input document URL</label>
+				<input id="input_doc_tb" type="url" />
+				<input id="input_doc_local" type="file" accept=".json,application/json" style="margin-left: 4em"/>
+			</div>
+		</div>
+		<div class="div_p">
+			<button id="input_doc_load">Load input document</button>
+		</div>
+		<div class="div_p" id="input_doc_info_block"></div>
+		<div class="div_p">
+			<button id="input_doc_doit" style="display: none"></button>
+		</div>
+		<br>
+		<hr />
+		<b>General Settings</b>
+		<br>
+		<div class="div_p">
+			<div>
+				<div><label><input id="show_urls_opt" type="checkbox" />Show service URLs...</label></div>
+				<div class="no_standalone_url svc_url cc_block">
+					<label for="layout_url_tb" class="url_label">Layout service URL</label>
+					<input id="layout_url_tb" type="url" />
+				</div>
+				<div class="no_standalone_url svc_url cc_block">
+					<label for="ws_url_tb" class="url_label">Websocket service URL</label>
+					<input id="ws_url_tb" type="url" />
+				</div>
+				<div class="no_standalone_url svc_url cc_block">
+					<label for="timeline_url_tb" class="url_label">Timeline service URL</label>
+					<input id="timeline_url_tb" type="url" />
+				</div>
+				<div class="svc_url cc_block">
+					<label for="shared_state_url_tb" class="url_label">Shared state service URL</label>
+					<input id="shared_state_url_tb" type="url" />
+				</div>
+				<div class="svc_url cc_block">
+					<label for="logging_url_tb" class="url_label">Logging service URL</label>
+					<input id="logging_url_tb" type="url" />
+				</div>
+				<div class="svc_url cc_block">
+					<label for="wallclock_url_tb" class="url_label">Wallclock service URL</label>
+					<input id="wallclock_url_tb" type="url" />
+				</div>
+				<div class="svc_url cc_block">
+					<label for="auth_url_tb" class="url_label">Auth service URL</label>
+					<input id="auth_url_tb" type="url" />
+				</div>
+				<div class="svc_url cc_block">
+					<label for="bos_url_tb" class="url_label">Bandwidth orch. service URL</label>
+					<input id="bos_url_tb" type="url" />
+				</div>
+				<div class="no_standalone_url svc_url cc_block">
+					<label for="layout_url_from_timeline_tb" class="url_label">Layout service URL from Timeline override</label>
+					<input id="layout_url_from_timeline_tb" type="url" />
+				</div>
+				<div class="svc_url cc_block">
+					<label for="cloud_sync_id_tb" class="url_label">Cloud sync service URL</label>
+					<input id="cloud_sync_id_tb" type="url" />
+				</div>
+				<div class="div_ss svc_url no_standalone_url">Credentials...</div>
+				<div class="no_standalone_url svc_url cc_block">
+					<label for="creds_username_tb" class="url_label">Username</label>
+					<input id="creds_username_tb" />
+				</div>
+				<div class="no_standalone_url svc_url cc_block">
+					<label for="creds_password_tb" class="url_label">Password</label>
+					<input id="creds_password_tb" type="password" />
+				</div>
+				<div id="button_reset_url_div" class="cc_block">
+					Reset URLs to:&nbsp;
+				</div>
+			</div>
+		</div>
+		<div class="div_p">
+			<div class="cc_block">Remote logging:</div>
+			<div><label><input value="off" name="remote_logging_radio" type="radio" checked />Off</label></div>
+			<div><label><input value="warn" name="remote_logging_radio" type="radio" />Errors and warnings only</label></div>
+			<div><label><input value="all" name="remote_logging_radio" type="radio" />Everything</label></div>
+		</div>
+		<div class="div_p" id="inter_context_sync_block">
+			<div><label>Join inter-context sync group: <input id="inter_context_sync_tb" type="text" /></label></div>
+		</div>
+		<div class="div_p">
+			<div class="div_ss cc_block"><label><input id="debug_comp_cb" type="checkbox" checked />Debug Component</label></div>
+			<div class="cc_block"><label><input id="failure_placeholder_cb" type="checkbox" checked />Replace failed components with a placeholder.</label></div>
+			<div class="adv cc_block"><label><input id="make_new_device_id_cb" type="checkbox" />Generate new Device ID</label></div>
+			<div class="adv cc_block"><label>Device ID namespace group: <input id="device_id_namespace_group_tb" type="text" /></label></div>
+			<div class="adv cc_block"><label><input id="long_form_console_log_cb" type="checkbox" checked />Use long-form console log messages</label></div>
+			<div class="adv cc_block"><label><input id="user_error_ui_cb" type="checkbox" />User-level error message UI</label></div>
+			<div class="adv cc_block"><label><input id="dev_logging_cb" type="checkbox" checked />Developer log messages (shown in status bar)</label></div>
+			<div class="adv"><label><input id="percent_coords_cb" type="checkbox" />Configure newly-created contexts in percent-coords mode</label></div>
+		</div>
+		<div class="div_p adv" id="touch_mode_block">
+			<div class="cc_block">Touch interaction:</div>
+			<div>
+				<label><input value="auto" name="touch_radio" type="radio" checked />Auto</label>
+				<label><input value="yes" name="touch_radio" type="radio" />Yes</label>
+				<label><input value="no" name="touch_radio" type="radio" />No</label>
+			</div>
+		</div>
+		<div class="div_p adv" id="size_override_block">
+			<div class="cc_block">Override layout capabilities reported size:</div>
+			<div>
+				<label for="width_override_tb" class="url_label">Width</label>
+				<input id="width_override_tb" type="number" />
+			</div>
+			<div>
+				<label for="height_override_tb" class="url_label">Height</label>
+				<input id="height_override_tb" type="number" />
+			</div>
+			<div>
+				<label for="dpi_override_tb" class="url_label">Resolution (nominal CSS pixels / inch)</label>
+				<input id="dpi_override_tb" type="number" />
+			</div>
+		</div>
+		<div class="div_p adv">
+			<div class="very_adv cc_block"><label><input id="override_clock_cb" type="checkbox" />Master Clock Override</label>
+				<span id="override_clock_params">
+					<input id="override_clock_start" type="number" value="0" style="margin-left: 4em" />
+					<label><input id="override_clock_start_enabled" type="checkbox" checked />Start Enabled</label>
+					<label><input id="override_clock_paused" type="checkbox" />Start Paused</label>
+				</span>
+			</div>
+			<div class="very_adv cc_block"><label><input id="remote_control_override_clock_cb" type="checkbox" />Remote control master clock override</label></div>
+			<div class="very_adv cc_block"><label><input id="wallclock_sync_cb" type="checkbox" />Force-enable wallclock service remote clock sync</label></div>
+			<div class="div_p very_adv" id="context_mode_block">
+				<div>Context recreate/rejoin mode:</div>
+				<div><label><input value="nocheck" name="context_radio" type="radio" checked />Do not check if device is already in a context before creating a new context</label></div>
+				<div><label><input value="destroy" name="context_radio" type="radio" />Destroy the context and create a new one if our device ID is already in a context</label></div>
+				<div><label><input value="rejoin" name="context_radio" type="radio" />Try to re-join the context and DMApp if our device ID is already in a context</label></div>
+			</div>
+			<div class="very_adv cc_block"><label><input id="adv_debug_mode_cb" type="checkbox" />Adv debug mode</label></div>
+			<div class="very_adv cc_block"><label><input id="media_player_full_logging_cb" type="checkbox" />Media player (DASH.js) full logging by default</label></div>
+			<div class="very_adv cc_block"><label><input id="promise_rejection_tracking_cb" type="checkbox" />Promise rejection tracking</label></div>
+			<div class="very_adv">
+				<div class="cc_block"><label><input id="component_url_transforms_cb" type="checkbox" />Component URL transforms</label></div>
+				<textarea id="component_url_transforms_tb" style="width: 100%; box-sizing: border-box;"></textarea>
+			</div>
+			<div class="very_adv">
+				<div class="cc_block" id="network_logging_source_postfix_block"><label>Network logging source postfix: <input id="network_logging_source_postfix_tb" type="text" /></label></div>
+			</div>
+		</div>
+		<div class="very_adv">
+			<br>
+			<hr />
+			<b>Manual Test (for specialised testing purposes only)</b>
+			<br>
+			<div class="div_p">
+				<div class="info_block">* Use the "General Settings" section above for further test configuration.</div>
+				<div>Mode:</div>
+				<div><label><input value="standalone" name="mode_radio" type="radio" checked />Standalone with services</label></div>
+				<div><label><input value="standalone_ns" name="mode_radio" type="radio" />Standalone without services</label></div>
+				<div id="tv_mode_block"><label><input value="tv" name="mode_radio" type="radio" />TV Emulator</label></div>
+				<div id="companion_mode_block"><label><input value="companion" name="mode_radio" type="radio" />Companion</label></div>
+			</div>
+			<div class="div_p" id="service_input_block">
+				<div>Service input:</div>
+				<div><label><input value="custom" name="input_radio" type="radio" />Custom</label></div>
+				<div id="service_input_url_block">
+					<div>
+						<label for="layout_doc_tb" class="url_label">Layout document URL</label>
+						<input id="layout_doc_tb" type="url" />
+					</div>
+					<div>
+						<label for="timeline_doc_tb" class="url_label">Timeline document URL</label>
+						<input id="timeline_doc_tb" type="url" />
+					</div>
+					<div>
+						<label for="region_list_tb" class="url_label">Region list (comma-separated)</label>
+						<input id="region_list_tb" type="url" />
+					</div>
+				</div>
+				<div><label><input value="none" name="input_radio" type="radio" checked />None</label></div>
+			</div>
+			<div class="div_p adv">
+				<div><label><input id="testing_opt" type="checkbox" />Testing Options...</label></div>
+				<div class="div_ss test_opt"><label><input id="component_fail_test_cb" type="checkbox" />Test component instantiation failure handling</label></div>
+			</div>
+			<div class="div_p">
+				<button id="doit">Launch Test</button>
+			</div>
+		</div>
+	</div>
+</template>
+<script src="TestConfigTestComponent.js"></script>
+</dom-module>

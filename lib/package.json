@@ -1,0 +1,28 @@
+{
+  "name": "DMAppClientLib",
+  "version": "0.0.1",
+  "main": "main.js",
+  "dependencies": {
+    "deep-eql": "^2.0.1",
+    "deep-freeze": "0.0.1",
+    "dvbcss-clocks": "git+https://github.com/bbc/dvbcss-clocks.git#c29d7a59d9871a6fad4b9025e8e1ff1b44864335",
+    "dvbcss-protocols": "0.0.2",
+    "events": "^1.1.1",
+    "expr-eval": "^1.2.0",
+    "inherits": "^2.0.3",
+    "jquery": "^3.1.1",
+    "just-debounce": "^1.0.0",
+    "listener-tracker": "^2.0.0",
+    "nano-equal": "^1.0.1",
+    "onetime": "^2.0.0",
+    "promise": "^7.1.1",
+    "shared-state-client": "git+https://github.com/2-IMMERSE/shared-state-client.git#fb3ccf35cfd6605d0e502b225e278af8e82a58bb",
+    "socket.io-client": "^1.7.2",
+    "sprintf-js": "^1.0.3",
+    "urijs": "^1.18.5"
+  },
+  "scripts": {
+    "build": "make -C .. lib",
+    "postinstall": "cd ./node_modules/dvbcss-clocks/ && patch -p1 --batch < ../../dvbcss-clocks.patch"
+  }
+}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<script>
+(function() {
+	"use strict";
+
+	const DMAppClientLib = require('DMAppClientLib');
+
+	DMAppClientLib.dMAppComponentTypes.ExampleMinimalPolymer1 = Polymer({
+		is: "example-minimal-polymer-one",
+		initDMAppComponent: function(dMAppController, id, typeName, config) {
+			DMAppClientLib.DMAppComponentBehaviour.initDMAppComponent.apply(this, arguments);
+
+			this.textContent = "Hello World 1";
+		},
+		behaviors: [ DMAppClientLib.DMAppComponentBehaviour ],
+	});
+})();
+</script>
+<!-- Use class: ExampleMinimalPolymer1 or example-minimal-polymer-one -->

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<dom-module id="example-minimal-polymer-two">
+<template strip-whitespace>
+	<style>
+		:host {
+			display: block;
+			overflow: auto;
+			border: 1px solid black;
+			padding: 3px;
+		}
+	</style>
+	<p><b>Hello World 2</b></p>
+</template>
+<script>
+(function() {
+	"use strict";
+
+	const DMAppClientLib = require('DMAppClientLib');
+
+	DMAppClientLib.dMAppComponentTypes.ExampleMinimalPolymer2 = Polymer({
+		is: "example-minimal-polymer-two",
+		behaviors: [ DMAppClientLib.DMAppComponentBehaviour ],
+	});
+})();
+</script>
+</dom-module>
+<!-- Use class: ExampleMinimalPolymer2 or example-minimal-polymer-two -->

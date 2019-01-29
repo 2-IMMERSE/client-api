@@ -1,0 +1,25 @@
+{
+  "name": "eu.immerse2.ios.general.test1",
+  "version": "0.0.1",
+  "displayName": "2-Immerse iOS General Test 1",
+  "cordova": {
+    "platforms": [
+      "ios"
+    ],
+    "plugins": {
+      "cordova-dialclient": {},
+      "cordova-plugin-console": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-whitelist": {},
+      "cordova-custom-config": {}
+    }
+  },
+  "dependencies": {
+    "cordova-custom-config": "~3.0.14",
+    "cordova-plugin-console": "^1.0.7",
+    "cordova-plugin-device": "^1.1.6",
+    "cordova-dialclient": "file:cordova-dialclient",
+    "cordova-plugin-whitelist": "^1.3.2",
+    "cordova-ios": "^4.4.0"
+  }
+}

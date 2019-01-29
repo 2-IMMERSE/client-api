@@ -1,0 +1,22 @@
+# Mac
+.DS_Store
+
+# Node
+npm-debug.log
+/node_modules
+
+# Bower
+/www/
+
+# Cordova
+/platforms
+/plugins
+
+# res
+resources/signing
+
+# synckit cloned repo
+synckit
+
+# cordova-plugin-hbbtv cloned repo
+cordova-plugin-hbbtv

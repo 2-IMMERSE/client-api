@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<script src="[CLIENT_API_URL]/master/dist/deps/deps/webcomponentsjs/webcomponents-lite.min.js"></script>
+	<link rel="import" href="[CLIENT_API_URL]/master/dist/bundle/dist/tv-emulator-bundle.html" />
+
+	<script>
+	(function() {
+		"use strict";
+		window.addEventListener('WebComponentsReady', function(e) {
+			const DMAppClientLib = require('DMAppClientLib');
+			const DMAppTvEmuLib = require('DMAppTvEmuLib');
+
+			const controller = new DMAppClientLib.DMAppController({
+				deviceIdPrefix: "tv",
+				deviceIdNamespace: "tv",
+				deviceType: "tv",
+				communalDevice: true,
+			});
+
+			// Just constructing this is sufficient, it isn't necessary to do anything with it afterwards
+			const tvemusync = new DMAppTvEmuLib.DMAppTvEmuSync(controller); // jshint ignore:line
+
+			const tvemucontroller = new DMAppTvEmuLib.DMAppTvEmuController(controller);
+			tvemucontroller.startApp2App();
+
+			controller.layout.io.setupContextAndDmapp("[DMAPP_URL]/timeline.xml",
+					"[DMAPP_URL]/layout.json").catch(function(err) {
+				controller.logger.error("Context/DMApp setup failed: " + err);
+			});
+
+			controller.timeline.setupStickyDefaultClock();
+		});
+	})();
+	</script>
+
+	<title>TV Emulator Boilerplate</title>
+</head>
+<body>
+</body>
+</html>

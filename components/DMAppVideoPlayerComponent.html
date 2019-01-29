@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+
+<!--
+/************************************************************************/
+/* FILE:                DMAppVideoPlayerComponent.html                  */
+/* DESCRIPTION:         Video player component                          */
+/* VERSION:             (see git)                                       */
+/* DATE:                (see git)                                       */
+/* AUTHOR:              Jonathan Rennison <jonathan.rennison@bt.com>    */
+/*                                                                      */
+/*                      © British Telecommunications plc 2018           */
+/*                                                                      */
+/* Licensed under the Apache License, Version 2.0 (the "License");      */
+/* you may not use this file except in compliance with the License.     */
+/* You may obtain a copy of the License at                              */
+/*                                                                      */
+/*   http://www.apache.org/licenses/LICENSE-2.0                         */
+/*                                                                      */
+/* Unless required by applicable law or agreed to in writing, software  */
+/* distributed under the License is distributed on an "AS IS" BASIS,    */
+/* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or      */
+/* implied.                                                             */
+/* See the License for the specific language governing permissions and  */
+/* limitations under the License.                                       */
+/************************************************************************/
+-->
+
+<dom-module id="dmapp-video-player-component">
+<template strip-whitespace>
+	<style>
+		video {
+			display: block;
+			width: 100%;
+			height: 100%;
+		}
+
+		#dmappDashjsVideoPlayerContainer {
+			position: relative;
+			isolation: isolate;
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+	<div id="dmappDashjsVideoPlayerContainer"></div>
+</template>
+</dom-module>
+<dom-module id="dmapp-audio-player-component">
+<template strip-whitespace>
+	<style>
+		#dmappDashjsVideoPlayerContainer {
+			position: relative;
+			isolation: isolate;
+		}
+	</style>
+	<div id="dmappDashjsVideoPlayerContainer"></div>
+</template>
+</dom-module>
+<!-- these two script tags must be concurrent, in this order -->
+<script src="deps/dash.all.min.js"></script>
+<script>
+(function() {
+	"use strict";
+
+	const DMAppClientLib = require('DMAppClientLib');
+	const SANDPlayer = DMAppClientLib.SANDPlayer;
+	const onetime = DMAppClientLib.deps.onetime;
+	const URI = DMAppClientLib.deps.URI;
+	const Promise = DMAppClientLib.deps.promise;
+	const $ = DMAppClientLib.deps.jquery;
+	const deepEql = DMAppClientLib.deps.deepEql;
+
+	const script = document._currentScript || document.currentScript;
+	const dashScriptTag = script ? script.previousElementSibling : null;
+	let dashLoadWaitable;
+
+	let mse_fixup_applied = false;
+
+	const base = {
+
+		ready: function() {
+			this.video_elem_container = this.$$('#dmappDashjsVideoPlayerContainer');
+			DMAppClientLib.DMAppAVPlayerComponentBehaviour.ready.call(this);
+		},
+
+		initDMAppComponent: function(dMAppController, id, typeName, config) {
+			const self = this;
+			Object.defineProperty(self, '_playerWaitable',    { value: DMAppClientLib.waitable() });
+			Object.defineProperty(self, '_playerLoggingMode', { value: new DMAppClientLib.Signal.SettableSignal(false, { boolean: true }) });
+			Object.defineProperty(self, '_playerCtxs',        { value: [] });
+			Object.defineProperty(self, '_alwaysLoad',        { value: new DMAppClientLib.Signal.SettableSignal(false, { boolean: true }) });
+			self._ctxIndex = 0;
+			DMAppClientLib.DMAppAVPlayerComponentBehaviour.initDMAppComponent.apply(this, arguments);
+			self.setTimelineDurationEstimate(null, true);
+
+			const defaultLoggingModeSignal = dMAppController.localSignalMap.getExistingSignal("media-player-component-default-logging-mode");
+			if (defaultLoggingModeSignal) self._playerLoggingMode.setValue(!!defaultLoggingModeSignal.getValue());
+
+			if (!mse_fixup_applied) {
+				// This is for a workaround for:
+				// https://github.com/Dash-Industry-Forum/dash.js/issues/672
+				// https://bugs.chromium.org/p/chromium/issues/detail?id=514647
+				mse_fixup_applied = true;
+				try {
+					if (navigator.requestMediaKeySystemAccess !== undefined &&
+							typeof navigator.requestMediaKeySystemAccess === 'function') {
+						const oldFunc = navigator.requestMediaKeySystemAccess;
+						navigator.requestMediaKeySystemAccess = function(system, config) {
+							for (let i = 0; i < config.length; i++) {
+								if (!config[i].audioCapabilities || config[i].audioCapabilities.length === 0) {
+									config[i].audioCapabilities = [{
+										contentType: 'audio/mp4;codecs="mp4a.40.2"',
+										robustness: '',
+									}];
+								}
+							}
+							return oldFunc.call(this, system, config);
+						};
+					}
+				} catch(e) {
+					self.logger.warn("Failed to apply MSE fixup");
+				}
+			}
+
+			self.setExpectedConfigParameterType('time', 'offset', 'startMediaTime', 'mediaMinimumSyncTimePreOffset', 'mediaMinimumSyncTimePostOffset');
+			self.setExpectedConfigParameterType('number', 'atomicSwitchTimeout', 'atomicSwitchDelay', 'initialVideoBandwidth', 'initialCanPlayNetworkSlowTimeout', 'seekCompletionNetworkSlowTimeout');
+			self.setExpectedConfigParameterType('boolean', 'emptyMediaUrlOk', 'preserveMediaTime', 'atomicSwitch', 'loop', 'muted', 'readyImmediately', 'noAutoPlay');
+			self.setExpectedConfigParameterType('boolean', 'avoidNegativeClockStep', 'useBandwidthOrchestration', 'selfDestructOnMediaEnd', 'limitBitrateByPortalSize');
+			self.setExpectedConfigParameterType('boolean', 'pauseOnSyncStop');
+			self.setExpectedConfigParameterType('string', 'mediaUrl', 'auxMediaUrl', 'syncMode', 'posterImage', 'errorPosterImage', 'volumeSignal', 'alwaysLoadAfterTime');
+			self.setExpectedConfigParameterType('array', 'audioChildren');
+			self.setExpectedConfigParameterType('object', 'bandwidthOrchestrationSandPlayerOptions', 'sendApp2AppMsgOnMediaEnd', 'sendApp2AppMsgBeforeMediaEnd');
+
+			self.parameters = self.filterConfigParameterObject(config.parameters || {});
+			self.setMediaSyncModeString(self.parameters.syncMode);
+			self.setControlsShownParameter(self.parameters.showControls);
+			if (self.parameters.mediaUrl == null) {
+				self.setTimelineDurationEstimate(null);
+				if (!self.parameters.emptyMediaUrlOk) self.logger.warn("No mediaUrl defined in video component init: this may be a parameter definition error");
+			}
+
+			self.presentableLatch = onetime(self.presentableGate.latch());
+			self.videoPresentableLatch = function(ctx) {
+				if (ctx.active) {
+					delete self.videoPresentableLatch;
+					self.presentableLatch();
+				}
+			};
+
+			self.softStopped.awaitHigh(function() {
+				self.addEffectiveParameterSignalOverlay("Soft-stop overlay", DMAppClientLib.Signal.SettableSignal.makeWithSignalTransform(true, [ self.softStopped, self._alwaysLoad ], function(s) {
+					if (self.softStopped.isBlocked() && !self._alwaysLoad.getValue()) {
+						return {
+							emptyMediaUrlOk: true,
+							mediaUrl: null,
+							auxMediaUrl: null,
+						};
+					} else {
+						return {};
+					}
+				}), 10);
+			});
+
+			const paramBlockLatch = self._parameterBlockSignal.latch();
+
+			self._defaultParameters = new DMAppClientLib.Signal.BaseSignal({
+				atomicSwitch: !(/ODROID/.test(window.navigator.userAgent)),
+				atomicSwitchTimeout: 3000,
+				avoidNegativeClockStep: true,
+				limitBitrateByPortalSize: true,
+				initialCanPlayNetworkSlowTimeout: 6000,
+				seekCompletionNetworkSlowTimeout: 3000,
+				pauseOnSyncStop: false,
+			});
+			self.addEffectiveParameterSignalOverlay("Defaults", self._defaultParameters, -2);
+
+			self.addEffectiveParameterSignalOverlay("Local Signal Defaults (media-player-component-default-parameters)", dMAppController.localSignalMap.getSignal("media-player-component-default-parameters"), -1);
+
+			const postReadyInit = function() {
+				self.mainCtx = self._makePlayerCtx();
+				self.listenerTracker.subscribeTo(dMAppController.muteAll).on("change", function() {
+					self._setupMuteState(self.mainCtx);
+				});
+				self.event.emit("_mainVideoElementChange");
+				paramBlockLatch();
+				self._isSetup = true;
+				self._setup(self.parameters.mediaUrl, self.parameters.auxMediaUrl, self.parameters.audioChildren);
+				self._playerWaitable.signal();
+			};
+
+			self.readyPromise.done(function() {
+				if (('WebKitMediaSource' in window || 'MediaSource' in window) && !window.dashjs) {
+					self.logger.warn("dash.js appears to be missing, attemping to rectify");
+					if (!dashLoadWaitable) {
+						const url = dashScriptTag.src;
+						self.logger.warn("Fallback: Loading dash.js from: " + url);
+						dashLoadWaitable = dMAppController.ajaxPromiseNX({
+							method: "GET",
+							url: url,
+							dataType: "script",
+						}).setTitle("Fallback: load dash.js").exec().then(function(info) {
+							self.logger.warn("Fallback: Loading dash.js: eval() done, have dashjs: " + !!window.dashjs);
+						});
+					}
+					dashLoadWaitable.then(postReadyInit);
+				} else {
+					postReadyInit();
+				}
+			});
+
+			self.setupSharedStateParameterOverlayMapping([{
+				paramName: 'mediaUrl',
+				sharedStateName: 'mediaurl',
+			}], new DMAppClientLib.StateMapping.ContextGroupParameterSharedStateMapping());
+		},
+
+		_makePlayerCtx: function(hidden) {
+			const self = this;
+			const ctx = {
+				active: true,
+				muted: false,
+				listenerTracker: DMAppClientLib.deps.listenerTracker.createTracker(),
+				bufferStalledSet: new Set(),
+				networkSlowSignal: new DMAppClientLib.Signal.SettableSignal(false, { boolean: true }),
+				ctxIndex: (self._ctxIndex++),
+			};
+			ctx.networkSlowSignal.setHysteresisFilter(function(newValue, currentValue, previousValue) {
+				if (newValue && !previousValue && !currentValue) {
+					return 100;
+				} else if (previousValue && currentValue && !newValue) {
+					return 5000;
+				} else if (currentValue === newValue) {
+					return false;
+				} else {
+					return true;
+				}
+			});
+			ctx.listenerTracker.subscribeTo(ctx.networkSlowSignal).on("toggle", function(info) {
+				self.logger.info('Network slow state signal -> ' + info.newValue);
+				self.dMAppController.errorSignals.networkSlowMedia.setReferenceRegistered(ctx, info.newValue);
+				self.event.emit('_debugInfoChange');
+			});
+			ctx.listenerTracker.subscribeTo(self.event).on('elementAttached', function() {
+				if (self.parameters.mediaUrl && self.isRunning() && !self.parameters.noAutoPlay) {
+					ctx.video_elem.play();
+				}
+			});
+			ctx.listenerTracker.subscribeTo(self.event).on('isRunningChange', function(isRunning) {
+				self._setupMuteState(ctx);
+				if (ctx.setAutoPlayHandler) ctx.setAutoPlayHandler(isRunning);
+				if (self.parameters.mediaUrl && isRunning && !self.parameters.noAutoPlay) {
+					ctx.video_elem.play();
+				}
+			});
+			self._makeVideoElement(ctx, hidden);
+			self._playerCtxs.push(ctx);
+			return ctx;
+		},
+
+		_destroyPlayerCtx: function(ctx) {
+			if (ctx.destroyed) this.logger.throwError("Ctx already destroyed");
+			Object.defineProperties(ctx, {
+				active:               { value: false },
+				destroyed:            { value: true },
+			});
+			if (ctx.sync) ctx.sync.stopSync();
+			if (ctx.video_elem) {
+				this._unsynchroniseElem(ctx.video_elem);
+				if (ctx.video_elem.parentNode) Polymer.dom(ctx.video_elem.parentNode).removeChild(ctx.video_elem);
+			}
+			this._removeAudioChildren(ctx);
+			this._removeDashJs(ctx);
+			this._removeElemPlayback(ctx);
+			this._removePendingSetupOperations(ctx);
+			ctx.listenerTracker.removeAllListeners();
+			this._playerCtxs.splice(this._playerCtxs.indexOf(ctx), 1);
+			if (ctx.volumeSignalInfo) {
+				ctx.volumeSignalInfo.unref();
+				delete ctx.volumeSignalInfo;
+			}
+		},
+
+		_destroyAllCtxs: function() {
+			while (this._playerCtxs.length > 0) {
+				this._destroyPlayerCtx(this._playerCtxs[0]);
+			}
+		},
+
+		_setup: function(url, auxUrl, audioChildren) {
+			if (this.switchLatch) {
+				// atomic switch already in progress, finish that before doing anything else
+				this.switchLatch(false, "Another media switch");
+			}
+			const prevUrl = this._currentUrl;
+			this._currentUrl = url;
+			if (url == null) {
+				this.setTimelineDurationEstimate(null);
+				if (!this.parameters.emptyMediaUrlOk) {
+					this.logger.warn("No mediaUrl defined in video component setup: this may be a parameter definition error");
+					this.dMAppController.devDialogLogger.warn("No mediaUrl defined in video component (" + this.getName() + ") setup: this may be a parameter definition error");
+				}
+			}
+			this.setIsSyncMasterPossible(url != null);
+			let videoPresentableLatch = this.videoPresentableLatch;
+			if (this.parameters.acquireNamedRefCountSignalWhilstUnpresentable) {
+				const oldVideoPresentableLatch = videoPresentableLatch;
+				const signalInfo = this.dMAppController.getSignalByName(this.parameters.acquireNamedRefCountSignalWhilstUnpresentable);
+				const latch = signalInfo.signal.latch();
+				videoPresentableLatch = function(ctx) {
+					if (ctx.active) {
+						latch();
+						signalInfo.unref();
+					}
+					if (oldVideoPresentableLatch) oldVideoPresentableLatch(ctx);
+				};
+			}
+			let ctx = this.mainCtx;
+			this._removePendingSetupOperations(ctx);
+			if (url) {
+				const extension = URI(url).suffix().toLowerCase();
+				if (extension === "mpd") {
+					// This is DASH
+					if (!('WebKitMediaSource' in window || 'MediaSource' in window)) {
+						// MSE appears to not be supported
+						if (auxUrl) {
+							this.logger.info("DASH input: MSE appears to not be supported, switching to auxiliary media source");
+							return this._setup(auxUrl, null, audioChildren);
+						} else {
+							this.logger.error("DASH input: MSE appears to not be supported, and no auxiliary media source is present");
+						}
+					}
+				}
+
+				let startTime = null;
+				let syncStartTime = false;
+				if (this.parameters.startMediaTime != null) {
+					startTime = parseFloat(this.parameters.startMediaTime);
+				} else if (this.parameters.preserveMediaTime && ctx.video_elem) {
+					startTime = ctx.video_elem.currentTime;
+					syncStartTime = true;
+				}
+
+				if (this.parameters.avoidNegativeClockStep && !syncStartTime && this.dMAppStartTime != null) {
+					let offset = 0;
+					if (this.parameters.offset != null) {
+						offset = parseFloat(this.parameters.offset);
+					} else if (this.parameters.startMediaTime != null) {
+						offset = parseFloat(this.parameters.startMediaTime);
+					}
+					const clock = this.dMAppController.timeline.getStickyDefaultClock();
+					const now = clock.now() / clock.getTickRate();
+					const target = now + offset - this.dMAppStartTime;
+					if (target > 0 && (startTime == null || target > startTime)) {
+						this.logger.info("Avoid negative clock step: advancing start time from: " + startTime + " to " + target);
+						startTime = target;
+					}
+				}
+
+				if (this.parameters.atomicSwitch && prevUrl) {
+					const self = this;
+					self.logger.debug("Atomic switch of players");
+
+					const containerStyle = window.getComputedStyle(self.video_elem_container, null);
+					self.video_elem_container.style.height = containerStyle.getPropertyValue('height');
+					self.video_elem_container.style.width = containerStyle.getPropertyValue('width');
+
+					const oldCtx = ctx;
+					oldCtx.active = false;
+					ctx = self._makePlayerCtx(true);
+					ctx.muted = true;
+					self._checkDashAvailabilityStart(ctx);
+					const oldVideoStyle = window.getComputedStyle(oldCtx.video_elem, null);
+					oldCtx.video_elem.style.height = oldVideoStyle.getPropertyValue('height');
+					oldCtx.video_elem.style.width = oldVideoStyle.getPropertyValue('width');
+					oldCtx.video_elem.style.position = "absolute";
+					oldCtx.video_elem.style.zIndex = -1;
+					if (syncStartTime && self.isClockMaster) {
+						self.logger.debug("Using MediaSynchroniser between switched elements");
+						oldCtx.sync = new DMAppClientLib.MediaSynchroniser({
+							master: oldCtx.video_elem,
+							slave: ctx.video_elem,
+							logger: self.logger.makeChildLogger("SwitchSync"),
+						});
+					}
+
+					const atomicLatch = onetime(function(ok, message) {
+						delete self.switchLatch;
+						if (ctx.destroyed) return;
+
+						if (ok) {
+							self.logger.info("Atomic switch done OK: " + message);
+						} else {
+							self.logger.warn("Atomic switch done not OK: " + message);
+						}
+
+						self.event.emit("_switch", { atomic: true });
+
+						if (oldCtx.sync) oldCtx.sync.stopSync();
+
+						self.mainCtx = ctx;
+						self.event.emit("_mainVideoElementChange");
+						self.setControlsShownParameter(self.parameters.showControls);
+
+						if (self.isClockMaster) self.setAsDefaultTimelineClock(true);
+
+						ctx.video_elem.style.display = "block";
+						window.setTimeout(function() {
+							self._destroyPlayerCtx(oldCtx);
+						}, 10);
+
+						self.video_elem_container.style.removeProperty('height');
+						self.video_elem_container.style.removeProperty('width');
+
+						ctx.muted = false;
+						self._setupMuteState(ctx);
+					});
+					self.switchLatch = atomicLatch;
+					const oldVideoPresentableLatch = videoPresentableLatch;
+					videoPresentableLatch = onetime(function(ctx) {
+						// new video is presentable, also trigger atomic latch
+						if (self.parameters.atomicSwitchDelay) {
+							if (!oldCtx.destroyed) {
+								self.logger.debug("Delaying switch by " + self.parameters.atomicSwitchDelay + " ms");
+								self.event.emit("_atomicSwitchDelay");
+								window.setTimeout(function() {
+									atomicLatch(true, "Presentable + atomic switch delay done");
+								}, self.parameters.atomicSwitchDelay);
+							}
+						} else {
+							atomicLatch(true, "Presentable");
+						}
+						if (oldVideoPresentableLatch) oldVideoPresentableLatch(ctx);
+					});
+
+					// give up if it takes more than this long
+					window.setTimeout(function () {
+						atomicLatch(false, "Timeout");
+					}, self.parameters.atomicSwitchTimeout);
+				} else {
+					this.event.emit("_switch", {});
+				}
+
+				this._removeAudioChildren(ctx);
+				if (url.startsWith('webcam://')) {
+					// Play webcam directly on video element
+					const self = this;
+					self._removeDashJs(ctx);
+					const fail = function(e) {
+						delete ctx.webcamCancel;
+						if (videoPresentableLatch) videoPresentableLatch(ctx);
+						const msg = ["Failed to acquire webcam source: ", e];
+						self.logger.error.apply(self.logger, msg);
+						if (ctx.active) {
+							self.dMAppController.devDialogLogger.error.apply(self.dMAppController.devDialogLogger, msg);
+							self.dMAppController.errorSignals.videoPlayback.registerReference(ctx);
+							self.setTimelineDurationEstimate(0, true);
+							self._setCtxConnectionErrorState(ctx);
+						}
+					};
+					const cancelGuard = function() {
+						delete ctx.webcamCancel;
+						if (videoPresentableLatch) videoPresentableLatch(ctx);
+					};
+					ctx.webcamCancel = cancelGuard;
+					const constraints = {
+						video: true,
+						audio: true,
+					};
+					const query = URI(url).query();
+					if (query) {
+						try {
+							const params = URI.parseQuery(query);
+							const parseRangeParam = function(section, key, filter) {
+								const handle = function(cprop, pprop) {
+									if (params[key + pprop] != null) {
+										if (constraints[section] === true) constraints[section] = {};
+										if (!constraints[section][key]) constraints[section][key] = {};
+										constraints[section][key][cprop] = filter(params[key + pprop]);
+									}
+								};
+								handle("min", "Min");
+								handle("max", "Max");
+								handle("exact", "Exact");
+								handle("ideal", "Ideal");
+							};
+							parseRangeParam("video", "aspectRatio", parseFloat);
+							parseRangeParam("video", "frameRate", parseFloat);
+							parseRangeParam("video", "height", parseInt);
+							parseRangeParam("video", "width", parseInt);
+							if (params.video === "false") constraints.video = false;
+							if (params.audio === "false") constraints.audio = false;
+						} catch (e) {
+							self.logger.error("Webcam URL: Failed to parse query params: ", e);
+						}
+					}
+					try {
+						self.logger.info("About to acquire webcam stream with constraints: ", constraints);
+						window.navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+							if (ctx.webcamCancel === cancelGuard) {
+								delete ctx.webcamCancel;
+								let msg = "";
+								try {
+									msg = stream.getTracks().map(function(s) {
+										return "[" + s.kind + ": " + s.label + ", capabilities: " + JSON.stringify(s.getCapabilities()) + ", constraints: " + JSON.stringify(s.getConstraints()) +
+												", settings: " + JSON.stringify(s.getSettings()) + "]";
+									}).join(", ");
+								} catch (e) {
+									self.logger.warn("Couldn't get information on webcam stream: ", e);
+								}
+								self.logger.info("Successfully acquired webcam stream, " + msg);
+								self._setupElemPlayback(ctx, stream, videoPresentableLatch, true);
+							}
+						}).catch(fail);
+					} catch(e) {
+						fail(e);
+					}
+				} else if (extension === "mpd") {
+					// This is DASH
+					this._removeElemPlayback(ctx);
+					try {
+						this._setupDashJs(ctx, url, videoPresentableLatch, startTime);
+					} catch(e) {
+						const msg = ["Failed to setup DASH.js player: ", e];
+						this.logger.error.apply(this.logger, msg);
+						if (ctx.active) {
+							this.dMAppController.devDialogLogger.error.apply(this.dMAppController.devDialogLogger, msg);
+							this.dMAppController.errorSignals.videoPlayback.registerReference(ctx);
+							this.setTimelineDurationEstimate(0, true);
+							this._setCtxConnectionErrorState(ctx);
+						}
+						this._clearCanPlayTimer(ctx);
+						if (videoPresentableLatch) videoPresentableLatch(ctx);
+					}
+				} else {
+					// Play directly on video element
+					this._removeDashJs(ctx);
+					this._setupElemPlayback(ctx, url, videoPresentableLatch);
+					if (startTime != null) {
+						try {
+							ctx.video_elem.currentTime = startTime;
+						} catch(e) {
+							this.logger.error("Error setting component start time");
+						}
+					}
+				}
+				if (audioChildren && audioChildren.length) {
+					const self = this;
+					if (!ctx.audioChildrenIds) {
+						ctx.audioChildrenIds = [];
+						ctx.audioChildrenMuteUpdateCallbacks = [];
+					}
+					for (let i = 0; i < audioChildren.length; i++) {
+						const id = "CTX:" + ctx.ctxIndex + ",audio:" + i;
+						ctx.audioChildrenIds.push(id);
+						self.createChildDMAppComponent({}, null, id, "audio", {
+							noElementDomAttachmentCtl: true,
+							parameters: audioChildren[i],
+						}).done(function(component) {
+							component._getParentMuted = self._getSelfMuted.bind(self);
+							const update = function() {
+								if (component.mainCtx) component._setupMuteState(component.mainCtx);
+							};
+							ctx.audioChildrenMuteUpdateCallbacks.push(update);
+							update();
+							Polymer.dom(self.video_elem_container).appendChild(component.getComponentElement());
+						});
+					}
+				}
+			} else {
+				this._removeAudioChildren(ctx);
+				this._removeDashJs(ctx);
+				this._removeElemPlayback(ctx);
+				this.resyncMediaElement(ctx.video_elem);
+				if (videoPresentableLatch) videoPresentableLatch(ctx);
+			}
+			this._setupElementParamAttrs(ctx);
+		},
+
+		_getSelfMuted: function() {
+			return !this.isRunning() || this._isMuted || (this._getParentMuted && this._getParentMuted()) || this.dMAppController.muteAll.getValue();
+		},
+
+		_setupMuteState: function(ctx) {
+			const ctxMuted = this._getSelfMuted() || ctx.muted;
+			if (ctx.player) {
+				ctx.player.setMute(ctxMuted);
+			} else if (ctx.video_elem) {
+				ctx.video_elem.muted = ctxMuted;
+			}
+			if (ctx.audioChildrenMuteUpdateCallbacks) {
+				for (let i = 0; i < ctx.audioChildrenMuteUpdateCallbacks.length; i++) ctx.audioChildrenMuteUpdateCallbacks[i]();
+			}
+		},
+
+		_logQualityChange: function (ctx, ev, type) {
+			const bitrates = ctx.player.getBitrateInfoListFor(ev.mediaType);
+			const rate = function(index, net) {
+				let out = index;
+				if (net && !Number.isInteger(index)) out = "-1";
+				if (Number.isInteger(index) && index >= 0 && index < bitrates.length) out += " (" + bitrates[index].bitrate + ")";
+				return out;
+			};
+			this.logger.emitMessage('debug', { noMessageOutputs: true }, 'DASH.js: Quality change (' + ev.mediaType + ') ' + type + ': ' + rate(ev.oldQuality) + ' -> ' + rate(ev.newQuality));
+			this.logger.emitMessage('info', { console: false }, 'DASH.js: Quality change (' + ev.mediaType + ') ' + type + ': fromlayer:' + rate(ev.oldQuality, true) + ' tolayer:' + rate(ev.newQuality, true));
+		},
+
+		_setupDashJs: function(ctx, url, videoPresentableLatch, startTime) {
+			const self = this;
+
+			ctx.had_can_play = false;
+
+			ctx.dashModifyRequestUrl = function(url) {
+				return url;
+			};
+
+			if (/^https:\/\/api\.(\w+\.)?platform\.2immerse\.eu\/live-origin\//.test(url)) {
+				const signal = self.dMAppController.localSignalMap.getSignal('auth-access-token');
+				ctx.dashModifyRequestUrl = function(url) {
+					const obj = URI(url);
+					obj.setSearch("access_token", signal.getValue());
+					return obj.toString();
+				};
+				url = ctx.dashModifyRequestUrl(url);
+			}
+
+			if (ctx.active) self.setLiveOffset(0);
+
+			if (!ctx.player) {
+				ctx.player = dashjs.MediaPlayer().create();
+				ctx.player.getDebug().setLogToBrowserConsole(false);
+				self._applyPlayerLogging(ctx);
+				self._applyXHRIntercept(ctx);
+
+				const bosUrl = self.dMAppController.getUrl('bandwidthOrchestrationService');
+				if (self.parameters.useBandwidthOrchestration && self.dMAppComponentDMAppId && bosUrl) {
+					const options = {
+						collectorUrl: bosUrl + '/collect',
+						collectorType: SANDPlayer.SANDPlayer_Collectors.COLLECT_AT_INTERVAL,
+					};
+					if (self.parameters.bandwidthOrchestrationSandPlayerOptions) $.extend(true, options, self.parameters.bandwidthOrchestrationSandPlayerOptions);
+					ctx.sandplayer = SANDPlayer.SANDPlayer(self.dMAppController, self.dMAppComponentDMAppId, self.layoutInstanceId || self.getName(), dashjs, ctx.player, options, self.logger.makeChildLogger("DASH.js: SANDPlayer"));
+				}
+				ctx.player.on('error', function(ev) {
+					const msg = ['DASH.js: Error: ', ev, ', giving up.'];
+					if (ev.type === "error" && ev.error === "capability") {
+						if (ev.event === "mediasource") {
+							msg.push("Media Source Extensions (MSE) is not supported");
+						} else if (ev.event === "encryptedmedia") {
+							msg.push("Encrypted Media Extensions (EME) is not supported");
+						} else {
+							msg.push("Capability: '" + ev.event + "' is not supported");
+						}
+						if (ctx.active) {
+							self.dMAppController.errorSignals.videoCapability.registerReference(ctx);
+							self._setCtxConnectionErrorState(ctx);
+						}
+						self.dMAppController.devDialogLogger.error.apply(self.dMAppController.devDialogLogger, msg);
+					} else if (ctx.active) {
+						self.dMAppController.devDialogLogger.error.apply(self.dMAppController.devDialogLogger, msg);
+					}
+					self.logger.error.apply(self.logger, msg);
+					if (ctx.active) {
+						self.dMAppController.errorSignals.videoPlayback.registerReference(ctx);
+						self.setTimelineDurationEstimate(0, true);
+						self._setCtxConnectionErrorState(ctx);
+					}
+					self._clearCanPlayTimer(ctx);
+					if (videoPresentableLatch) videoPresentableLatch(ctx);
+				}, self);
+				ctx.player.on('playbackError', function(ev) {
+					const msg = ['DASH.js: Playback Error: ', ev, ', giving up.'];
+					self.logger.error.apply(self.logger, msg);
+					if (ctx.active) {
+						self.dMAppController.devDialogLogger.error.apply(self.dMAppController.devDialogLogger, msg);
+						self.dMAppController.errorSignals.videoPlayback.registerReference(ctx);
+						self.setTimelineDurationEstimate(0, true);
+						self._setCtxConnectionErrorState(ctx);
+					}
+					self._clearCanPlayTimer(ctx);
+					if (videoPresentableLatch) videoPresentableLatch(ctx);
+				}, self);
+				ctx.player.on('bufferStateChanged', function(ev) {
+					const stalled = (ev.state === 'bufferStalled');
+					const method = stalled ? 'warn' : 'info';
+					self.logger[method]('DASH.js: Buffer state change: ' + ev.mediaType + ' -> ' + ev.state);
+					if (stalled) {
+						ctx.bufferStalledSet.add(ev.mediaType);
+					} else {
+						ctx.bufferStalledSet.delete(ev.mediaType);
+					}
+					self._handlerBufferStallState(ctx);
+				}, self);
+				ctx.player.on('qualityChangeRequested', function(ev) {
+					self._logQualityChange(ctx, ev, 'requested');
+				}, self);
+				ctx.player.on('qualityChangeRendered', function(ev) {
+					self._logQualityChange(ctx, ev, 'rendered');
+				}, self);
+				// self.parameters.mediaUrl may be undefined/null
+				ctx.player.initialize(ctx.video_elem, null, self.isRunning());
+				ctx.player.setLimitBitrateByPortal(!!self.parameters.limitBitrateByPortalSize);
+				if (self.parameters.initialVideoBandwidth != null) ctx.player.setInitialBitrateFor('video', self.parameters.initialVideoBandwidth);
+				ctx.player.setFastSwitchEnabled(true);
+				ctx.player.setProtectionData({
+					"org.w3.clearkey": {
+						"clearkeys": self.dMAppController.keyStore.cencKeyMap(),
+					},
+				});
+				self._setupMuteState(ctx);
+				ctx.player.attachSource(self._adjustDashUrl(url, startTime));
+				if (videoPresentableLatch) {
+					if (self.parameters.mediaUrl) {
+						ctx.player.on('canPlay', function(ev) {
+							videoPresentableLatch(ctx);
+						}, self);
+					} else {
+						videoPresentableLatch(ctx);
+					}
+				}
+				ctx.player.on('playbackEnded', function(ev) {
+					self._handlePlaybackEnd(ctx);
+				}, self);
+				ctx.player.on('canPlay', function(ev) {
+					self.logger.info('DASH.js: canplay event');
+					ctx.had_can_play = true;
+					self._clearCanPlayTimer(ctx);
+					try {
+						if (ctx.active && !ctx.player.isDynamic()) self.setTimelineDurationEstimate(ctx.player.duration() - self._mediaOffset);
+					} catch(e) {
+						self.logger.error("Failed to get DASH.js media duration: ", e);
+					}
+					self._checkDashAvailabilityStart(ctx);
+				});
+				ctx.player.on('playbackSeeking', function(ev) {
+					self.logger.info('DASH.js: playbackSeeking event');
+					self._armOperationInProgressTimer(ctx);
+				});
+				ctx.player.on('playbackTimeUpdated', function(ev) {
+					self.event.emit('_debugInfoChange');
+				}, self);
+				ctx.player.on('manifestLoaded', function(ev) {
+					self._checkDashAvailabilityStart(ctx);
+				}, self);
+				ctx.player.on('streamInitialized', function(ev) {
+					self._checkDashAvailabilityStart(ctx);
+				}, self);
+				self.resyncMediaElement(ctx.video_elem);
+				ctx.listenerTracker.subscribeTo(self._playerLoggingMode).on("toggle", function() {
+					if (ctx.player) self._applyPlayerLogging(ctx);
+				});
+				ctx.setAutoPlayHandler = ctx.player.setAutoPlay.bind(ctx.player);
+			} else {
+				self._setupMuteState(ctx);
+				ctx.player.attachSource(self._adjustDashUrl(url, startTime));
+			}
+			self._armCanPlayTimer(ctx);
+			self._armOperationInProgressTimer(ctx);
+			self.event.emit('_debugInfoChange');
+		},
+
+		_checkDashAvailabilityStart: function(ctx) {
+			if (ctx.active) {
+				let ast = null;
+				if (ctx.player && ctx.player.isDynamic()) {
+					const activeStream = ctx.player.getActiveStream();
+					if (activeStream) {
+						const streamInfo = activeStream.getStreamInfo();
+						if (streamInfo) {
+							if (streamInfo.manifestInfo && streamInfo.manifestInfo.availableFrom) {
+								ast = (new Date(streamInfo.manifestInfo.availableFrom)).getTime() / 1000;
+							}
+						}
+					}
+				}
+				this.setLiveOffset(-ast);
+				this.event.emit('_debugInfoChange');
+			}
+		},
+
+		_adjustDashUrl: function(url, startTime) {
+			if (startTime != null) {
+				const uriObj = new URI(url);
+				const uri_fragment = uriObj.fragment();
+				let params = {};
+				if (uri_fragment) {
+					try {
+						params = URI.parseQuery(uri_fragment);
+					} catch (e) {
+						this.logger.error("Adjust DASH URL: Failed to parse uri fragment: ", e);
+					}
+				}
+				params.s = parseFloat(startTime);
+				uriObj.fragment(URI.buildQuery(params));
+				url = uriObj.toString();
+			}
+			return url;
+		},
+
+		_setCtxPoster: function(ctx) {
+			if (this.playbackType === "video") {
+				if (ctx.connectionError && this.parameters.errorPosterImage) {
+					ctx.video_elem.poster = this.parameters.errorPosterImage;
+				} else {
+					ctx.video_elem.poster = this.parameters.posterImage || "";
+				}
+			}
+		},
+
+		_setCtxConnectionErrorState: function(ctx) {
+			if (!ctx.connectionError) {
+				ctx.connectionError = true;
+				this._setCtxPoster(ctx);
+				if (ctx.active) this.event.emit('_playbackError');
+			}
+		},
+
+		_removeConnectionErrorSignals: function(ctx) {
+			this.dMAppController.errorSignals.networkMedia.unregisterReference(ctx);
+			this.dMAppController.errorSignals.services.unregisterReference(ctx);
+			if (ctx.connectionError) {
+				delete ctx.connectionError;
+				this._setCtxPoster(ctx);
+			}
+		},
+
+		_removeConnectionSlowSignals: function(ctx) {
+			ctx.bufferStalledSet.clear();
+			ctx.networkSlowSignal.setValue(false);
+			ctx.networkSlowSignal.flushHysteresis();
+		},
+
+		_handlerBufferStallState: function(ctx) {
+			const wasStalled = ctx.networkSlowSignal.getValue();
+			const isStalled = ctx.bufferStalledSet.size > 0 && (wasStalled || !ctx.operationInProgress);
+			ctx.networkSlowSignal.setValue(isStalled);
+		},
+
+		_clearCanPlayTimer: function(ctx) {
+			if (ctx.canPlayTimeout) ctx.canPlayTimeout.cancel();
+			ctx.bufferStalledSet.delete("can_play_timer");
+			this._handlerBufferStallState(ctx);
+		},
+
+		_armCanPlayTimer: function(ctx) {
+			const self = this;
+			self._clearCanPlayTimer(ctx);
+			if (ctx.had_can_play) return;
+
+			const timeout = Number(self.parameters.initialCanPlayNetworkSlowTimeout);
+			if (!Number.isFinite(timeout) || timeout <= 0) return;
+
+			ctx.canPlayTimeout = new DMAppClientLib.TimeoutHandler(function() {
+				if (ctx.had_can_play) return;
+				self.logger.warn('Playback did not start within ' + timeout + 'ms, network probably too slow');
+				ctx.bufferStalledSet.add('can_play_timer');
+				self._handlerBufferStallState(ctx);
+			}, timeout);
+		},
+
+		_clearOperationInProgressTimer: function(ctx) {
+			if (ctx.operationInProgressTimeout) ctx.operationInProgressTimeout.cancel();
+			ctx.operationInProgress = false;
+			this._handlerBufferStallState(ctx);
+		},
+
+		_armOperationInProgressTimer: function(ctx) {
+			const self = this;
+			if (ctx.operationInProgressTimeout) ctx.operationInProgressTimeout.cancel();
+
+			const timeout = Number(self.parameters.seekCompletionNetworkSlowTimeout);
+			if (!Number.isFinite(timeout) || timeout <= 0) return;
+
+			ctx.operationInProgress = true;
+			ctx.operationInProgressTimeout = new DMAppClientLib.TimeoutHandler(function() {
+				ctx.operationInProgress = false;
+				self._handlerBufferStallState(ctx);
+			}, timeout);
+			self._handlerBufferStallState(ctx);
+		},
+
+		_applyXHRIntercept: function(ctx, context) {
+			const self = this;
+			const interceptor = function() {
+				const oldLoad = this.parent.load;
+
+				return {
+					load: function(config) {
+						const success = config.success;
+						config.success = function() {
+							self._removeConnectionErrorSignals(ctx);
+							if (success) success.apply(this, arguments);
+						};
+						return oldLoad(config);
+					},
+				};
+			};
+			ctx.player.extend('XHRLoader', interceptor, true);
+
+			ctx.player.extend('RequestModifier', function() {
+				return {
+					modifyRequestURL: function(url) {
+						return ctx.dashModifyRequestUrl(url);
+					},
+				};
+			}, true);
+		},
+
+		_removeDashJs: function(ctx) {
+			if (ctx.sandplayer) {
+				ctx.sandplayer.destroy();
+				delete ctx.sandplayer;
+			}
+			if (ctx.player) {
+				this._removeConnectionErrorSignals(ctx);
+				this._removeConnectionSlowSignals(ctx);
+				this.dMAppController.errorSignals.videoPlayback.unregisterReference(ctx);
+				this.dMAppController.errorSignals.videoCapability.unregisterReference(ctx);
+				ctx.player.reset();
+				delete ctx.player;
+				delete ctx.setAutoPlayHandler;
+			}
+			this._clearCanPlayTimer(ctx);
+			this._clearOperationInProgressTimer(ctx);
+			if (ctx.active) this.setLiveOffset(0);
+			this.event.emit('_debugInfoChange');
+		},
+
+		_makeVideoElement: function(ctx, hidden) {
+			const self = this;
+			if (ctx.video_elem) throw new Error("Already have " + self.playbackType + " element");
+			const elem = document.createElement(self.playbackType);
+			if (DMAppClientLib.DMAppAVPlayerComponentBehaviour.ElemAnnotationSymbol) elem[DMAppClientLib.DMAppAVPlayerComponentBehaviour.ElemAnnotationSymbol] = "CTX:" + ctx.ctxIndex;
+			if (hidden) elem.style.display = "none";
+			ctx.video_elem = elem;
+			Polymer.dom(self.video_elem_container).appendChild(elem);
+			elem.addEventListener("ended", function() {
+				if (ctx._usingRawVideoElem) self._handlePlaybackEnd(ctx);
+			}, true);
+			elem.addEventListener("play", function() {
+				self.event.emit('_playEvent');
+			}, true);
+			elem.addEventListener("loadedmetadata", function() {
+				if (ctx.active && ctx._usingRawVideoElem) self.setTimelineDurationEstimate(elem.duration - self._mediaOffset);
+			});
+		},
+
+		_setupElemPlayback: function(ctx, url, videoPresentableLatch, srcObjectMode) {
+			const self = this;
+
+			ctx.had_can_play = false;
+
+			if (videoPresentableLatch) {
+				const elem = ctx.video_elem;
+				elem.addEventListener("canplaythrough", function() {
+					if (ctx._usingRawVideoElem) videoPresentableLatch(ctx);
+				}, true);
+			}
+			if (!ctx._usingRawVideoElem) {
+				ctx._usingRawVideoElem = true;
+				self.resyncMediaElement(ctx.video_elem);
+				ctx.rawVideoElemListenerTracker = DMAppClientLib.deps.listenerTracker.createTracker();
+				const tracker = ctx.rawVideoElemListenerTracker.subscribeTo(ctx.video_elem);
+				tracker.on('waiting', function() {
+					self.logger.warn(self.playbackType + ' element: waiting event');
+					if (!ctx.had_can_play) return;
+					ctx.bufferStalledSet.add('video_element');
+					self._handlerBufferStallState(ctx);
+				});
+				tracker.on('canplay', function() {
+					self.logger.info(self.playbackType + ' element: canplay event');
+					self._clearCanPlayTimer(ctx);
+					ctx.bufferStalledSet.delete('video_element');
+					self._handlerBufferStallState(ctx);
+					ctx.had_can_play = true;
+				});
+				tracker.on('seeking', function(ev) {
+					self.logger.info(self.playbackType + ' element: seeking event');
+					self._armOperationInProgressTimer(ctx);
+				});
+				tracker.on('error', function() {
+					let msg = "";
+					if (ctx.video_elem.error) {
+						if (ctx.video_elem.error.code >= 1 && ctx.video_elem.error.code <= 4) {
+							msg = ['MEDIA_ERR_ABORTED', 'MEDIA_ERR_NETWORK', 'MEDIA_ERR_DECODE', 'MEDIA_ERR_SRC_NOT_SUPPORTED'][ctx.video_elem.error.code - 1];
+						} else {
+							msg = "code: " + ctx.video_elem.error.code;
+						}
+						if (ctx.video_elem.error.message) msg += ", detail: " + ctx.video_elem.error.message;
+					}
+					self.logger.error(self.playbackType + ' element: error event:', msg);
+					if (ctx.active) {
+						self.dMAppController.devDialogLogger.error(self.playbackType + ' element: error event:', msg);
+						self.dMAppController.errorSignals.videoPlayback.registerReference(ctx);
+						self.setTimelineDurationEstimate(0, true);
+						self._setCtxConnectionErrorState(ctx);
+					}
+					self._clearCanPlayTimer(ctx);
+					if (videoPresentableLatch) videoPresentableLatch(ctx);
+				});
+			}
+			self._setupMuteState(ctx);
+			if (window.cordova && window.cordova.platformId === "ios") {
+				ctx.video_elem.setAttribute('playsinline', 'true');
+				ctx.video_elem.setAttribute('webkit-playsinline', 'true');
+			}
+			ctx.video_elem.autoplay = self.isRunning();
+			if (srcObjectMode) {
+				ctx.video_elem.srcObject = url;
+			} else {
+				ctx.video_elem.src = url;
+			}
+			ctx.setAutoPlayHandler = function(autoplay) {
+				ctx.video_elem.autoplay = autoplay;
+			};
+			self._armCanPlayTimer(ctx);
+			self._armOperationInProgressTimer(ctx);
+			self.event.emit('_debugInfoChange');
+		},
+
+		_removeElemPlayback: function(ctx) {
+			if (ctx._usingRawVideoElem) {
+				ctx.video_elem.src = '';
+				delete ctx._usingRawVideoElem;
+				ctx.rawVideoElemListenerTracker.removeAllListeners();
+				delete ctx.rawVideoElemListenerTracker;
+				this._removeConnectionSlowSignals(ctx);
+				delete ctx.setAutoPlayHandler;
+			}
+			this._clearCanPlayTimer(ctx);
+			this._clearOperationInProgressTimer(ctx);
+			this.event.emit('_debugInfoChange');
+		},
+
+		_removeAudioChildren: function(ctx) {
+			if (ctx.audioChildrenIds) {
+				for (let i = 0; i < ctx.audioChildrenIds.length; i++) {
+					this.getChildComponentContainer().removeDMAppComponentById(ctx.audioChildrenIds[i]);
+				}
+				delete ctx.audioChildrenIds;
+				delete ctx.audioChildrenMuteUpdateCallbacks;
+			}
+		},
+
+		_removePendingSetupOperations: function(ctx) {
+			if (ctx.webcamCancel) ctx.webcamCancel(ctx);
+		},
+
+		_handlePlaybackEnd: function(ctx) {
+			const self = this;
+			const clock = self.referenceClock;
+			if (ctx.active && clock && clock.isAvailable()) {
+				self.setTimelineDurationEndedNow();
+			}
+			if (ctx.active && !self.parameters.loop && ctx.time_update_handler_elem !== ctx.video_elem) {
+				self.logger.info("Reached media end: Setting 'is sync master possible' to false");
+				self.setIsSyncMasterPossible(false);
+				const tracker = ctx.listenerTracker.subscribeTo(ctx.video_elem);
+				const time_update_handler = function() {
+					if (ctx.active && ctx.video_elem && !ctx.video_elem.ended) {
+						self.logger.info("No longer at media end: Updating 'is sync master possible' to: " + (self._currentUrl != null));
+						tracker.removeListener('timeupdate', time_update_handler);
+						delete ctx.time_update_handler_elem;
+						self.setIsSyncMasterPossible(self._currentUrl != null);
+					}
+				};
+				tracker.on('timeupdate', time_update_handler);
+				ctx.time_update_handler_elem = ctx.video_elem;
+			}
+			if (ctx.active) {
+				self.event.emit('_mediaEndReached');
+			}
+			if (ctx.active && self.parameters.sendApp2AppMsgOnMediaEnd) {
+				self.logger.info("Playback end reached and senApp2AppMsgOnMediaEnd set, sending message");
+				const cfg = self.parameters.sendApp2AppMsgOnMediaEnd;
+				self.sendApp2AppMsg(cfg.msgBody, cfg.toDeviceId, cfg.toComponentId);
+			}
+			if (ctx.active && self.parameters.selfDestructOnMediaEnd) {
+				self.logger.info("Playback end reached and selfDestructOnMediaEnd set, requesting self destruct");
+				self.requestDestruction();
+			}
+		},
+
+		_getCurrentDuration: function(ctx) {
+			if (ctx._usingRawVideoElem && ctx.video_elem && ctx.video_elem.readyState >= ctx.video_elem.HAVE_METADATA) {
+				return ctx.video_elem.duration;
+			}
+			if (ctx.player && !ctx.player.isDynamic()) {
+				return ctx.player.duration();
+			}
+			return null;
+		},
+
+		deinitDMAppComponent: function() {
+			this._playerWaitable.abort(this.getName() + ": DASH.js component is destructing");
+			this.logger.debug("DASH.js component deinitDMAppComponent");
+			this._destroyAllCtxs();
+
+			DMAppClientLib.DMAppAVPlayerComponentBehaviour.deinitDMAppComponent.call(this);
+		},
+
+		_setupElementParamAttrs: function(ctx) {
+			if (!ctx.video_elem) return;
+			if (this.parameters.loop) {
+				ctx.video_elem.setAttribute("loop",  "loop");
+			} else {
+				ctx.video_elem.removeAttribute("loop");
+			}
+			this._setCtxPoster(ctx);
+
+			if (this.parameters.volumeSignal !== ctx.volumeSignal) {
+				if (ctx.volumeSignalInfo) {
+					ctx.volumeSignalInfo.unref();
+					delete ctx.volumeSignalInfo;
+				}
+				if (this.parameters.volumeSignal) {
+					ctx.volumeSignal = this.parameters.volumeSignal;
+					ctx.volumeSignalInfo = this.dMAppController.getSignalByName(ctx.volumeSignal);
+					ctx.volumeSignalInfo.signal.onImmediate("change", function() {
+						const volume = ctx.volumeSignalInfo.signal.getValue();
+						if (typeof volume === "number" && volume >= 0 && volume <= 1) ctx.video_elem.volume = volume;
+					});
+				}
+			}
+
+			if (this.parameters.sendApp2AppMsgBeforeMediaEnd) {
+				const self = this;
+				if (ctx.send_msg_time_update_handler_elem !== ctx.video_elem) {
+					if (ctx.send_msg_time_update_handler_remove) ctx.send_msg_time_update_handler_remove();
+					const tracker = ctx.listenerTracker.subscribeTo(ctx.video_elem);
+					let triggered = false;
+					const time_update_handler = function() {
+						const cfg = self.parameters.sendApp2AppMsgBeforeMediaEnd;
+						if (ctx.active && ctx.video_elem && cfg) {
+							const duration = self._getCurrentDuration(ctx);
+							if (duration == null) {
+								triggered = false;
+							} else if (ctx.video_elem.currentTime < duration - parseFloat(cfg.offset)) {
+								triggered = false;
+							} else if (!triggered) {
+								triggered = true;
+								self.sendApp2AppMsg(cfg.msgBody, cfg.toDeviceId, cfg.toComponentId);
+							}
+						}
+					};
+					tracker.on('timeupdate', time_update_handler);
+					ctx.time_update_handler_elem = ctx.video_elem;
+					ctx.send_msg_time_update_handler_remove = function() {
+						tracker.removeListener('timeupdate', time_update_handler);
+						delete ctx.time_update_handler_elem;
+						delete ctx.send_msg_time_update_handler_remove;
+					};
+				}
+			} else {
+				if (ctx.send_msg_time_update_handler_remove) ctx.send_msg_time_update_handler_remove();
+			}
+		},
+
+		setParameters: function(parameters) /* -> void */ {
+			if (!parameters) parameters = {};
+			const prevParams = this.parameters;
+			this.parameters = parameters;
+			this.setMediaSyncModeString(parameters.syncMode);
+			this.setControlsShownParameter(parameters.showControls);
+			this._isMuted = !!parameters.muted;
+			if (this._isSetup) {
+				// player already inited, change video URL if necessary
+				this._setupMuteState(this.mainCtx);
+				if (parameters.mediaUrl !== prevParams.mediaUrl || parameters.auxMediaUrl !== prevParams.auxMediaUrl || !deepEql(parameters.audioChildren, prevParams.audioChildren)) {
+					// parameters.mediaUrl may be undefined/null
+					this._setup(parameters.mediaUrl, parameters.auxMediaUrl, parameters.audioChildren);
+				}
+			}
+			if (parameters.offset != null) {
+				this.setMediaOffset(parseFloat(parameters.offset));
+			} else if (parameters.startMediaTime != null) {
+				this.setMediaOffset(parseFloat(parameters.startMediaTime));
+			} else {
+				this.setMediaOffset(0);
+			}
+			const parseFloatIfNonNull = function(num) {
+				return num != null ? parseFloat(num) : null;
+			};
+			this.setMediaSyncMinimum(parseFloatIfNonNull(parameters.mediaMinimumSyncTimePreOffset), parseFloatIfNonNull(parameters.mediaMinimumSyncTimePostOffset));
+
+			this.setPauseOnSyncStop(!!parameters.pauseOnSyncStop);
+
+			// otherwise: player not inited yet, set the parameters to be applied when init does take place
+			if (this.mainCtx) this._setupElementParamAttrs(this.mainCtx);
+
+			if (parameters.alwaysLoadAfterTime) {
+				if (!this._alwaysLoadAfterTime) {
+					this._alwaysLoadAfterTime = this._makeRefClockTimeThresholdSignal(function(now, threshold) {
+						if (now == null || threshold == null) {
+							this._alwaysLoad.setValue(false);
+						} else {
+							this._alwaysLoad.setValue(now >= threshold);
+						}
+					}.bind(this));
+					this._alwaysLoadAfterTime.on("change", function(info) {
+						this.logger.debug("Always load after time changed from: " + info.oldValue + ", to: " + info.newValue + ", expression: " + this._alwaysLoadAfterTimeStr, this._clockInfo());
+					}.bind(this));
+				}
+				if (this._alwaysLoadAfterTimeStr !== parameters.alwaysLoadAfterTime) {
+					this._alwaysLoadAfterTimeStr = parameters.alwaysLoadAfterTime;
+					this.dMAppController.setExpressionSignal(this._alwaysLoadAfterTime, parameters.alwaysLoadAfterTime);
+				}
+			} else if (this._alwaysLoadAfterTime) {
+				this._alwaysLoadAfterTimeStr = null;
+				this._alwaysLoadAfterTime.setValue(null);
+			}
+
+			if (parameters.readyImmediately) this.presentableLatch();
+		},
+
+		setPlayerLogging: function(enabled) {
+			this._playerLoggingMode.setValue(!!enabled);
+		},
+
+		_applyPlayerLogging: function(ctx) {
+			const self = this;
+			const enabled = self._playerLoggingMode.getValue();
+			if (enabled && !ctx._playerLogFunc) {
+				ctx._playerLogFunc = function(ev) {
+					self.logger.debug('DASH.js: ' + ev.message);
+				};
+				ctx.player.on('log', ctx._playerLogFunc, self);
+			} else if (!enabled && ctx._playerLogFunc) {
+				ctx.player.off('log', ctx._playerLogFunc, self);
+				delete ctx._playerLogFunc;
+			}
+		},
+
+		getPlayerSync: function() /* -> { player: player, element: Element } */ {
+			if (!this.mainCtx) return null;
+			return {
+				player: this.mainCtx.player,
+				element: this.mainCtx.video_elem,
+				allElements: this._playerCtxs.map(function(ctx) {
+					return ctx.video_elem;
+				}),
+			};
+		},
+
+		getPlayer: function() /* -> Promise<{ player: player, element: Element }> */ {
+			const self = this;
+			return self._playerWaitable.then(function() {
+				return self.getPlayerSync();
+			});
+		},
+
+		getControlsShown: function() /* -> Promise<bool> */ {
+			return this.getPlayer().then(function(player) {
+				return player.element.getAttribute("controls") != null;
+			});
+		},
+
+		setControlsShown: function(shown) /* -> Promise<> */ {
+			if (this.playbackType === "audio") {
+				this.getComponentElement().style.display = shown ? "" : "none";
+			}
+			return this.getPlayer().then(function(player) {
+				if (shown) {
+					player.element.setAttribute("controls", "controls");
+				} else {
+					player.element.removeAttribute("controls");
+				}
+			});
+		},
+
+		setupApp2AppRecvHandler: function(recvHandler) {
+			const self = this;
+			recvHandler.setSubHandler("play", function() {
+				return self.getPlayer().then(function(player) {
+					player.element.play();
+				});
+			});
+			recvHandler.setSubHandler("pause", function() {
+				return self.getPlayer().then(function(player) {
+					player.element.pause();
+				});
+			});
+			recvHandler.setSubHandler("togglePaused", function() {
+				return self.getPlayer().then(function(player) {
+					if (player.element.paused) {
+						player.element.play();
+					} else {
+						player.element.pause();
+					}
+				});
+			});
+			recvHandler.setSubHandler("mute", function() {
+				self._isMuted = true;
+				self._setupMuteState(self.mainCtx);
+			});
+			recvHandler.setSubHandler("unmute", function() {
+				self._isMuted = false;
+				self._setupMuteState(self.mainCtx);
+			});
+			recvHandler.setSubHandler("seek", function(msgBody) {
+				return self.getPlayer().then(function(player) {
+					player.element.currentTime = msgBody;
+				});
+			});
+			recvHandler.setSubHandler("seekAndPlay", function(msgBody) {
+				return self.getPlayer().then(function(player) {
+					player.element.pause();
+					player.element.currentTime = msgBody;
+					setTimeout(function() { player.element.play(); }, 0);
+				});
+			});
+			recvHandler.setSubHandler("setVolume", function(msgBody) {
+				return self.getPlayer().then(function(player) {
+					player.element.volume = msgBody;
+				});
+			});
+			recvHandler.setSubHandler("setPlayerLoggingMode", function(msgBody) {
+				if (typeof msgBody !== "boolean") return Promise.reject("Unexpected value type: " + msgBody);
+				self._playerLoggingMode.setValue(msgBody);
+			});
+
+			DMAppClientLib.DMAppAVPlayerComponentBehaviour.setupApp2AppRecvHandler.call(this, recvHandler);
+		},
+
+		setupComponentDebugEvents: function(listenerTracker, func) {
+			const tracker = listenerTracker.subscribeTo(this.event);
+			tracker.on("_debugInfoChange", func);
+			listenerTracker.subscribeTo(this._playerLoggingMode).on("change", func);
+			DMAppClientLib.DMAppAVPlayerComponentBehaviour.setupComponentDebugEvents.call(this, listenerTracker, func);
+		},
+
+		dumpDebugInfo: function(dumper) {
+			const cat = dumper.subcategory(this.typeName);
+			const modes = [];
+			if (this.mainCtx) {
+				if (this.mainCtx._usingRawVideoElem) modes.push("Raw " + this.playbackType + " element");
+				if (this.mainCtx.player) modes.push("DASH.js player");
+				if (this.mainCtx.bufferStalledSet.size) cat.keyValue("Stalled buffer(s)", Array.from(this.mainCtx.bufferStalledSet).join(", "));
+				if (this.mainCtx.networkSlowSignal.getValue()) cat.value("Network slow signalled");
+			}
+			cat.keyValue("Player mode", modes.join(", ") || "none");
+			cat.keyValue("Muted set", !!this._isMuted);
+			cat.checkboxOption("DASH.js extra logging", this._playerLoggingMode);
+			if (this.mainCtx && this.mainCtx.player) {
+				const dcat = cat.subcategory("DASH diagnostic info", false);
+				dcat.keyValue("Is dynamic", this.mainCtx.player.isDynamic());
+				dcat.keyValue("DVR window size", this.mainCtx.player.getDVRWindowSize());
+				dcat.keyValue("Time", this.mainCtx.player.time());
+				dcat.keyValue("Duration", this.mainCtx.player.duration());
+				const dumpTimestamp = function(key, t) {
+					if (Number.isFinite(t)) {
+						const d = new Date(t * 1000);
+						dcat.keyValue(key, t + ", " + d.toISOString());
+					} else {
+						dcat.keyValue(key, t);
+					}
+				};
+				if (this.mainCtx.player.isDynamic()) {
+					dumpTimestamp("Time (UTC)", this.mainCtx.player.timeAsUTC());
+					dumpTimestamp("Duration (UTC)", this.mainCtx.player.durationAsUTC());
+				}
+				const activeStream = this.mainCtx.player.getActiveStream();
+				if (activeStream) {
+					const streamInfo = activeStream.getStreamInfo();
+					if (streamInfo) {
+						dcat.keyValue("Stream Info", JSON.stringify(streamInfo));
+						if (streamInfo.manifestInfo && streamInfo.manifestInfo.availableFrom) {
+							dumpTimestamp("Availability Start", (new Date(streamInfo.manifestInfo.availableFrom)).getTime() / 1000);
+						}
+					}
+				}
+			}
+			DMAppClientLib.DMAppAVPlayerComponentBehaviour.dumpDebugInfo.call(this, dumper);
+		},
+
+		behaviors: [ DMAppClientLib.DMAppAVPlayerComponentBehaviour ],
+
+	};
+
+	function registerType(is, name, shortName, playbackType) {
+		DMAppClientLib.dMAppComponentTypes[shortName] = DMAppClientLib.dMAppComponentTypes[name] = Polymer($.extend({
+			is: is,
+			typeName: name,
+			playbackType: playbackType,
+		}, base));
+	}
+
+	registerType('dmapp-video-player-component', 'DMAppVideoPlayerComponent', 'video', 'video');
+	registerType('dmapp-audio-player-component', 'DMAppAudioPlayerComponent', 'audio', 'audio');
+
+})();
+</script>

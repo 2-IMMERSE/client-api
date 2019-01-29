@@ -1,0 +1,5 @@
+jsdoc/
+dist/
+/build/
+.*.prev
+Makefile.local

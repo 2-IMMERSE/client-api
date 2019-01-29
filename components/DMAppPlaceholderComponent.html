@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<dom-module id="dmapp-placeholder">
+<template strip-whitespace>
+	<style>
+		:host {
+			all: initial;
+			border: 6px dashed yellow;
+			background-color: red;
+			box-sizing: border-box;
+			animation: 1s placeholderComponentAnimateBorder step-end infinite;
+		}
+		@keyframes placeholderComponentAnimateBorder {
+			50% {
+				border: 6px dashed red;
+				background-color: yellow;
+			}
+		}
+		div.main {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			background-color: #000000;
+			color: #FFFFFF;
+			padding: 1em;
+			box-sizing: border-box;
+		}
+
+		.type, .cid {
+			font-weight: bold;
+		}
+
+		.reason {
+			font-size: 75%;
+		}
+	</style>
+	<div class="main">
+		<div class="type"></div>
+		<div class="cid"></div>
+		<br>
+		<div class="reason"></div>
+	</div>
+</template>
+<script>
+(function() {
+	"use strict";
+
+	const DMAppClientLib = require('DMAppClientLib');
+
+	DMAppClientLib.dMAppComponentTypes.Placeholder = Polymer({
+		is: "dmapp-placeholder",
+
+		initDMAppComponent: function(dMAppController, id, typeName, config) {
+			DMAppClientLib.DMAppComponentBehaviour.initDMAppComponent.apply(this, arguments);
+			this._config = config;
+			this.$$('.type').textContent = "Type: " + (config.fallbackType || "Unknown");
+			this.$$('.cid').textContent = "ID: " + id;
+			this.$$('.reason').textContent = "Failure Reason: " + (config.fallbackReason || "Unknown");
+		},
+
+		dumpDebugInfo: function(dumper) {
+			const cat = dumper.subcategory("Placeholder Component");
+			cat.keyValue("Type", this._config.fallbackType);
+			cat.keyValue("Reason", this._config.fallbackReason);
+			DMAppClientLib.DMAppComponentBehaviour.dumpDebugInfo.call(this, dumper);
+		},
+
+		behaviors: [ DMAppClientLib.DMAppComponentBehaviour ],
+	});
+})();
+</script>

@@ -1,0 +1,11 @@
+{
+  "name": "DMAppClientTestGeneral",
+  "version": "0.0.1",
+  "dependencies": {
+  },
+  "scripts": {
+    "preinstall": "make preinstall",
+    "build": "make build",
+    "vulcanize": "make vulcanize"
+  }
+}

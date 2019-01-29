@@ -1,0 +1,11 @@
+{
+  "name": "DMAppCompLib",
+  "version": "0.0.1",
+  "main": "main.js",
+  "dependencies": {
+    "reconnectingwebsocket": "^1.0.0"
+  },
+  "scripts": {
+    "build": "make -C .. libcomp"
+  }
+}

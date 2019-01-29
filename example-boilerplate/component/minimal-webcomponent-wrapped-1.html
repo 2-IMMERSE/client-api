@@ -1,0 +1,48 @@
+<template id="example-webcomponent-wrapped-1-template">
+	<p><b>Hello World as Wrapped Web Component 1</b></p>
+	<p id="dynamic_content_box"></p>
+</template>
+
+<script>
+(function(window, document){
+	"use strict";
+
+	const mainDoc = document; // 'document' is captured from executing the anonymous function wrapper.
+	const thisDoc = (mainDoc._currentScript || mainDoc.currentScript).ownerDocument;
+	const template = thisDoc.querySelector('template#example-webcomponent-wrapped-1-template').content;
+
+	var proto = Object.create(HTMLElement.prototype);
+	proto.createdCallback = function() {
+		const self = this;
+
+		// Append templates to DOM first before we are allowed to register DOM event listeners.
+		self.innerHTML = "";
+		const clone = mainDoc.importNode(template, true);
+		self.appendChild(clone);
+
+		// Do more stuff
+	};
+
+	document.registerElement('example-webcomponent-wrapped-1', { prototype: proto });
+
+	const DMAppClientLib = require('DMAppClientLib');
+	const $ = DMAppClientLib.deps.jquery;
+
+	function WrapperClass(dMAppController) {
+		DMAppClientLib.DMAppComponentWrapper.call(this, document.createElement('example-webcomponent-wrapped-1'), dMAppController);
+	}
+
+	$.extend(WrapperClass.prototype, DMAppClientLib.DMAppComponentWrapper.prototype);
+
+	WrapperClass.prototype.initDMAppComponent = function(dMAppController, id, typeName, config) {
+		DMAppClientLib.DMAppComponentWrapper.prototype.initDMAppComponent.apply(this, arguments);
+
+		this.getComponentElement().querySelector('#dynamic_content_box').innerText = "Dynamic Text";
+	};
+
+	DMAppClientLib.dMAppComponentTypes.ExampleWebComponentWrapped1 = WrapperClass;
+
+})(window, document);
+
+</script>
+<!-- use class: ExampleWebComponentWrapped1 -->

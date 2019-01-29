@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+
+	<!-- This will fail silently when this page is not in android assets -->
+	<script src="cordova.js"></script>
+
+	<script src="[CLIENT_API_URL]/master/dist/deps/deps/webcomponentsjs/webcomponents-lite.min.js"></script>
+	<link rel="import" href="[CLIENT_API_URL]/master/dist/bundle/dist/unified-companion-bundle.html" />
+
+	<script>
+	(function() {
+		"use strict";
+		window.addEventListener('WebComponentsReady', function(e) {
+			const DMAppClientLib = require('DMAppClientLib');
+			const DMAppCompLib = require('DMAppCompLib');
+
+			const controller = new DMAppClientLib.DMAppController({
+				deviceIdPrefix: "companion",
+				deviceIdNamespace: "companion",
+				deviceType: "companion",
+				communalDevice: false,
+				longFormConsoleLogging: true,
+			});
+
+			const compcontroller = new DMAppCompLib.DMAppComp(controller);
+			compcontroller.setupCompanionPlatformSpecificDiscovery({ joinFirst: true });
+		});
+	})();
+	</script>
+
+	<title>Unified Boilerplate</title>
+</head>
+<body>
+</body>
+</html>

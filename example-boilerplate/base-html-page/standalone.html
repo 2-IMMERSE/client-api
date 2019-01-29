@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<script src="[CLIENT_API_URL]/master/dist/deps/deps/webcomponentsjs/webcomponents-lite.min.js"></script>
+	<link rel="import" href="[CLIENT_API_URL]/master/dist/bundle/dist/standalone-bundle.html" />
+
+	<script>
+	(function() {
+		"use strict";
+		window.addEventListener('WebComponentsReady', function(e) {
+			const DMAppClientLib = require('DMAppClientLib');
+
+			const controller = new DMAppClientLib.DMAppController({
+				deviceIdPrefix: "standalone",
+				deviceIdNamespace: "standalone",
+				deviceType: "generic",
+				communalDevice: true,
+			});
+
+			controller.layout.io.setupContextAndDmapp("[DMAPP_URL]/timeline.xml",
+					"[DMAPP_URL]/layout.json").catch(function(err) {
+				controller.logger.error("Context/DMApp setup failed: " + err);
+			});
+
+			controller.timeline.setupStickyDefaultClock();
+		});
+	})();
+	</script>
+
+	<title>Standalone Boilerplate</title>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+	"undef": true,
+	"unused": "vars",
+	"freeze": true,
+	"latedef": "nofunc",
+	"noarg": true,
+	"strict": true,
+	"eqnull": true,
+	"loopfunc": true,
+	"esversion": 6,
+	"varstmt": true,
+	"predef": [
+		"-Promise"
+	]
+}

@@ -1,0 +1,29 @@
+<template id="example-webcomponent-one-template">
+	<p><b>Hello World as Web Component 1</b></p>
+</template>
+
+<script>
+(function(window, document){
+	"use strict";
+
+	const mainDoc = document; // 'document' is captured from executing the anonymous function wrapper.
+	const thisDoc = (mainDoc._currentScript || mainDoc.currentScript).ownerDocument;
+	const template = thisDoc.querySelector('template#example-webcomponent-one-template').content;
+
+	var proto = Object.create(HTMLElement.prototype);
+	proto.createdCallback = function() {
+		const self = this;
+
+		// Append templates to DOM first before we are allowed to register DOM event listeners.
+		self.innerHTML = "";
+		const clone = mainDoc.importNode(template, true);
+		self.appendChild(clone);
+
+		// Do more stuff
+	};
+
+	document.registerElement('example-webcomponent-one', { prototype: proto });
+})(window, document);
+
+</script>
+<!-- use class: example-webcomponent-one -->

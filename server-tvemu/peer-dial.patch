@@ -1,0 +1,66 @@
+diff --git a/lib/peer-dial.js b/lib/peer-dial.js
+index 6323a56..7a023ba 100644
+--- a/lib/peer-dial.js
++++ b/lib/peer-dial.js
+@@ -38,6 +38,7 @@ var APP_DESC_RENDERER = ejs.compile(APP_DESC_TEMPLATE, { open: '{{', close: '}}'
+ var SERVER = os.type() + "/" + os.release() + " UPnP/1.1 famium/0.0.1";
+ var setupServer = function(){
+ 	var self = this;
++	self.ready = false;
+ 	var pref = self.prefix;
+ 	var peer = self.ssdpPeer;
+ 	var serviceTypes = ["urn:dial-multiscreen-org:service:dial:1","urn:dial-multiscreen-org:device:dial:1","upnp:rootdevice","ssdp:all","uuid:"+self.uuid];
+@@ -179,6 +180,7 @@ var setupServer = function(){
+ 				LOCATION: location
+ 			},self.extraHeaders));
+ 		};
++		self.ready = true;
+ 		self.emit("ready");
+ 	}).on("search",function(headers, address){
+ 		if(serviceTypes.indexOf(headers.ST) != -1) {
+@@ -192,8 +194,21 @@ var setupServer = function(){
+ 			},self.extraHeaders), address);
+ 		}
+ 	}).on("close",function(){
++		self.ready = false;
+ 		self.emit("stop");
+-	});;
++	});
++
++	self.update = function() {
++		for (var i = 0; i < serviceTypes.length; i++) {
++			var st = serviceTypes[i];
++			self.ssdpPeer.update(merge({
++				NT: st,
++				USN: "uuid:" + self.uuid + "::" + st,
++				SERVER: SERVER,
++				LOCATION: location
++			}, self.extraHeaders));
++		};
++	};
+ };
+ 
+ var getExtraHeaders =  function(dict){
+@@ -308,15 +323,15 @@ var DIALClient = function (options) {
+ 		var location = headers.LOCATION;
+ 		var nts =headers.NTS;
+ 		var nt = headers.NT;
+-		if(serviceTypes.indexOf(nt)>=0){
+-			if (location && nts == "ssdp:alive" && !services[location]) {
++		if (serviceTypes.indexOf(nt) >= 0) {
++			if (location && (nts == "ssdp:alive" || nts == "ssdp:update")) {
++				var updateType = services[location] ? "update" : "found";
+ 				services[location] = headers;
+-				self.emit("found",location,headers);
+-			}
+-			else if(location && nts == "ssdp:byebye" && services[location]){
+-                var service = services[location];
++				self.emit(updateType, location, headers);
++			} else if (location && nts == "ssdp:byebye" && services[location]) {
++				var service = services[location];
+ 				delete services[location];
+-				self.emit("disappear",location,service);
++				self.emit("disappear", location, service);
+ 			}
+ 		}
+ 	}).on("close",function(){

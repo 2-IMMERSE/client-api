@@ -1,0 +1,22 @@
+diff --git a/src/DateNowClock.js b/src/DateNowClock.js
+index a6ff0b7..062cd20 100644
+--- a/src/DateNowClock.js
++++ b/src/DateNowClock.js
+@@ -21,8 +21,6 @@ var measurePrecision = require('./measurePrecision');
+ var WeakMap = require('weak-map');
+ var PRIVATE = new WeakMap();
+ 
+-var DATENOW_PRECISION = measurePrecision(Date.now.bind(Date), 100) / 1000;
+-
+ /**
+  * @exports DateNowClock
+  * @class DateNowClock
+@@ -80,7 +78,7 @@ var DateNowClock = function(options) {
+         priv.maxFreqErrorPpm = 50;
+     }
+     
+-    priv.precision = DATENOW_PRECISION;
++    priv.precision = 0;
+ };
+ 
+ inherits(DateNowClock, ClockBase);

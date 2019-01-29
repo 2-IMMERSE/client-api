@@ -1,0 +1,27 @@
+{
+  "name": "Client Deps",
+  "authors": [
+    "Jonathan G Rennison <jonathan.rennison@bt.com>"
+  ],
+  "description": "Client Deps",
+  "main": "",
+  "moduleType": [],
+  "license": "Proprietary (details to be added)",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "^1.11.0"
+  },
+  "install": {
+    "path": "deps",
+    "sources": {
+      "webcomponentsjs": "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+    }
+  }
+}

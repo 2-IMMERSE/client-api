@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+
+<!--
+/************************************************************************/
+/* FILE:                TestVideoTestComponent.html                     */
+/* DESCRIPTION:         Test video test component                       */
+/* VERSION:             (see git)                                       */
+/* DATE:                (see git)                                       */
+/* AUTHOR:              Jonathan Rennison <jonathan.rennison@bt.com>    */
+/*                                                                      */
+/*                      © British Telecommunications plc 2018           */
+/*                                                                      */
+/* Licensed under the Apache License, Version 2.0 (the "License");      */
+/* you may not use this file except in compliance with the License.     */
+/* You may obtain a copy of the License at                              */
+/*                                                                      */
+/*   http://www.apache.org/licenses/LICENSE-2.0                         */
+/*                                                                      */
+/* Unless required by applicable law or agreed to in writing, software  */
+/* distributed under the License is distributed on an "AS IS" BASIS,    */
+/* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or      */
+/* implied.                                                             */
+/* See the License for the specific language governing permissions and  */
+/* limitations under the License.                                       */
+/************************************************************************/
+-->
+
+<dom-module id="test-video-test-component">
+<template strip-whitespace>
+	<style>
+		:host {
+			display: block;
+			overflow: auto;
+			border: 1px solid black;
+			padding: 3px;
+		}
+
+		.video_sel {
+			display: inline-block;
+			padding-right: 2em;
+		}
+	</style>
+	<p><b>Video Test Component</b></p>
+	<p id="enc_block"></p>
+	<div><label><input id="atomic_cb" type="checkbox" />Atomic switch</label> <label><input id="preserve_time_cb" type="checkbox" />Preserve time on switch</label></div>
+	<div id="insert_point"></div>
+</template>
+<script>
+(function() {
+	"use strict";
+
+	const DMAppClientLib = require('DMAppClientLib');
+	const $ = DMAppClientLib.deps.jquery;
+
+	DMAppClientLib.dMAppComponentTypes.TestVideoTestComponent = Polymer({
+
+		is: "test-video-test-component",
+
+		initDMAppComponent: function(dMAppController, id, typeName, config) {
+			const self = this;
+			DMAppClientLib.DMAppComponentBehaviour.initDMAppComponent.apply(this, arguments);
+
+			const parameters = config.parameters || {};
+
+			if (parameters.cencKeys) {
+				$.extend(this.dMAppController.keyStore.cencKeyMap(), parameters.cencKeys);
+			}
+
+			self.readyPromise.done(function() {
+				for (let i = 0; i < parameters.videos.length; i++) {
+					self._addSwitchedVideoPlayer(i, (i === 0 && !parameters.companion) ? 'master' : 'slave', parameters.videos[i]);
+				}
+			});
+		},
+
+		_addSwitchedVideoPlayer: function(index, syncMode, info) {
+			const self = this;
+			const switcher = $('<div class="video_sel"><span class="video_name"></span>: </div>');
+			switcher.find('.video_name').text((info.name || index) + ' (' + syncMode + ')');
+			const radio_group = "video_mode_" + index;
+			let checked = 0;
+			for (let i = 0; i < info.streams.length; i++) {
+				const radio = $('<label><input value="' + i + '" name="' + radio_group + '" type="radio" /></label>');
+				radio.append(document.createTextNode(info.streams[i].name));
+				if (info.streams[i].checked) checked = i;
+				switcher.append(radio);
+			}
+			Polymer.dom(self.root).appendChild(switcher[0]); // see: https://github.com/Polymer/polymer/issues/3100#issuecomment-230599278
+			self.$$('#enc_block').appendChild(switcher[0]);
+			self.updateStyles();
+			switcher.find('input[value=' + checked + ']').prop("checked", true);
+			self._addVideoPlayer("video" + index, syncMode, switcher.find('input'), function() {
+				return info.streams[switcher.find('input:checked').val()].url;
+			});
+		},
+
+		_addVideoPlayer: function(id, syncMode, inputElems, urlFunc) {
+			const self = this;
+			const initUrl = urlFunc();
+			this.logger.info("Setting video source of " + id + " to: " + initUrl);
+			const videoElement = this.dMAppController.layout.createDMAppComponent(id, "DMAppVideoPlayerComponent", {
+				parameters: {
+					mediaUrl: initUrl,
+					syncMode: syncMode,
+					emptyMediaUrlOk: true,
+					showControls: "auto",
+				},
+			});
+			videoElement.layoutIndependent = true;
+			videoElement.noElementDomAttachmentCtl = true;
+			videoElement.style.width = "40%";
+			videoElement.style.marginLeft = "5%";
+			videoElement.style.marginRight = "5%";
+			videoElement.style.marginTop = "25px";
+			videoElement.style.marginBottom = "25px";
+			videoElement.style.display = 'inline-block';
+			this.$$('#insert_point').appendChild(videoElement.getComponentElement());
+			$(inputElems).on('change', function() {
+				const url = urlFunc();
+				self.logger.info("Changing video source of " + id + " to: " + url);
+				videoElement.configParameterSignal.setValue({
+					mediaUrl: url,
+					syncMode: syncMode,
+					emptyMediaUrlOk: true,
+					showControls: "auto",
+					atomicSwitch: !!self.$$('#atomic_cb:checked'),
+					preserveMediaTime: !!self.$$('#preserve_time_cb:checked'),
+				});
+			});
+			self.$$('#atomic_cb').checked = !!videoElement._defaultParameters.getValue().atomicSwitch;
+			return videoElement;
+		},
+
+		behaviors: [ DMAppClientLib.DMAppComponentBehaviour ],
+
+	});
+
+})();
+</script>
+</dom-module>

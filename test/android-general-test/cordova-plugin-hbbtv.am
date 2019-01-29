@@ -1,0 +1,584 @@
+From 8fc9aaa9647abd5490b20c0f629c48a91578dfe7 Mon Sep 17 00:00:00 2001
+From: Jonathan G Rennison <jonathan.rennison@bt.com>
+Date: Tue, 9 Aug 2016 15:41:24 +0100
+Subject: [PATCH 1/7] Expose additional terminal properties in JS interface.
+
+Add launch_url, additionalData, and terminal, which includes everything.
+---
+ src/android/HbbTV.java | 38 +++++++++++++++++++++----------------
+ www/HbbTV.js           | 43 +++++++++++++++++++++++++++++++-----------
+ 2 files changed, 54 insertions(+), 27 deletions(-)
+
+diff --git a/src/android/HbbTV.java b/src/android/HbbTV.java
+index f95d79b..869cb2c 100644
+--- a/src/android/HbbTV.java
++++ b/src/android/HbbTV.java
+@@ -90,6 +90,27 @@ public class HbbTV extends CordovaPlugin {
+     return true;
+   }
+ 
++  private JSONObject terminalToJson(DialAppInfo terminal) {
++    DialDevice device = terminal.getDialDevice();
++    HashMap<String,Object> copy = new HashMap<String,Object>();
++    copy.put("descriptionUrl",device.getDescriptionUrl());
++    copy.put("launchUrl",device.getApplicationUrl()+"/HbbTV");
++    copy.put("applicationUrl",device.getApplicationUrl());
++    copy.put("usn",device.getUSN());
++    copy.put("type",device.getType());
++    copy.put("friendlyName",device.getFriendlyName());
++    copy.put("manufacturer",device.getManufacturer());
++    copy.put("manufacturerUrl",device.getManufacturerUrl());
++    copy.put("modelDescription",device.getModelDescription());
++    copy.put("modelName",device.getModelName());
++    copy.put("udn",device.getUDN());
++    copy.put("state",terminal.getState());
++    HashMap<String,Object> additionalData = new HashMap<String,Object>();
++    additionalData.putAll(terminal.getAdditionalData());
++    copy.put("additionalData",new JSONObject(additionalData));
++    return new JSONObject(copy);
++  }
++
+   private HbbTvManager getHbbTvManager() {
+     if (hbbTvManager == null){
+       hbbTvManager = new HbbTvManager(new HbbTvManager.DiscoverTerminalsCallback() {
+@@ -98,22 +119,7 @@ public class HbbTV extends CordovaPlugin {
+           synchronized (HbbTV.this){
+             JSONArray arr = new JSONArray();
+             for (DialAppInfo terminal: terminals.values()){
+-              DialDevice device = terminal.getDialDevice();
+-              HashMap<String,Object> copy = new HashMap<String,Object>();
+-              copy.put("descriptionUrl",device.getDescriptionUrl());
+-              copy.put("launchUrl",device.getApplicationUrl()+"/HbbTV");
+-              copy.put("applicationUrl",device.getApplicationUrl());
+-              copy.put("usn",device.getUSN());
+-              copy.put("type",device.getType());
+-              copy.put("friendlyName",device.getFriendlyName());
+-              copy.put("manufacturer",device.getManufacturer());
+-              copy.put("manufacturerUrl",device.getManufacturerUrl());
+-              copy.put("modelDescription",device.getModelDescription());
+-              copy.put("modelName",device.getModelName());
+-              copy.put("udn",device.getUDN());
+-              copy.put("state",terminal.getState());
+-              copy.putAll(terminal.getAdditionalData());
+-              arr.put(new JSONObject(copy));
++              arr.put(terminalToJson(terminal));
+             }
+             for (CallbackContext callbackContext: getPendingDiscoveryRequests()){
+               if (callbackContext != null){
+diff --git a/www/HbbTV.js b/www/HbbTV.js
+index c69d6d8..da1b961 100644
+--- a/www/HbbTV.js
++++ b/www/HbbTV.js
+@@ -28,11 +28,13 @@ var discoveredTerminals = {};
+  * A DiscoveredTerminal object shall have the following properties:
+  *  - readonly Number enum_id: A unique ID for a discovered HbbTV terminal
+  *  - readonly String friendly_name: A discovered terminal may provide a friendly name, e.g. “Muttleys TV”, for an HbbTV application to make use of.
++ *  - readonly String launch_url: The HbbTV application launch URL.
++ *  - readonly String additionalData: An object containing the additional data fields of the discovered HbbTV terminal.
+  * 	- readonly String X_HbbTV_App2AppURL: The remote service endpoint on the discovered HbbTV terminal for application to application communication
+  * 	- readonly String X_HbbTV_InterDevSyncURL: The remote service endpoint on the discovered HbbTV terminal for inter-device synchronisation
+  * 	- readonly String X_HbbTV_UserAgent: The User Agent string of the discovered HbbTV terminal
+  */
+-var DiscoveredTerminal = function(enum_id, friendly_name, X_HbbTV_App2AppURL, X_HbbTV_InterDevSyncURL, X_HbbTV_UserAgent){
++var DiscoveredTerminal = function(enum_id, friendly_name, launch_url, additionalData, terminal){
+     Object.defineProperty(this, "enum_id", {
+         get: function () {
+             return enum_id;
+@@ -43,19 +45,34 @@ var DiscoveredTerminal = function(enum_id, friendly_name, X_HbbTV_App2AppURL, X_
+             return friendly_name;
+         }
+     });
++    Object.defineProperty(this, "launch_url", {
++        get: function () {
++            return launch_url;
++        }
++    });
++    Object.defineProperty(this, "additionalData", {
++        get: function () {
++            return additionalData;
++        }
++    });
+     Object.defineProperty(this, "X_HbbTV_App2AppURL", {
+         get: function () {
+-            return X_HbbTV_App2AppURL;
++            return additionalData.X_HbbTV_App2AppURL;
+         }
+     });
+     Object.defineProperty(this, "X_HbbTV_InterDevSyncURL", {
+         get: function () {
+-            return X_HbbTV_InterDevSyncURL;
++            return additionalData.X_HbbTV_InterDevSyncURL;
+         }
+     });
+     Object.defineProperty(this, "X_HbbTV_UserAgent", {
+         get: function () {
+-            return X_HbbTV_UserAgent;
++            return additionalData.X_HbbTV_UserAgent;
++        }
++    });
++    Object.defineProperty(this, "terminal", {
++        get: function () {
++            return terminal;
+         }
+     });
+ };
+@@ -75,6 +92,15 @@ var HbbTVTerminalManager = function(){
+             return launchHbbTVApp;
+         }
+     });
++
++var handleNewTerminal = function(terminal){
++    var launchUrl = terminal.launchUrl;
++    var oldTerminal = discoveredTerminals[launchUrl];
++    var enumId = oldTerminal && oldTerminal.enum_id || terminalCounter++;
++    var newTerminal = new DiscoveredTerminal(enumId, terminal.friendlyName, terminal.launchUrl, terminal.additionalData, terminal);
++    discoveredTerminals[launchUrl] = newTerminal;
++    discoveredTerminals[enumId] = terminal;
++    return newTerminal;
+ };
+ 
+ /**
+@@ -86,12 +112,7 @@ var discoverTerminals = function(onTerminalDiscovery){
+         var res = [];
+         for(var i=0;i<terminals.length; i++){
+             var terminal = terminals[i];
+-            var launchUrl = terminal.launchUrl;
+-            var oldTerminal = discoveredTerminals[launchUrl];
+-            var enumId = oldTerminal && oldTerminal.enum_id || terminalCounter++;
+-            var newTerminal = new DiscoveredTerminal(enumId, terminal.friendlyName, terminal.X_HbbTV_App2AppURL, terminal.X_HbbTV_InterDevSyncURL, terminal.X_HbbTV_UserAgent);
+-            discoveredTerminals[launchUrl] = newTerminal;
+-            discoveredTerminals[enumId] = terminal;
++            var newTerminal = handleNewTerminal(terminal);
+             res.push(newTerminal);
+         }
+         onTerminalDiscovery && onTerminalDiscovery.call(null,res);
+@@ -174,4 +195,4 @@ var createXmlLaunchRequest = function(options){
+ 
+ exports.createTerminalManager = function(){
+     return new HbbTVTerminalManager();
+-};
+\ No newline at end of file
++};
+-- 
+2.17.1
+
+
+From 533d329cc8c66b7df07ddb340308b039c165936e Mon Sep 17 00:00:00 2001
+From: Jonathan G Rennison <jonathan.rennison@bt.com>
+Date: Tue, 9 Aug 2016 15:42:16 +0100
+Subject: [PATCH 2/7] Add interface to get discovery events back immediately.
+
+This is in addition to the full list when the timeout expires.
+---
+ src/android/HbbTV.java        | 15 +++++++++++++++
+ src/android/HbbTvManager.java | 16 ++++++++++++++++
+ www/HbbTV.js                  | 18 ++++++++++++++++++
+ 3 files changed, 49 insertions(+)
+
+diff --git a/src/android/HbbTV.java b/src/android/HbbTV.java
+index 869cb2c..4e29ed9 100644
+--- a/src/android/HbbTV.java
++++ b/src/android/HbbTV.java
+@@ -53,6 +53,9 @@ public class HbbTV extends CordovaPlugin {
+     else if (action.equals("launchHbbTVApp")) {
+       return this.launchHbbTVApp(args, callbackContext);
+     }
++    else if (action.equals("setDiscoverTerminalImmediateCallback")) {
++      return this.setDiscoverTerminalImmediateCallback(args, callbackContext);
++    }
+     return false;
+   }
+ 
+@@ -90,6 +93,18 @@ public class HbbTV extends CordovaPlugin {
+     return true;
+   }
+ 
++  private synchronized boolean setDiscoverTerminalImmediateCallback(JSONArray args, final CallbackContext callbackContext) {
++    getHbbTvManager().setDiscoverTerminalImmediateCallback(new HbbTvManager.DiscoverTerminalImmediateCallback() {
++      @Override
++      public void onDiscoverTerminalImmediate(DialAppInfo terminal) {
++        PluginResult result = new PluginResult(PluginResult.Status.OK, terminalToJson(terminal));
++        result.setKeepCallback(true);
++        callbackContext.sendPluginResult(result);
++      }
++    });
++    return true;
++  }
++
+   private JSONObject terminalToJson(DialAppInfo terminal) {
+     DialDevice device = terminal.getDialDevice();
+     HashMap<String,Object> copy = new HashMap<String,Object>();
+diff --git a/src/android/HbbTvManager.java b/src/android/HbbTvManager.java
+index 24ee619..d08639f 100644
+--- a/src/android/HbbTvManager.java
++++ b/src/android/HbbTvManager.java
+@@ -40,6 +40,7 @@ public class HbbTvManager{
+   private Dial mDial;
+   private Map<String, DialAppInfo> mHbbTvTerminals;
+   private DiscoverTerminalsCallback mDiscoverTerminalsCallback;
++  private DiscoverTerminalImmediateCallback mDiscoverTerminalImmediateCallback;
+   private boolean searching = false;
+   private Handler mHandler;
+   public HbbTvManager(){
+@@ -59,6 +60,14 @@ public class HbbTvManager{
+     this.mDiscoverTerminalsCallback = discoverTerminalsCallback;
+   }
+ 
++  public DiscoverTerminalImmediateCallback getDiscoverTerminalImmediateCallback() {
++    return mDiscoverTerminalImmediateCallback;
++  }
++
++  public void setDiscoverTerminalImmediateCallback(DiscoverTerminalImmediateCallback discoverTerminalImmediateCallback) {
++    this.mDiscoverTerminalImmediateCallback = discoverTerminalImmediateCallback;
++  }
++
+   public synchronized void discoverTerminals(){
+     if(!searching){
+       searching = true;
+@@ -108,6 +117,9 @@ public class HbbTvManager{
+               Log.d(TAG, "onReceiveAppInfo: " + dialDevice.getApplicationUrl() + ", " + appInfo);
+               if(appInfo != null /*&& appInfo.getAdditionalData("X_HbbTV_App2AppURL") != null*/){
+                 getHbbTvTerminals().put(dialDevice.getApplicationUrl(),appInfo);
++                if(getDiscoverTerminalImmediateCallback() != null) {
++                  getDiscoverTerminalImmediateCallback().onDiscoverTerminalImmediate(appInfo);
++                }
+               }
+             }
+           });
+@@ -120,4 +132,8 @@ public class HbbTvManager{
+   public interface DiscoverTerminalsCallback {
+     public void onDiscoverTerminals(Map<String,DialAppInfo> terminals);
+   }
++
++  public interface DiscoverTerminalImmediateCallback {
++    public void onDiscoverTerminalImmediate(DialAppInfo terminal);
++  }
+ }
+diff --git a/www/HbbTV.js b/www/HbbTV.js
+index da1b961..bf108d4 100644
+--- a/www/HbbTV.js
++++ b/www/HbbTV.js
+@@ -93,6 +93,13 @@ var HbbTVTerminalManager = function(){
+         }
+     });
+ 
++    Object.defineProperty(this, "setDiscoverTerminalImmediateCallback", {
++        get: function () {
++            return setDiscoverTerminalImmediateCallback;
++        }
++    });
++};
++
+ var handleNewTerminal = function(terminal){
+     var launchUrl = terminal.launchUrl;
+     var oldTerminal = discoveredTerminals[launchUrl];
+@@ -154,6 +161,17 @@ var launchHbbTVApp = function(enumId,options,onHbbTVLaunch){
+     return true;
+ };
+ 
++var setDiscoverTerminalImmediateCallback = function(onDiscoverImmediate){
++    var success = function (terminal) {
++        var newTerminal = handleNewTerminal(terminal);
++        onDiscoverImmediate && onDiscoverImmediate.call(null,newTerminal);
++    };
++    var error = function (statusCode) {
++        onDiscoverImmediate && onDiscoverImmediate.call(null,null,statusCode);
++    };
++    exec(success, error, "HbbTV", "setDiscoverTerminalImmediateCallback", []);
++};
++
+ var createXmlLaunchRequest = function(options){
+     var xml = '<?xml version="1.0" encoding="UTF-8"?> ' +
+         '<mhp:ServiceDiscovery xmlns:mhp="urn:dvb:mhp:2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:hbb="urn:hbbtv:application_descriptor:2014" > ' +
+-- 
+2.17.1
+
+
+From 788f458973e35b0df11fd543d1765a83c455f242 Mon Sep 17 00:00:00 2001
+From: Jonathan G Rennison <jonathan.rennison@bt.com>
+Date: Thu, 26 Jan 2017 15:02:30 +0000
+Subject: [PATCH 3/7] Explicitly stop SSDP at end of discover timeout, add some
+ logging.
+
+---
+ src/android/HbbTvManager.java | 6 ++++++
+ src/android/dial/Dial.java    | 2 ++
+ src/android/ssdp/Ssdp.java    | 1 +
+ 3 files changed, 9 insertions(+)
+
+diff --git a/src/android/HbbTvManager.java b/src/android/HbbTvManager.java
+index d08639f..5088c03 100644
+--- a/src/android/HbbTvManager.java
++++ b/src/android/HbbTvManager.java
+@@ -84,6 +84,12 @@ public class HbbTvManager{
+         public void run() {
+           synchronized(HbbTvManager.this) {
+             Log.d(TAG, "discoverTerminals: stop searching");
++            try {
++              getDial().cancel();
++            }
++            catch (IOException e){
++              Log.e(TAG,e.getMessage(),e);
++            }
+             if (getDiscoverTerminalsCallback() != null){
+               getDiscoverTerminalsCallback().onDiscoverTerminals(getLastFoundTerminals());
+             }
+diff --git a/src/android/dial/Dial.java b/src/android/dial/Dial.java
+index 7f165a6..64296a0 100644
+--- a/src/android/dial/Dial.java
++++ b/src/android/dial/Dial.java
+@@ -85,12 +85,14 @@ public class Dial {
+ 
+   public synchronized void search(int timeoutInSeconds) throws IOException{
+     int timeout = Math.max(MIN_SEARCH_TIMEOUT,Math.min(timeoutInSeconds,MAX_SEARCH_TIMEOUT));
++    Log.d(TAG, "search() called, timeout: " + timeout);
+     if (getSsdp().start(timeout)){
+       getSsdp().search(DIAL_SERVICE_TYPE);
+     }
+   }
+ 
+   public synchronized void cancel() throws IOException{
++    Log.d(TAG, "cancel() called");
+     getSsdp().stop();
+   }
+ 
+diff --git a/src/android/ssdp/Ssdp.java b/src/android/ssdp/Ssdp.java
+index a8425d9..b84b149 100644
+--- a/src/android/ssdp/Ssdp.java
++++ b/src/android/ssdp/Ssdp.java
+@@ -90,6 +90,7 @@ public class Ssdp implements Runnable {
+ 
+   public synchronized void search(SsdpMessage msg) throws IOException {
+     if(mDatagramSocket != null){
++      Log.d(TAG, "Emitting SSDP search");
+       byte bytes[] = msg.toString().getBytes();
+       DatagramPacket dp = new DatagramPacket(bytes, bytes.length, getMulticastGroup());
+       mDatagramSocket.send(dp);
+-- 
+2.17.1
+
+
+From 3c89a86065edf718d051154f45646bb4bce4f02e Mon Sep 17 00:00:00 2001
+From: Jonathan G Rennison <jonathan.rennison@bt.com>
+Date: Thu, 26 Jan 2017 15:03:46 +0000
+Subject: [PATCH 4/7] Comment out unnecessary XML parse logging.
+
+---
+ src/android/dial/DialDevice.java | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/android/dial/DialDevice.java b/src/android/dial/DialDevice.java
+index 4c7e07f..e21b730 100644
+--- a/src/android/dial/DialDevice.java
++++ b/src/android/dial/DialDevice.java
+@@ -252,13 +252,13 @@ public class DialDevice {
+ 
+     private void readAppInfo(XmlPullParser parser, DialAppInfo appInfo) throws XmlPullParserException, IOException{
+       parser.require(XmlPullParser.START_TAG, ns, "service");
+-      Log.d(TAG, "XML parser " + parser.getName());
++      //Log.d(TAG, "XML parser " + parser.getName());
+       while (parser.next() != XmlPullParser.END_TAG) {
+         if (parser.getEventType() != XmlPullParser.START_TAG) {
+           continue;
+         }
+         String name = parser.getName();
+-        Log.d(TAG, "XML parser current element"+name);
++        //Log.d(TAG, "XML parser current element"+name);
+         if (name.equals("name")) {
+           appInfo.setName(readText(parser, name));
+         }
+@@ -286,14 +286,14 @@ public class DialDevice {
+ 
+     private void readAppInfoAdditionalData(XmlPullParser parser, DialAppInfo appInfo) throws XmlPullParserException, IOException{
+       parser.require(XmlPullParser.START_TAG, ns, "additionalData");
+-      Log.d(TAG, "XML parser "+parser.getName());
++      //Log.d(TAG, "XML parser "+parser.getName());
+       while (parser.next() != XmlPullParser.END_TAG) {
+         if (parser.getEventType() != XmlPullParser.START_TAG) {
+           continue;
+         }
+         try {
+           String name = parser.getName();
+-          Log.d(TAG, "XML parser current element"+name);
++          //Log.d(TAG, "XML parser current element"+name);
+           String value = readText(parser, name);
+           appInfo.getAdditionalData().put(name,value);
+         }
+-- 
+2.17.1
+
+
+From 31f4174ee06dab01a7da11241b5621751dd36ccf Mon Sep 17 00:00:00 2001
+From: Jonathan G Rennison <jonathan.rennison@bt.com>
+Date: Fri, 17 Nov 2017 10:15:53 +0000
+Subject: [PATCH 5/7] Use thread pool executor for async DIAL tasks
+
+---
+ src/android/dial/DialDevice.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/android/dial/DialDevice.java b/src/android/dial/DialDevice.java
+index e21b730..e05be58 100644
+--- a/src/android/dial/DialDevice.java
++++ b/src/android/dial/DialDevice.java
+@@ -55,7 +55,7 @@ public class DialDevice {
+   private String mModelName;
+   private String mUDN;
+   private String mPresentationUrl;
+-  private Executor mExecutor = AsyncTask.SERIAL_EXECUTOR;
++  private Executor mExecutor = AsyncTask.THREAD_POOL_EXECUTOR;
+ 
+   public DialDevice(String descriptionUrl, SsdpMessage ssdpMessage){
+     mDescriptionUrl = descriptionUrl;
+-- 
+2.17.1
+
+
+From f482894b67713052e522985e5f7a20e9b4243f7d Mon Sep 17 00:00:00 2001
+From: Jonathan G Rennison <jonathan.rennison@bt.com>
+Date: Thu, 8 Mar 2018 14:43:58 +0000
+Subject: [PATCH 6/7] Add method to manually search for DIAL device description
+ at URL
+
+---
+ src/android/HbbTV.java        | 14 ++++++++++++++
+ src/android/HbbTvManager.java |  5 +++++
+ src/android/dial/Dial.java    |  6 ++++++
+ www/HbbTV.js                  | 16 ++++++++++++++++
+ 4 files changed, 41 insertions(+)
+
+diff --git a/src/android/HbbTV.java b/src/android/HbbTV.java
+index 4e29ed9..894fc90 100644
+--- a/src/android/HbbTV.java
++++ b/src/android/HbbTV.java
+@@ -56,6 +56,9 @@ public class HbbTV extends CordovaPlugin {
+     else if (action.equals("setDiscoverTerminalImmediateCallback")) {
+       return this.setDiscoverTerminalImmediateCallback(args, callbackContext);
+     }
++    else if (action.equals("discoverTerminalAtDeviceDescriptionUrl")) {
++      return this.discoverTerminalAtDeviceDescriptionUrl(args, callbackContext);
++    }
+     return false;
+   }
+ 
+@@ -105,6 +108,17 @@ public class HbbTV extends CordovaPlugin {
+     return true;
+   }
+ 
++  private synchronized boolean discoverTerminalAtDeviceDescriptionUrl(JSONArray args, final CallbackContext callbackContext) {
++    try{
++      getHbbTvManager().discoverTerminalFromUrl(args.getString(0));
++    }
++    catch (Exception e){
++      Log.e(TAG,e.getMessage(),e);
++      callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR,500));
++    }
++    return true;
++  }
++
+   private JSONObject terminalToJson(DialAppInfo terminal) {
+     DialDevice device = terminal.getDialDevice();
+     HashMap<String,Object> copy = new HashMap<String,Object>();
+diff --git a/src/android/HbbTvManager.java b/src/android/HbbTvManager.java
+index 5088c03..ce8b18c 100644
+--- a/src/android/HbbTvManager.java
++++ b/src/android/HbbTvManager.java
+@@ -100,6 +100,11 @@ public class HbbTvManager{
+     }
+   }
+ 
++  public synchronized void discoverTerminalFromUrl(String getDialDeviceFromUrl){
++    Log.d(TAG, "discoverTerminalFromUrl: searching at URL: " + getDialDeviceFromUrl);
++    getDial().getDialDeviceFromUrl(getDialDeviceFromUrl);
++  }
++
+   public Map<String, DialAppInfo> getLastFoundTerminals(){
+     return new HashMap<String, DialAppInfo>(getHbbTvTerminals());
+   };
+diff --git a/src/android/dial/Dial.java b/src/android/dial/Dial.java
+index 64296a0..3189517 100644
+--- a/src/android/dial/Dial.java
++++ b/src/android/dial/Dial.java
+@@ -110,6 +110,12 @@ public class Dial {
+     new DownloadDeviceDescriptionTask().executeOnExecutor(mExecutor, device);
+   }
+ 
++  public void getDialDeviceFromUrl(String deviceDescriptionUrl){
++    DialDevice device = new DialDevice(deviceDescriptionUrl, null);
++    device.setExecutor(mExecutor);
++    new DownloadDeviceDescriptionTask().executeOnExecutor(mExecutor, device);
++  }
++
+   public interface DeviceFoundCallback {
+     public void onDialDeviceFound(DialDevice dialDevice);
+   }
+diff --git a/www/HbbTV.js b/www/HbbTV.js
+index bf108d4..531a0d4 100644
+--- a/www/HbbTV.js
++++ b/www/HbbTV.js
+@@ -98,6 +98,12 @@ var HbbTVTerminalManager = function(){
+             return setDiscoverTerminalImmediateCallback;
+         }
+     });
++
++    Object.defineProperty(this, "discoverTerminalAtDeviceDescriptionUrl", {
++        get: function () {
++            return discoverTerminalAtDeviceDescriptionUrl;
++        }
++    });
+ };
+ 
+ var handleNewTerminal = function(terminal){
+@@ -172,6 +178,16 @@ var setDiscoverTerminalImmediateCallback = function(onDiscoverImmediate){
+     exec(success, error, "HbbTV", "setDiscoverTerminalImmediateCallback", []);
+ };
+ 
++var discoverTerminalAtDeviceDescriptionUrl = function(deviceDescriptionUrl, callback){
++    var success = function (terminal) {
++        callback && callback.call(null, null);
++    };
++    var error = function (statusCode) {
++        callback && callback.call(null, statusCode);
++    };
++    exec(success, error, "HbbTV", "discoverTerminalAtDeviceDescriptionUrl", [deviceDescriptionUrl]);
++};
++
+ var createXmlLaunchRequest = function(options){
+     var xml = '<?xml version="1.0" encoding="UTF-8"?> ' +
+         '<mhp:ServiceDiscovery xmlns:mhp="urn:dvb:mhp:2009" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:hbb="urn:hbbtv:application_descriptor:2014" > ' +
+-- 
+2.17.1
+
+
+From 44b93b4a2603f604ee6716d51556d7ff6b4b9a41 Mon Sep 17 00:00:00 2001
+From: Michael Probst <mprobst@irt.de>
+Date: Wed, 14 Mar 2018 16:40:09 +0000
+Subject: [PATCH 7/7] Handle SSDP header names which are not upper case
+
+---
+ src/android/ssdp/SsdpMessage.java | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/android/ssdp/SsdpMessage.java b/src/android/ssdp/SsdpMessage.java
+index 0aa8f01..6202ad3 100644
+--- a/src/android/ssdp/SsdpMessage.java
++++ b/src/android/ssdp/SsdpMessage.java
+@@ -57,7 +57,7 @@ public class SsdpMessage {
+       line = lines[i].trim();
+       int index = line.indexOf(":");
+       if (index>0) {
+-        String key = line.substring(0, index).trim();
++        String key = line.substring(0, index).trim().toUpperCase();
+         String value = line.substring(index+1).trim();
+         getHeaders().put(key, value);
+       }
+@@ -96,4 +96,4 @@ public class SsdpMessage {
+     builder.append("\r\n");
+     return builder.toString();
+   }
+-}
+\ No newline at end of file
++}
+-- 
+2.17.1
+

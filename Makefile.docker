@@ -1,0 +1,67 @@
+# (c) BBC Research & Development, 2018. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+# implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+DOCKER_IMAGE := bbcrd-clientapi-builder
+
+# User that the build is run as (non-root)
+CLIENTAPI_USER:=android
+BUILD_DIR:=$(CURDIR)
+
+ifdef http_proxy
+    BUILD_PROXY = --build-arg http_proxy=$(http_proxy)
+    RUN_PROXY += --env http_proxy=$(http_proxy)
+endif
+
+ifdef https_proxy
+    BUILD_PROXY += --build-arg https_proxy=$(https_proxy)
+    RUN_PROXY += --env https_proxy=$(https_proxy)
+endif
+
+# Check that private key file actually exists.
+ifdef GIT_PRIVATE_KEY_FILENAME
+    ifeq ("$(wildcard $(GIT_PRIVATE_KEY_FILENAME))","")
+        $(error '$(GIT_PRIVATE_KEY_FILENAME)' doesn't exist)
+    endif
+else
+    # GIT_PRIVATE_KEY_FILENAME must be defined for all make targets (except 'clean')
+    ifeq ($(filter clean,$(MAKECMDGOALS)),)
+        $(error 'GIT_PRIVATE_KEY_FILENAME' environment variable is required)
+    endif
+endif
+
+.PHONY: dockerimage $(MAKECMDGOALS) clean
+
+dockerimage: Dockerfile Makefile Makefile.docker
+	docker build  $(BUILD_PROXY) -t $(DOCKER_IMAGE) .
+
+$(MAKECMDGOALS): dockerimage
+	docker run $(RUN_PROXY) --rm -it \
+	-v $(BUILD_DIR):/build \
+	-v $(GIT_PRIVATE_KEY_FILENAME):/home/$(CLIENTAPI_USER)/.git-key:ro \
+	$(DOCKER_IMAGE) \
+	ssh-agent bash -c "ssh-add /home/$(CLIENTAPI_USER)/.git-key; cd /build; make -f Makefile $(MAKECMDGOALS)"
+
+shell: dockerimage
+	docker run $(RUN_PROXY) --rm -it \
+	-v $(BUILD_DIR):/build \
+	-v $(GIT_PRIVATE_KEY_FILENAME):/home/$(CLIENTAPI_USER)/.git-key:ro \
+	$(DOCKER_IMAGE) \
+	ssh-agent bash -c "ssh-add /home/$(CLIENTAPI_USER)/.git-key; bash"
+
+clean: dockerimage
+	docker run $(RUN_PROXY) --rm -it \
+	-v $(BUILD_DIR):/build \
+	$(DOCKER_IMAGE) \
+	make -f Makefile clean

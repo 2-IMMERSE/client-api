@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<dom-module id="example-minimal-polymer-three">
+<template strip-whitespace>
+	<style>
+		:host {
+			display: block;
+			overflow: auto;
+			border: 1px solid black;
+			padding: 3px;
+		}
+	</style>
+	<p><b>Hello World 3</b></p>
+</template>
+<script>
+(function() {
+	"use strict";
+
+	const DMAppClientLib = require('DMAppClientLib');
+
+	Polymer({
+		is: "example-minimal-polymer-three",
+		behaviors: [ DMAppClientLib.DMAppComponentBehaviour ],
+	});
+})();
+</script>
+</dom-module>
+<!-- Use class: example-minimal-polymer-three -->
