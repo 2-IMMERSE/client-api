@@ -9,6 +9,7 @@
 			background-color: red;
 			box-sizing: border-box;
 			animation: 1s placeholderComponentAnimateBorder step-end infinite;
+			display: none;
 		}
 		@keyframes placeholderComponentAnimateBorder {
 			50% {
@@ -63,6 +64,13 @@
 			cat.keyValue("Type", this._config.fallbackType);
 			cat.keyValue("Reason", this._config.fallbackReason);
 			DMAppClientLib.DMAppComponentBehaviour.dumpDebugInfo.call(this, dumper);
+		},
+
+		setLayout: function (layout) {
+			const regionId = layout.regionId || null;
+			const region = this.dMAppController.layout.layoutRegionCtl.getNamedLayoutRegionInfo(regionId);
+			this.style.display = (region && region.suppressFailedComponentPlaceholders) ? "none" : "block";
+			DMAppClientLib.DMAppComponentBehaviour.setLayout.call(this, layout);
 		},
 
 		behaviors: [ DMAppClientLib.DMAppComponentBehaviour ],
