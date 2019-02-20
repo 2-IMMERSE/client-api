@@ -97,5 +97,6 @@ Available universal parameters:
 * `__acquireApp2AppCallbackName`: optional string of an app2app named callback name (%-prefixed) to acquire.
 * `__acquireRefCountSignalOnPresentable`: optional string of a ref-count type prefixed signal name to acquire when the component becomes presentable.
 * `__acquireRefCountSignalOnReallyPresentable`: optional string of a ref-count type prefixed signal name to acquire when the component becomes really presentable.
+* `__softStopOnSignal`: optional string of a prefixed signal name which when high/truthy the component shall not be runnable (it is soft-stopped).
 
 See [setExpressionSignal](../jsdoc/DMAppController.html#setExpressionSignal) and [expr-eval](https://www.npmjs.com/package/expr-eval) for details of expression strings.
