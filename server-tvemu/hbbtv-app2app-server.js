@@ -62,7 +62,7 @@ let HbbTVApp2AppServer = function(app, path) {
 		} else if (connection.remote) {
 			let channelPendingRemoteConnections = pendingRemoteConnections[connection.channel] || [];
 			let index = channelPendingRemoteConnections.indexOf(connection);
-			if (index >= 0) pendingRemoteConnections.splice(index, 1);
+			if (index >= 0) channelPendingRemoteConnections.splice(index, 1);
 			if (channelPendingRemoteConnections.length === 0) {
 				delete pendingRemoteConnections[connection.channel];
 			}
