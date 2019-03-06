@@ -515,6 +515,18 @@
 								self._inputDocHandler.setVariation(v.name, !!input.prop("checked"));
 							});
 							appendDiv(div[0]);
+						} else if (v.type === "optional/string") {
+							const div = $("<div><label><input name='input_doc_var_tb_" + v.name + "' type='text' /></label></div>");
+							if (v.description) div.find('label').prepend(document.createTextNode(v.description));
+							const input = div.find('input');
+							if (storedVariations[v.name]) {
+								input.prop("value", storedVariations[v.name]);
+								self._inputDocHandler.setVariation(v.name, storedVariations[v.name]);
+							}
+							input.on("input", function() {
+								self._inputDocHandler.setVariation(v.name, input.prop("value"));
+							});
+							appendDiv(div[0]);
 						} else {
 							self.logger.warn("Unexpected variation type: ", v.type);
 						}
