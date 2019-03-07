@@ -1,7 +1,7 @@
 ### Component Requirements
 
 A 'component' is defined as an object meeting the interface defined by `DMAppComponent`, which is
-defined in terms of exposing and/or overriding all properties the of mixin: `DMAppComponentBehaviour`.
+defined in terms of exposing and/or overriding all properties of the mixin: `DMAppComponentBehaviour`.
 
 A component MUST:
 * Satisfy the interface defined by `DMAppComponent` which is defined in terms of `DMAppComponentBehaviour`.
