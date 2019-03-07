@@ -1,0 +1,9326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Mixin: DMAppAVPlayerComponentBehaviour</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Mixin: DMAppAVPlayerComponentBehaviour</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>DMAppAVPlayerComponentBehaviour</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>DMApp AV player component behaviour.<br>AV media player components SHOULD mix-in this behaviour, or another behaviour which mixes this behaviour.<br>This is typically done using Polymer's behaviour mechanism.</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html">DMAppComponentBehaviour</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="DMAppAVPlayerComponent.html">DMAppAVPlayerComponent</a> for the corresponding instance interface</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="SYNC_MODE"><span class="type-signature">(readonly) </span>SYNC_MODE<span class="type-signature"> :number</span></h4>
+
+
+
+
+<div class="description">
+    <p>Sync mode types: see <a href="DMAppAVPlayerComponent.html#syncMode">DMAppAVPlayerComponent#syncMode</a></p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">number</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>SLAVE</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Request that the media be synced as a slave to the clock source</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>MASTER</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Request that the media attempt to drive the clock source as a master</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>NONE</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Request the the media not be synced as either a master or slave to the clock source</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line244">line 244</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".addEffectiveParameterSignalOverlay"><span class="type-signature">(static) </span>addEffectiveParameterSignalOverlay<span class="signature">(name<span class="signature-attributes">non-null</span>, signal<span class="signature-attributes">non-null</span>, priority<span class="signature-attributes">non-null</span>, recursive<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Add parameter signal overlay.<br>This is added to the set of signals/transforms used to generate <a href="DMAppComponent.html#effectiveParameterSignal">DMAppComponent#effectiveParameterSignal</a>, (by default only <a href="DMAppComponent.html#configParameterSignal">DMAppComponent#configParameterSignal</a> is used).<br>The signal value is applied using an object extend (by default recursive).</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Descriptive name for this overlay (for debug/diagnostic purposes)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>signal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Signal.BaseSignal.html">Signal.BaseSignal</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Signal to overlay</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>priority</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Non-zero signed number used for ordering of <a href="DMAppComponent.html#configParameterSignal">DMAppComponent#configParameterSignal</a> and overlays. Overlays/transforms are applied in ascending order of priority. <a href="DMAppComponent.html#configParameterSignal">DMAppComponent#configParameterSignal</a> has a priority of 0.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>recursive</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>optional boolean whether to do a recursive object merge instead of a single-level object merge (default true).</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.addEffectiveParameterSignalOverlay">DMAppComponentBehaviour.addEffectiveParameterSignalOverlay</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1825">line 1825</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".addEffectiveParameterSignalTransform"><span class="type-signature">(static) </span>addEffectiveParameterSignalTransform<span class="signature">(name<span class="signature-attributes">non-null</span>, transform<span class="signature-attributes">non-null</span>, signalSet<span class="signature-attributes">non-null</span>, priority<span class="signature-attributes">non-null</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Add parameter signal transform function.<br>This is added to the set of signals/transforms used to generate <a href="DMAppComponent.html#effectiveParameterSignal">DMAppComponent#effectiveParameterSignal</a>, (by default only <a href="DMAppComponent.html#configParameterSignal">DMAppComponent#configParameterSignal</a> is used).<br>The transform function is re-executed whenever one or more of the set of input signals/parameters changes.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Descriptive name for this overlay (for debug/diagnostic purposes)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>transform</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="DMAppComponent.html#~TransformCallback">DMAppComponent~TransformCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Parameter transform function, the return value is the transformed parameters object</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>signalSet</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Signal.BaseSignal.html">Signal.BaseSignal</a></span>
+|
+
+<span class="param-type">Array.&lt;<a href="Signal.BaseSignal.html">Signal.BaseSignal</a>></span>
+|
+
+<span class="param-type">Object.&lt;string, <a href="Signal.BaseSignal.html">Signal.BaseSignal</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Set of signals to monitor</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>priority</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Non-zero signed number used for ordering of <a href="DMAppComponent.html#configParameterSignal">DMAppComponent#configParameterSignal</a> and overlays. Overlays/transforms are applied in ascending order of priority. <a href="DMAppComponent.html#configParameterSignal">DMAppComponent#configParameterSignal</a> has a priority of 0.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.addEffectiveParameterSignalTransform">DMAppComponentBehaviour.addEffectiveParameterSignalTransform</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1853">line 1853</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".createApp2AppCallback"><span class="type-signature">(static) </span>createApp2AppCallback<span class="signature">(func)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create an app2app message receiver callback.<br>This has a lifetime bounded to be within that of the component.<br>The callback may be removed before component destruction by using <a href="App2AppMsgBusCtl.html#removeCallback">App2AppMsgBusCtl#removeCallback</a>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>func</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#App2AppRecvMsgCallback">App2AppRecvMsgCallback</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Message receiver callback</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.createApp2AppCallback">DMAppComponentBehaviour.createApp2AppCallback</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1806">line 1806</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>callback ID</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".createChildDMAppComponent"><span class="type-signature">(static) </span>createChildDMAppComponent<span class="signature">(options<span class="signature-attributes">nullable</span>, url<span class="signature-attributes">nullable</span>, id<span class="signature-attributes">non-null</span>, typeName<span class="signature-attributes">non-null</span>, config<span class="signature-attributes">nullable</span>)</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>.&lt;<a href="DMAppComponent.html">DMAppComponent</a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create child component.<br>The new component is created in the <a href="ComponentContainer.html">ComponentContainer</a> returned by <a href="DMAppComponent.html#getChildComponentContainer">DMAppComponent#getChildComponentContainer</a>.<br>The new component's lifetime is limited to be within that of its parent (this component).</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional options object</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>propagatePresentable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to propagate presentable state from child to parent component</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>propagateDuration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to copy duration estimate from child to parent component</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>propagateExitTransitionInProgress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to propagate exit transition in progress state from child to parent component</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inheritStartStop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to copy start/stop times from parent to child component</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inheritSoftStopped</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to copy soft-stopped state from parent to child component, this defaults to the value of options.inheritStartStop</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inheritVisibilityBlockSignal</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to copy visibility block signal state from parent to child component</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inheritLayoutInstanceId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to copy layout instance ID from parent to child component</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inheritLayoutConfig</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to copy layout config (excluding instance ID) from parent to child component</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional HTML import URL to load before constructing component</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>component ID</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>typeName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>component type name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>initial config</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>parameters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type"><a href="Signal.BaseSignal.html">Signal.BaseSignal</a>.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>optional initial parameters, see <a href="DMAppComponent.html#setParameters">DMAppComponent#setParameters</a>. If this is a signal, changes to the signal are propagated to the child component parameters.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>layout</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>optional initial layout, see <a href="DMAppComponent.html#setLayout">DMAppComponent#setLayout</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>contextId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>optional context ID override for this component (this is only required in Special Circumstances)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dmAppId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>optional DMApp ID override for this component (this is only required in Special Circumstances)</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>noElementDomAttachmentCtl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Whether to the set child component's <a href="DMAppComponent.html#noElementDomAttachmentCtl">DMAppComponent#noElementDomAttachmentCtl</a> field.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.createChildDMAppComponent">DMAppComponentBehaviour.createChildDMAppComponent</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line2628">line 2628</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Promise of child component</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a>.&lt;<a href="DMAppComponent.html">DMAppComponent</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".deinitDMAppComponent"><span class="type-signature">(static) </span>deinitDMAppComponent<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Deinitialise the current component.<br>If this method is overridden, the parent implementation MUST be called.<br>The call of the parent implementation SHOULD be placed at the end of the overriding method.<br>After this method has executed, the component SHALL be in the destructed state.<br>This method SHOULD NOT be called directly.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.deinitDMAppComponent">DMAppComponentBehaviour.deinitDMAppComponent</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line571">line 571</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<h5>Fires:</h5>
+<ul>
+    <li><a href="DMAppComponent.html#event:destroy">DMAppComponent#event:destroy</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".deserialiseDMAppComponentState"><span class="type-signature">(abstract, static) </span>deserialiseDMAppComponentState<span class="signature">(data)</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Deserialise the current component state.<br>The default implementation rejects non-empty objects.<br>If this method is overridden, the parent implementation SHOULD NOT be called.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.deserialiseDMAppComponentState">DMAppComponentBehaviour.deserialiseDMAppComponentState</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line672">line 672</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".dumpDebugInfo"><span class="type-signature">(static) </span>dumpDebugInfo<span class="signature">(dumper)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>See <a href="DebugMiscUtil.DebugDumpable.html#dumpDebugInfo">DebugMiscUtil.DebugDumpable#dumpDebugInfo</a></p>
+<p>If this method is overridden, the parent implementation SHOULD be called.</p>
+<p>Typically you will also need to implement <a href="DMAppComponent.html#setupComponentDebugEvents">DMAppComponent#setupComponentDebugEvents</a>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dumper</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="DebugMiscUtil.DebugDumper.html">DebugMiscUtil.DebugDumper</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Dumper to dump to</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="implements">Implements:</dt>
+    <dd class="implements"><ul>
+        
+            <li><a href="DebugMiscUtil.DebugDumpable.html#dumpDebugInfo">DebugMiscUtil.DebugDumpable#dumpDebugInfo</a></li>
+        
+    </ul></dd>
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.dumpDebugInfo">DMAppComponentBehaviour.dumpDebugInfo</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line2829">line 2829</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".filterConfigParameterObject"><span class="type-signature">(static) </span>filterConfigParameterObject<span class="signature">(params<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Filter a config parameters object using type filters defined by <a href="DMAppComponent.html#setExpectedConfigParameterType">DMAppComponent#setExpectedConfigParameterType</a>.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Config parameters object</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.filterConfigParameterObject">DMAppComponentBehaviour.filterConfigParameterObject</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1942">line 1942</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Filtered parameter object, this may be the same object as params.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getApp2AppRecvHandler"><span class="type-signature">(static) </span>getApp2AppRecvHandler<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="App2AppMsgBusCtl.App2AppMsgBusRecvHandler.html">App2AppMsgBusCtl.App2AppMsgBusRecvHandler</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get app2app message receiver for this component</p>
+<p>The app2app message receiver is created and setup on first use</p>
+<p>This method SHOULD NOT be overridden</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.getApp2AppRecvHandler">DMAppComponentBehaviour.getApp2AppRecvHandler</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1776">line 1776</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The message receiver for this component</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="App2AppMsgBusCtl.App2AppMsgBusRecvHandler.html">App2AppMsgBusCtl.App2AppMsgBusRecvHandler</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getChildComponentContainer"><span class="type-signature">(static) </span>getChildComponentContainer<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="ComponentContainer.html">ComponentContainer</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get child component container for this component (created on first call)</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.getChildComponentContainer">DMAppComponentBehaviour.getChildComponentContainer</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line2593">line 2593</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="ComponentContainer.html">ComponentContainer</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getChildDMAppComponentSignalById"><span class="type-signature">(static) </span>getChildDMAppComponentSignalById<span class="signature">(id<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="DMAppComponent.html#~GetDMAppComponentSignalResult">DMAppComponent~GetDMAppComponentSignalResult</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get DMApp component signal of the child component of this component with the given ID, incrementing its ref count and creating it if it doesn't already exist</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>DMApp component ID (short/unprefixed)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.getChildDMAppComponentSignalById">DMAppComponentBehaviour.getChildDMAppComponentSignalById</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line2582">line 2582</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Signal result, this is scoped to be within the component lifetime</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="DMAppComponent.html#~GetDMAppComponentSignalResult">DMAppComponent~GetDMAppComponentSignalResult</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getComponentElement"><span class="type-signature">(static) </span>getComponentElement<span class="signature">()</span><span class="type-signature"> &rarr; (nullable) {Element}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get component element.</p>
+<p>If this behaviour is not applied to the component element, this method MUST be overridden,<br>otherwise this method MAY be overridden if necessary.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.getComponentElement">DMAppComponentBehaviour.getComponentElement</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1700">line 1700</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Element</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getControlsShown"><span class="type-signature">(abstract, static) </span>getControlsShown<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>.&lt;boolean>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get whether the AV player is showing controls.<br>If this method is overridden, the parent implementation SHOULD NOT be called.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line130">line 130</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a>.&lt;boolean></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getExitTransitionSignal"><span class="type-signature">(static) </span>getExitTransitionSignal<span class="signature">()</span><span class="type-signature"> &rarr; (non-null) {<a href="Signal.RefCountSignal.html">Signal.RefCountSignal</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Returns the component's exit transition in progress signal.<br>When the returned signal has a non-zero ref count, the running state (see <a href="DMAppComponent.html#getRunningState">DMAppComponent#getRunningState</a>) is held in the DEACTIVATING state.<br>This method SHOULD NOT be overridden.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.getExitTransitionSignal">DMAppComponentBehaviour.getExitTransitionSignal</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1244">line 1244</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="Signal.RefCountSignal.html">Signal.RefCountSignal</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getName"><span class="type-signature">(static) </span>getName<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get component name.<br>This method SHOULD NOT be overridden.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.getName">DMAppComponentBehaviour.getName</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line295">line 295</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getPlayer"><span class="type-signature">(abstract, static) </span>getPlayer<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>.&lt;<a href="global.html#GetPlayerResultType">GetPlayerResultType</a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get the AV player element and optionally player object.<br>This method must be overridden, and the parent implementation MUST NOT be called.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line108">line 108</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a>.&lt;<a href="global.html#GetPlayerResultType">GetPlayerResultType</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getPlayerSync"><span class="type-signature">(abstract, static) </span>getPlayerSync<span class="signature">()</span><span class="type-signature"> &rarr; (nullable) {<a href="global.html#GetPlayerResultType">GetPlayerResultType</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Synchronously get the AV player element and optionally player object.<br>This method must be overridden, and the parent implementation MUST NOT be called.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line119">line 119</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#GetPlayerResultType">GetPlayerResultType</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getRunningState"><span class="type-signature">(static) </span>getRunningState<span class="signature">()</span><span class="type-signature"> &rarr; {DMAppComponentBehaviour.RUNNING_STATE}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Return the component's running state.<br>This method SHOULD NOT be overridden.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.getRunningState">DMAppComponentBehaviour.getRunningState</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1326">line 1326</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">DMAppComponentBehaviour.RUNNING_STATE</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getSignalByNameScoped"><span class="type-signature">(static) </span>getSignalByNameScoped<span class="signature">(name<span class="signature-attributes">non-null</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="DMAppController.html#~GetRefCountedSignalResult">DMAppController~GetRefCountedSignalResult</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get signal by name, scoped to the lifetime of this component</p>
+<p>This is a wrapper around <a href="DMAppController.html#getSignalByName">DMAppController#getSignalByName</a> which registers the returned unref callback to be executed in this component's destructor.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Prefix followed by arbitrary string key</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional options object, see <a href="DMAppController.html#getSignalByName">DMAppController#getSignalByName</a></p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.getSignalByNameScoped">DMAppComponentBehaviour.getSignalByNameScoped</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line2731">line 2731</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Signal result, if the signal that was requested is not actually ref-counted, calling unref has no effect, however the caller MUST NOT assume that the signal is not ref-counted unless options.nonRefCountedOnly is specified. unref MAY be null if options.unrefFuncNullable is true.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="DMAppController.html#~GetRefCountedSignalResult">DMAppController~GetRefCountedSignalResult</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".getTopLevelDMAppComponentSignalById"><span class="type-signature">(static) </span>getTopLevelDMAppComponentSignalById<span class="signature">(id<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="DMAppComponent.html#~GetDMAppComponentSignalResult">DMAppComponent~GetDMAppComponentSignalResult</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get DMApp component signal of the top-level component with the given ID in the same context/DMApp (or lack thereof) as the current component, incrementing its ref count and creating it if it doesn't already exist.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>DMApp component ID (short/unprefixed)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.getTopLevelDMAppComponentSignalById">DMAppComponentBehaviour.getTopLevelDMAppComponentSignalById</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line2569">line 2569</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Signal result, this is scoped to be within the component lifetime</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="DMAppComponent.html#~GetDMAppComponentSignalResult">DMAppComponent~GetDMAppComponentSignalResult</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".initDMAppComponent"><span class="type-signature">(static) </span>initDMAppComponent<span class="signature">(dMAppController, id, typeName, config)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Initialise the current component.<br>If this method is overridden, the parent implementation MUST be called.<br>The call of the parent implementation SHOULD be placed at the start of the overriding method.<br>This method SHOULD NOT be called directly.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dMAppController</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="DMAppController.html">DMAppController</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>component ID</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>typeName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>component type name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>initial config</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>parameters</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional initial parameters, see <a href="DMAppComponentBehaviour.html#.setParameters">DMAppComponentBehaviour.setParameters</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>layout</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional initial layout, see <a href="DMAppComponentBehaviour.html#.setLayout">DMAppComponentBehaviour.setLayout</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>contextId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional context ID for this component</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dmAppId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional DMApp ID for this component</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.initDMAppComponent">DMAppComponentBehaviour.initDMAppComponent</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line471">line 471</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".isRunning"><span class="type-signature">(static) </span>isRunning<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Return whether the component is in a ACTIVE (i.e. started, not yet stopped, and not soft-stopped) or DEACTIVATING state.<br>This method SHOULD NOT be overridden.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.isRunning">DMAppComponentBehaviour.isRunning</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1316">line 1316</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".masqueradeDestroyed"><span class="type-signature">(static) </span>masqueradeDestroyed<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Masquerade component destruction.</p>
+<p>The component is not destroyed, however external services (layout, timeline, etc.) are informed that it is in a way indistinguishable from normal destruction.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.masqueradeDestroyed">DMAppComponentBehaviour.masqueradeDestroyed</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1228">line 1228</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".ready"><span class="type-signature">(static) </span>ready<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Called (typically but not necessarily by Polymer) when the Element is ready.<br>If this method is overridden, the parent implementation MUST be called.</p>
+<p>This method SHOULD NOT be called directly.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.ready">DMAppComponentBehaviour.ready</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line481">line 481</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".requestDestruction"><span class="type-signature">(static) </span>requestDestruction<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>This method is called to request destruction of the component.<br>The implementation of the method is not obligated to destroy the component.<br>The default implementation destroys the component immediately.<br>If this method is overridden, the parent implementation SHOULD only be called if the component is to be destroyed immediately.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.requestDestruction">DMAppComponentBehaviour.requestDestruction</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1203">line 1203</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".resyncMedia"><span class="type-signature">(static) </span>resyncMedia<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>If media element are currently synced, re-initialise the sync state.<br>This method should be used if the media/player state changes in a way that require re-applying sync handlers.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line215">line 215</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".resyncMediaElement"><span class="type-signature">(static) </span>resyncMediaElement<span class="signature">(elem)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>If the media element is currently synced, re-initialise the sync state.<br>This method should be used if the media/player state changes in a way that require re-applying sync handlers.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>elem</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The media element to resync</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line228">line 228</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".sendApp2AppMsg"><span class="type-signature">(static) </span>sendApp2AppMsg<span class="signature">(msgBody, toDeviceId, toComponentId)</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Send app2app message</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>msgBody</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The message body, this is of an arbitrary type</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toDeviceId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The device ID to send the message to. '@self' and '@master' are special values to address the current device and the master device respectively.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toComponentId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The component ID to send the message to</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.sendApp2AppMsg">DMAppComponentBehaviour.sendApp2AppMsg</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1794">line 1794</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Reply sent back by the receiver, or an error/negative acknowledgment</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".serialiseDMAppComponentState"><span class="type-signature">(abstract, static) </span>serialiseDMAppComponentState<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>.&lt;Object>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Serialise the current component state.<br>The default implementation returns an empty object.<br>If this method is overridden, the parent implementation SHOULD NOT be called.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.serialiseDMAppComponentState">DMAppComponentBehaviour.serialiseDMAppComponentState</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line658">line 658</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a>.&lt;Object></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setAsDefaultTimelineClock"><span class="type-signature">(static) </span>setAsDefaultTimelineClock<span class="signature">(replace)</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set the AV player to be the master source of the default timeline clock source <a href="DMAppTimeline.html#defaultClock">DMAppTimeline#defaultClock</a><br>and by extension all components and other entities synchronised to the default timeline clock source.<br>This method SHOULD NOT be overridden.<br>Sets DMAppAVPlayerComponentBehaviour#isClockMaster to true.<br>This is called by DMAppAVPlayerComponentBehaviour#setMediaSyncMode, manual calls may be overridden.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>replace</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Replace any existing default timeline clock source</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line322">line 322</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setComponentInfo"><span class="type-signature">(static) </span>setComponentInfo<span class="signature">(info)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Called to set the component info.<br>If this method is overridden, the parent implementation MUST be called.<br>This sets the value of <a href="DMAppComponent.html#dMAppComponentInfo">DMAppComponent#dMAppComponentInfo</a> to info.<br>Calls <a href="DMAppComponentBehaviour.html#.setComponentStartStop">DMAppComponentBehaviour.setComponentStartStop</a></p>
+<p>This method should not generally be called directly by component authors in the case of top-level, remote service controlled components.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>info</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setComponentInfo">DMAppComponentBehaviour.setComponentInfo</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line863">line 863</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<h5>Fires:</h5>
+<ul>
+    <li><a href="DMAppComponent.html#event:startTimeChange">DMAppComponent#event:startTimeChange</a></li>
+
+    <li><a href="DMAppComponent.html#event:stopTimeChange">DMAppComponent#event:stopTimeChange</a></li>
+
+    <li><a href="DMAppComponent.html#event:startStopTimeChange">DMAppComponent#event:startStopTimeChange</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setComponentStartStop"><span class="type-signature">(static) </span>setComponentStartStop<span class="signature">(info)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Called to set the component start/stop times.<br>If this method is overridden, the parent implementation MUST be called.<br>Called by <a href="DMAppComponentBehaviour.html#.setComponentInfo">DMAppComponentBehaviour.setComponentInfo</a>.</p>
+<p>This method should not generally be called directly by component authors in the case of top-level, remote service controlled components.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>info</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setComponentStartStop">DMAppComponentBehaviour.setComponentStartStop</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line814">line 814</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<h5>Fires:</h5>
+<ul>
+    <li><a href="DMAppComponent.html#event:startTimeChange">DMAppComponent#event:startTimeChange</a></li>
+
+    <li><a href="DMAppComponent.html#event:stopTimeChange">DMAppComponent#event:stopTimeChange</a></li>
+
+    <li><a href="DMAppComponent.html#event:startStopTimeChange">DMAppComponent#event:startStopTimeChange</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setControlsShown"><span class="type-signature">(abstract, static) </span>setControlsShown<span class="signature">(shown)</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set whether the AV player is showing controls.<br>If this method is overridden, the parent implementation SHOULD NOT be called.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>shown</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line142">line 142</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setControlsShownParameter"><span class="type-signature">(static) </span>setControlsShownParameter<span class="signature">(showParam)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set whether to shown video player controls, from the parameter.<br>This calls DMAppAVPlayerComponentBehaviour#setControlsShown.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>showParam</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Whether to show controls if a boolean, otherwise use the default.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line297">line 297</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setExpectedConfigParameterType"><span class="type-signature">(static) </span>setExpectedConfigParameterType<span class="signature">(type<span class="signature-attributes">non-null</span>, &hellip;paramKeys<span class="signature-attributes">non-null</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set expected type for keys in <a href="DMAppComponent.html#configParameterSignal">DMAppComponent#configParameterSignal</a>.</p>
+<p>The value of <a href="DMAppComponent.html#configParameterSignal">DMAppComponent#configParameterSignal</a> is filtered using <a href="DMAppComponent.html#filterConfigParameterObject">DMAppComponent#filterConfigParameterObject</a><br>before being used to generate <a href="DMAppComponent.html#effectiveParameterSignal">DMAppComponent#effectiveParameterSignal</a>.</p>
+<p>This does not result in <a href="DMAppComponent.html#configParameterSignal">DMAppComponent#configParameterSignal</a> being modified,<br>but may change the value of <a href="DMAppComponent.html#effectiveParameterSignal">DMAppComponent#effectiveParameterSignal</a>.</p>
+<p>This is intended to be used for basic type validation, and to allow use of non-string parameter types in external documents with limited type support.</p>
+<p>Conversions:</p>
+<ul>
+<li>boolean: this converts the string values: &quot;true&quot; and &quot;false&quot;</li>
+<li>number: this converts strings to numbers</li>
+<li>time: this converts strings to numbers, and also parses strings in mm:ss and hh:mm:ss time formats to a number in seconds</li>
+<li>string: no conversions</li>
+<li>object: this converts JSON strings to objects</li>
+<li>array: this converts JSON strings to arrays</li>
+</ul>
+<p>If the config parameter value is not the expected type and cannot be converted as per the above, a warning is emitted and the value is coerced to the given type or set to null.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>type</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Type name, known values include: boolean, number, time, string, object, array</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>paramKeys</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Parameter keys to set to this type</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setExpectedConfigParameterType">DMAppComponentBehaviour.setExpectedConfigParameterType</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1980">line 1980</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setIsSyncMasterPossible"><span class="type-signature">(static) </span>setIsSyncMasterPossible<span class="signature">(possible)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set whether this AV player can possibly be a sync master, default: false.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>possible</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Whether being a sync master is possible</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line417">line 417</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setLayout"><span class="type-signature">(abstract, static) </span>setLayout<span class="signature">(layout)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Called to set the component layout.<br>If this method is overridden, the parent implementation SHOULD NOT be called.</p>
+<p>This method should not generally be called directly by component authors in the case of top-level, remote service controlled components.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>layout</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setLayout">DMAppComponentBehaviour.setLayout</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line706">line 706</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setLiveOffset"><span class="type-signature">(static) </span>setLiveOffset<span class="signature">(offset)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set the live offset in time in s by which the AV media player is ahead of the component<br>timeline clock, when synced as either a master or slave.<br>This is equivalent to the availability start time of a DASH feed, when using the media wallclock as the component timeline clock.<br>This method SHOULD NOT be overridden.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>offset in s</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line168">line 168</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setMediaOffset"><span class="type-signature">(static) </span>setMediaOffset<span class="signature">(offset)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set the offset in time in s by which the AV media player is ahead of the component<br>timeline clock, when synced as either a master or slave.<br>This method SHOULD NOT be overridden.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>offset in s</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line153">line 153</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setMediaSyncMinimum"><span class="type-signature">(static) </span>setMediaSyncMinimum<span class="signature">(pre<span class="signature-attributes">nullable</span>, post<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set the time in s (or null to disable) by which the clock to which the AV media player is synced (in slave mode) is clamped to be greater than or equal to the given value (relative to the component timeline clock).<br>Clamping is applied before and after any media sync offset (see DMAppAVPlayerComponentBehaviour#setMediaOffset).<br>This method SHOULD NOT be overridden.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pre</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional offset offset in s, pre-offset</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>post</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional offset offset in s, post-offset</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line204">line 204</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setMediaSyncMode"><span class="type-signature">(static) </span>setMediaSyncMode<span class="signature">(mode)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set the synchronisation mode for this component.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">DMAppAVPlayerComponentBehaviour.SYNC_MODE</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The sync mode to set</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line281">line 281</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setMediaSyncModeString"><span class="type-signature">(static) </span>setMediaSyncModeString<span class="signature">(modeString)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set the synchronisation mode for this component, as a string.<br>This calls DMAppAVPlayerComponentBehaviour#setMediaSyncMode.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>modeString</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The sync mode to set, as a string.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line261">line 261</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setParameters"><span class="type-signature">(abstract, static) </span>setParameters<span class="signature">(params, oldParams)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Called when the component parameters change.<br>If this method is overridden, the parent implementation SHOULD NOT be called.</p>
+<p>This method SHOULD NOT be called directly by component authors.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The current component parameters</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>oldParams</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The previous component parameters</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setParameters">DMAppComponentBehaviour.setParameters</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line693">line 693</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setPauseOnSyncStop"><span class="type-signature">(static) </span>setPauseOnSyncStop<span class="signature">(enabled)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set whether the AV media player in slave mode should be paused in the case whether sync is stopped because the clock to which the AV media player is synced is unavailable.<br>This method SHOULD NOT be overridden.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>enabled</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>whether to pause the media element when sync is stopped due to the clock being unavailable</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line189">line 189</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setReferenceClock"><span class="type-signature">(static) </span>setReferenceClock<span class="signature">(clock)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set the reference clock for this component.<br>See <a href="DMAppComponent.html#referenceClock">DMAppComponent#referenceClock</a><br>The default reference clock if this method is not called is: <a href="DMAppTimeline.html#defaultClock">DMAppTimeline#defaultClock</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>MUST be a member clock or a clock from <a href="DMAppTimeline.html#getRegisteredClock">DMAppTimeline#getRegisteredClock</a>, or a clock derived from a member/registered clock using <a href="DMAppTimeline.html#createOffsettedClock">DMAppTimeline#createOffsettedClock</a>/<a href="DMAppTimeline.html#createCorrelatedClock">DMAppTimeline#createCorrelatedClock</a>/<a href="DMAppTimeline.html#setCorrelatedClockParent">DMAppTimeline#setCorrelatedClockParent</a></p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setReferenceClock">DMAppComponentBehaviour.setReferenceClock</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1513">line 1513</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<h5>Fires:</h5>
+<ul>
+    <li><a href="DMAppComponent.html#event:referenceClockChange">DMAppComponent#event:referenceClockChange</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setSelfDestructBeforeStart"><span class="type-signature">(static) </span>setSelfDestructBeforeStart<span class="signature">(enabled)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set whether the component should request its destruction (using <a href="DMAppComponent.html#requestDestruction">DMAppComponent#requestDestruction</a>) when it is or transitions to the waiting (before start) state.<br>This method SHOULD NOT be overridden.<br>If this method is not called the default is false.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>enabled</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setSelfDestructBeforeStart">DMAppComponentBehaviour.setSelfDestructBeforeStart</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1280">line 1280</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setSelfDestructOnStop"><span class="type-signature">(static) </span>setSelfDestructOnStop<span class="signature">(enabled)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set whether the component should request its destruction (using <a href="DMAppComponent.html#requestDestruction">DMAppComponent#requestDestruction</a>) when it is or transitions to the stopped state.<br>This method SHOULD NOT be overridden.<br>If this method is not called the default is true.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>enabled</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setSelfDestructOnStop">DMAppComponentBehaviour.setSelfDestructOnStop</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1261">line 1261</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setTimelineDurationEndedNow"><span class="type-signature">(static) </span>setTimelineDurationEndedNow<span class="signature">(force)</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set component duration estimate sent to timeline service, as the current reference clock time.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>force</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>force update, update even if duration already set</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setTimelineDurationEndedNow">DMAppComponentBehaviour.setTimelineDurationEndedNow</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1626">line 1626</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setTimelineDurationEstimate"><span class="type-signature">(static) </span>setTimelineDurationEstimate<span class="signature">(duration<span class="signature-attributes">nullable</span>, force)</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set component duration estimate sent to timeline service. This defaults to 0.<br>This may be set to null/undefined to send the absence of an estimate.<br>If a duration is to be determined in future, this should be set to null before the<br>first status update is sent.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>estimate</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>force</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>force update, update even if duration already set</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setTimelineDurationEstimate">DMAppComponentBehaviour.setTimelineDurationEstimate</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1606">line 1606</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setupApp2AppRecvHandler"><span class="type-signature">(static) </span>setupApp2AppRecvHandler<span class="signature">(recvHandler<span class="signature-attributes">non-null</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Setup app2app message receiver</p>
+<p>The app2app message receiver is created and setup on first use</p>
+<p>If this method is overridden, the parent implementation SHOULD be called.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>recvHandler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="App2AppMsgBusCtl.App2AppMsgBusRecvHandler.html">App2AppMsgBusCtl.App2AppMsgBusRecvHandler</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The new message receiver for this component</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setupApp2AppRecvHandler">DMAppComponentBehaviour.setupApp2AppRecvHandler</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1713">line 1713</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setupComponentDebugEvents"><span class="type-signature">(static) </span>setupComponentDebugEvents<span class="signature">(listenerTracker, func)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>See <a href="DebugMiscUtil.DebugDumpable.html#setupComponentDebugEvents">DebugMiscUtil.DebugDumpable#setupComponentDebugEvents</a></p>
+<p>If this method is overridden, the parent implementation SHOULD be called.</p>
+<p>It is generally only necessary to implement this method if <a href="DMAppComponent.html#dumpDebugInfo">DMAppComponent#dumpDebugInfo</a> is also implemented.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>listenerTracker</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#ListenerTracker">ListenerTracker</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Listener tracker to subscribe to events on</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>func</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback function to use for event subscriptions</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="implements">Implements:</dt>
+    <dd class="implements"><ul>
+        
+            <li><a href="DebugMiscUtil.DebugDumpable.html#setupComponentDebugEvents">DebugMiscUtil.DebugDumpable#setupComponentDebugEvents</a></li>
+        
+    </ul></dd>
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setupComponentDebugEvents">DMAppComponentBehaviour.setupComponentDebugEvents</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line2763">line 2763</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setupSharedStateElementAttributeMapping"><span class="type-signature">(static) </span>setupSharedStateElementAttributeMapping<span class="signature">(attributeList, stateMapping, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Setup mapping of component element attributes to a shared state mapping descriptor.</p>
+<p>Attribute names are lower-cased.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>attributeList</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;(string|<a href="global.html#SharedStateMappedElementAttributeDescriptor">SharedStateMappedElementAttributeDescriptor</a>)></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>List of attribute names and/or descriptors to map</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stateMapping</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="StateMapping.SharedStateMappingBase.html">StateMapping.SharedStateMappingBase</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Shared state mapping descriptor</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional options object</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>blockable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Blockable.html">Blockable</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional blockable to block</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setupSharedStateElementAttributeMapping">DMAppComponentBehaviour.setupSharedStateElementAttributeMapping</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line2267">line 2267</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".setupSharedStateParameterOverlayMapping"><span class="type-signature">(static) </span>setupSharedStateParameterOverlayMapping<span class="signature">(parameterList, stateMapping)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Setup read-only mapping of component parameter overlay from a shared state mapping descriptor.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>parameterList</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;(string|<a href="global.html#SharedStateMappedParameterDescriptor">SharedStateMappedParameterDescriptor</a>)></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>List of parameter names and/or descriptors to map</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>stateMapping</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="StateMapping.SharedStateMappingBase.html">StateMapping.SharedStateMappingBase</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Shared state mapping descriptor</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.setupSharedStateParameterOverlayMapping">DMAppComponentBehaviour.setupSharedStateParameterOverlayMapping</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line2490">line 2490</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".stringifyDMAppComponentStatus"><span class="type-signature">(static) </span>stringifyDMAppComponentStatus<span class="signature">(status)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Convert a component status into a string.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>status</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">DMAppComponentBehaviour.COMPONENT_STATUS</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <dt class="mixes">Mixes In:</dt>
+
+        <dd class="mixes"><ul>
+        
+            <li><a href="DMAppComponentBehaviour.html#.stringifyDMAppComponentStatus">DMAppComponentBehaviour.stringifyDMAppComponentStatus</a></li>
+        
+        </ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppComponentBehaviour.js.html">lib/DMAppComponentBehaviour.js</a>, <a href="lib_DMAppComponentBehaviour.js.html#line1689">line 1689</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".unsetAsDefaultTimelineClock"><span class="type-signature">(static) </span>unsetAsDefaultTimelineClock<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Unset the AV player from being the master source of the default timeline clock source <a href="DMAppTimeline.html#defaultClock">DMAppTimeline#defaultClock</a>.<br>See <a href="DMAppAVPlayerComponentBehaviour.html#.setAsDefaultTimelineClock">DMAppAVPlayerComponentBehaviour.setAsDefaultTimelineClock</a>.<br>This method SHOULD NOT be overridden.<br>Unsets DMAppAVPlayerComponentBehaviour#isMaster.<br>This is called by DMAppAVPlayerComponentBehaviour#setMediaSyncMode, manual calls may be overridden.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppAVPlayerComponentBehaviour.js.html">lib/DMAppAVPlayerComponentBehaviour.js</a>, <a href="lib_DMAppAVPlayerComponentBehaviour.js.html#line396">line 396</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DMAppAndroid.html">DMAppAndroid</a></li><li><a href="module-DMAppClientLib.html">DMAppClientLib</a></li><li><a href="module-DMAppCompEmuLib.html">DMAppCompEmuLib</a></li><li><a href="module-DMAppCompLib.html">DMAppCompLib</a></li><li><a href="module-DMAppIos.html">DMAppIos</a></li><li><a href="module-DMAppTvEmuLib.html">DMAppTvEmuLib</a></li></ul><h3>Classes</h3><ul><li><a href="AjaxPromise.html">AjaxPromise</a></li><li><a href="App2AppMsgBusCtl.html">App2AppMsgBusCtl</a></li><li><a href="App2AppMsgBusCtl.App2AppMsgBusRecvHandler.html">App2AppMsgBusRecvHandler</a></li><li><a href="BlockableWrapper.html">BlockableWrapper</a></li><li><a href="CiiSyncHandlerBase.html">CiiSyncHandlerBase</a></li><li><a href="ClockArrayIntervalScheduler.html">ClockArrayIntervalScheduler</a></li><li><a href="ComponentContainer.html">ComponentContainer</a></li><li><a href="DebugMiscUtil.SerialisationDumper.html">SerialisationDumper</a></li><li><a href="DeviceOrientationCtl.html">DeviceOrientationCtl</a></li><li><a href="DMAppAndroidCompDiscovery.html">DMAppAndroidCompDiscovery</a></li><li><a href="DMAppAndroidSynchroniser.html">DMAppAndroidSynchroniser</a></li><li><a href="DMAppAVPlayerComponent.html">DMAppAVPlayerComponent</a></li><li><a href="DMAppComp.html">DMAppComp</a></li><li><a href="DMAppCompDiscoveryFilter.html">DMAppCompDiscoveryFilter</a></li><li><a href="DMAppCompEmuDiscovery.html">DMAppCompEmuDiscovery</a></li><li><a href="DMAppComponent.html">DMAppComponent</a></li><li><a href="DMAppComponentWrapper.html">DMAppComponentWrapper</a></li><li><a href="DMAppController.html">DMAppController</a></li><li><a href="DMAppIosCompDiscovery.html">DMAppIosCompDiscovery</a></li><li><a href="DMAppLayout.html">DMAppLayout</a></li><li><a href="DMAppLayoutIO.html">DMAppLayoutIO</a></li><li><a href="DMAppLayoutRegionCtl.html">DMAppLayoutRegionCtl</a></li><li><a href="DMAppTimeline.html">DMAppTimeline</a></li><li><a href="DMAppTvEmuController.html">DMAppTvEmuController</a></li><li><a href="DMAppTvEmuSync.html">DMAppTvEmuSync</a></li><li><a href="ErrorUtil.ErrorFlag.html">ErrorFlag</a></li><li><a href="ErrorUtil.ErrorSignal.html">ErrorSignal</a></li><li><a href="ExecValve.html">ExecValve</a></li><li><a href="InputDocument.InputDocumentHandler.html">InputDocumentHandler</a></li><li><a href="KeyStore.html">KeyStore</a></li><li><a href="LocalSignalMap.html">LocalSignalMap</a></li><li><a href="Logger.html">Logger</a></li><li><a href="MediaElementClockSource.html">MediaElementClockSource</a></li><li><a href="MediaSynchroniser.html">MediaSynchroniser</a></li><li><a href="PromiseExecQueue.html">PromiseExecQueue</a></li><li><a href="RefCountedSignalMap.html">RefCountedSignalMap</a></li><li><a href="ResourceMgmtUtil.RefCountedDelayedDestructor.html">RefCountedDelayedDestructor</a></li><li><a href="Signal.BaseSignal.html">BaseSignal</a></li><li><a href="Signal.BlockCountSignal.html">BlockCountSignal</a></li><li><a href="Signal.ConstWrapperSignal.html">ConstWrapperSignal</a></li><li><a href="Signal.RefCountSignal.html">RefCountSignal</a></li><li><a href="Signal.SettableSignal.html">SettableSignal</a></li><li><a href="Signal.SharedStatePropertySignal.html">SharedStatePropertySignal</a></li><li><a href="StateMapping.ContextGlobalSharedStateMapping.html">ContextGlobalSharedStateMapping</a></li><li><a href="StateMapping.ContextGroupParameterSharedStateMapping.html">ContextGroupParameterSharedStateMapping</a></li><li><a href="StateMapping.SharedStateMappingBase.html">SharedStateMappingBase</a></li><li><a href="StateMapping.StaticPathSharedStateMapping.html">StaticPathSharedStateMapping</a></li><li><a href="StickyClockCorrelationSource.html">StickyClockCorrelationSource</a></li><li><a href="SyncProtocolsCiiSyncHandler.html">SyncProtocolsCiiSyncHandler</a></li><li><a href="TestConfigTestComponent.html">TestConfigTestComponent</a></li><li><a href="TimeoutHandler.html">TimeoutHandler</a></li><li><a href="VersionUtil.FeatureVersionSet.html">FeatureVersionSet</a></li></ul><h3>Events</h3><ul><li><a href="AjaxPromise.html#event:fail">fail</a></li><li><a href="AjaxPromise.html#event:retry">retry</a></li><li><a href="AjaxPromise.html#event:success">success</a></li><li><a href="App2AppMsgBusCtl.html#event:deviceSocketChange">deviceSocketChange</a></li><li><a href="App2AppMsgBusCtl.html#event:enabledStateChange">enabledStateChange</a></li><li><a href="App2AppMsgBusCtl.html#event:upstreamChange">upstreamChange</a></li><li><a href="ClockArrayIntervalScheduler.html#event:change">change</a></li><li><a href="ComponentContainer.html#event:createdComponent">createdComponent</a></li><li><a href="ComponentContainer.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="ComponentContainer.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DiscoveryCtl.html#event:destroy">destroy</a></li><li><a href="DiscoveryCtl.html#event:newDevice">newDevice</a></li><li><a href="DiscoveryCtl.html#event:removeDevice">removeDevice</a></li><li><a href="DiscoveryCtl.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAVPlayerComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppAVPlayerComponent.html#event:destroy">destroy</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppAVPlayerComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppComp.html#event:join">join</a></li><li><a href="DMAppComp.html#event:remoteDeviceIdChange">remoteDeviceIdChange</a></li><li><a href="DMAppComp.html#event:remoteJoinStateChange">remoteJoinStateChange</a></li><li><a href="DMAppCompEmuDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppComponent.html#event:destroy">destroy</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppController.html#event:logRingBufferUpdate">logRingBufferUpdate</a></li><li><a href="DMAppIosCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppLayout.html#event:contextChange">contextChange</a></li><li><a href="DMAppLayout.html#event:createdComponent">createdComponent</a></li><li><a href="DMAppLayout.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="DMAppLayout.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DMAppLayout.html#event:dmAppChange">dmAppChange</a></li><li><a href="DMAppLayout.html#event:orientationChange">orientationChange</a></li><li><a href="DMAppLayoutRegionCtl.html#event:layoutRegionChange">layoutRegionChange</a></li><li><a href="DMAppTimeline.html#event:interContextSyncIdChange">interContextSyncIdChange</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:toggle">toggle</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:toggle">toggle</a></li><li><a href="RefCountedSignalMap.html#event:newSignal">newSignal</a></li><li><a href="RefCountedSignalMap.html#event:removeSignal">removeSignal</a></li><li><a href="Signal.BaseSignal.html#event:change">change</a></li><li><a href="Signal.BaseSignal.html#event:fall">fall</a></li><li><a href="Signal.BaseSignal.html#event:rise">rise</a></li><li><a href="Signal.BaseSignal.html#event:toggle">toggle</a></li><li><a href="Signal.BlockCountSignal.html#event:change">change</a></li><li><a href="Signal.BlockCountSignal.html#event:fall">fall</a></li><li><a href="Signal.BlockCountSignal.html#event:rise">rise</a></li><li><a href="Signal.BlockCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.ConstWrapperSignal.html#event:change">change</a></li><li><a href="Signal.ConstWrapperSignal.html#event:fall">fall</a></li><li><a href="Signal.ConstWrapperSignal.html#event:rise">rise</a></li><li><a href="Signal.ConstWrapperSignal.html#event:toggle">toggle</a></li><li><a href="Signal.RefCountSignal.html#event:change">change</a></li><li><a href="Signal.RefCountSignal.html#event:fall">fall</a></li><li><a href="Signal.RefCountSignal.html#event:rise">rise</a></li><li><a href="Signal.RefCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SettableSignal.html#event:change">change</a></li><li><a href="Signal.SettableSignal.html#event:fall">fall</a></li><li><a href="Signal.SettableSignal.html#event:rise">rise</a></li><li><a href="Signal.SettableSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:change">change</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:fall">fall</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:rise">rise</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:toggle">toggle</a></li></ul><h3>Namespaces</h3><ul><li><a href="ClockMiscUtil.html">ClockMiscUtil</a></li><li><a href="ClockSyncUtil.html">ClockSyncUtil</a></li><li><a href="CustomElementUtil.html">CustomElementUtil</a></li><li><a href="DebugMiscUtil.html">DebugMiscUtil</a></li><li><a href="DMAppTimeline.SharedStateSyncUtil.html">SharedStateSyncUtil</a></li><li><a href="EnumUtil.html">EnumUtil</a></li><li><a href="ErrorUtil.html">ErrorUtil</a></li><li><a href="InputDocument.html">InputDocument</a></li><li><a href="InputUtil.html">InputUtil</a></li><li><a href="MiscUtil.html">MiscUtil</a></li><li><a href="ModuleUtil.html">ModuleUtil</a></li><li><a href="PromiseUtil.html">PromiseUtil</a></li><li><a href="ResourceMgmtUtil.html">ResourceMgmtUtil</a></li><li><a href="Signal.html">Signal</a></li><li><a href="StateMapping.html">StateMapping</a></li><li><a href="TestComponents.html">TestComponents</a></li><li><a href="UpdateUtil.html">UpdateUtil</a></li><li><a href="VersionUtil.html">VersionUtil</a></li></ul><h3>Mixins</h3><ul><li><a href="DMAppAVPlayerComponentBehaviour.html">DMAppAVPlayerComponentBehaviour</a></li><li><a href="DMAppComponentBehaviour.html">DMAppComponentBehaviour</a></li><li><a href="ErrorUtil.ErrorMixin.html">ErrorMixin</a></li></ul><h3>Interfaces</h3><ul><li><a href="Blockable.html">Blockable</a></li><li><a href="CiiSyncHandler.html">CiiSyncHandler</a></li><li><a href="DebugMiscUtil.DebugDumpable.html">DebugDumpable</a></li><li><a href="DebugMiscUtil.DebugDumper.html">DebugDumper</a></li><li><a href="DebugMiscUtil.SerialisationDumper-Dynhandler.html">Dynhandler</a></li><li><a href="DiscoveryCtl.html">DiscoveryCtl</a></li><li><a href="ExternalSync.html">ExternalSync</a></li><li><a href="InputDocument.SetupComponentInterface.html">SetupComponentInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#argCheck">argCheck</a></li><li><a href="global.html#retryPromise">retryPromise</a></li><li><a href="global.html#waitable">waitable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 07 2019 10:14:17 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

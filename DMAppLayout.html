@@ -1,0 +1,4755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: DMAppLayout</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: DMAppLayout</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>DMAppLayout<span class="signature">(dMAppController)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>Handles Layout functionality.<br>This should not be directly constructed. Use: <a href="DMAppController.html#layout">DMAppController#layout</a>.</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    
+    <h4 class="name" id="DMAppLayout"><span class="type-signature"></span>new DMAppLayout<span class="signature">(dMAppController)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dMAppController</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="DMAppController.html">DMAppController</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>parent controller</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line60">line 60</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>EventEmitter</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="batchComponentStatuses"><span class="type-signature"></span>batchComponentStatuses<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    <p>Whether to batch component status updates which are POSTed to the Layout service (default: true)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line128">line 128</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="componentContainer"><span class="type-signature"></span>componentContainer<span class="type-signature"> :<a href="ComponentContainer.html">ComponentContainer</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>root layout component container</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="ComponentContainer.html">ComponentContainer</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line135">line 135</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="componentFactory"><span class="type-signature"></span>componentFactory<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Component constructor factory, this is nominally user-replaceable.<br>Any replacement must match the original behaviour.</p>
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>build</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Construct component and forwards arguments to initDMAppComponent</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line152">line 152</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="contextId"><span class="type-signature">(nullable) </span>contextId<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>current Context ID</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line137">line 137</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="contextIdSignal"><span class="type-signature"></span>contextIdSignal<span class="type-signature"> :<a href="Signal.BaseSignal.html">Signal.BaseSignal</a>.&lt;?string></span></h4>
+
+
+
+
+<div class="description">
+    <p>current Context ID (read-only signal)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="Signal.BaseSignal.html">Signal.BaseSignal</a>.&lt;?string></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line138">line 138</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="contextObj"><span class="type-signature">(nullable) </span>contextObj<span class="type-signature"> :Object</span></h4>
+
+
+
+
+<div class="description">
+    <p>current Context object</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line139">line 139</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="debounceLayoutUpdates"><span class="type-signature"></span>debounceLayoutUpdates<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    <p>Whether to de-bounce layout updates (default: true)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line129">line 129</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="dMAppController"><span class="type-signature"></span>dMAppController<span class="type-signature"> :<a href="DMAppController.html">DMAppController</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>parent controller</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="DMAppController.html">DMAppController</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line126">line 126</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="dmAppId"><span class="type-signature">(nullable) </span>dmAppId<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>current DMApp ID</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line140">line 140</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="dmAppIdSignal"><span class="type-signature"></span>dmAppIdSignal<span class="type-signature"> :<a href="Signal.BaseSignal.html">Signal.BaseSignal</a>.&lt;?string></span></h4>
+
+
+
+
+<div class="description">
+    <p>current DMApp ID (read-only signal)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="Signal.BaseSignal.html">Signal.BaseSignal</a>.&lt;?string></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line141">line 141</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="dmAppObj"><span class="type-signature">(nullable) </span>dmAppObj<span class="type-signature"> :Object</span></h4>
+
+
+
+
+<div class="description">
+    <p>current DMApp object</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">Object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line142">line 142</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="failedComponentPlaceholderMode"><span class="type-signature"></span>failedComponentPlaceholderMode<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    <p>Whether to replace failed components with a place-holder (default: false)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line130">line 130</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="interContextId"><span class="type-signature">(nullable) </span>interContextId<span class="type-signature"> :string</span></h4>
+
+
+
+
+<div class="description">
+    <p>current inter-context ID</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">string</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line143">line 143</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="interContextIdSignal"><span class="type-signature"></span>interContextIdSignal<span class="type-signature"> :<a href="Signal.BaseSignal.html">Signal.BaseSignal</a>.&lt;?string></span></h4>
+
+
+
+
+<div class="description">
+    <p>current inter-context ID (read-only signal)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="Signal.BaseSignal.html">Signal.BaseSignal</a>.&lt;?string></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line144">line 144</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="io"><span class="type-signature"></span>io<span class="type-signature"> :<a href="DMAppLayoutIO.html">DMAppLayoutIO</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>default layout and related services network IO functionality handler for this instance</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="DMAppLayoutIO.html">DMAppLayoutIO</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line133">line 133</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="layoutRegionCtl"><span class="type-signature"></span>layoutRegionCtl<span class="type-signature"> :<a href="DMAppLayoutRegionCtl.html">DMAppLayoutRegionCtl</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>layout region controller for this instance</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="DMAppLayoutRegionCtl.html">DMAppLayoutRegionCtl</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line132">line 132</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="logger"><span class="type-signature"></span>logger<span class="type-signature"> :<a href="Logger.html">Logger</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>logger for this instance</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="Logger.html">Logger</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line131">line 131</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="newContextPercentCoords"><span class="type-signature"></span>newContextPercentCoords<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    <p>whether newly created contexts should be configured with percentCoords=true, (default: false)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line134">line 134</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="orientationController"><span class="type-signature"></span>orientationController<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Orientation controller, this is stubbed and user-replaceable</p>
+</div>
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>getOrientation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Get  current orientation string</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>getAvailableOrientations</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Get array enumeration of orientation strings</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line235">line 235</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="postComponentStatuses"><span class="type-signature"></span>postComponentStatuses<span class="type-signature"> :boolean</span></h4>
+
+
+
+
+<div class="description">
+    <p>Whether to POST component status updates to the Layout service (default: true), this should only be disabled in Special Circumstances</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">boolean</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line127">line 127</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createDMAppComponent"><span class="type-signature"></span>createDMAppComponent<span class="signature">(id)</span><span class="type-signature"> &rarr; {<a href="DMAppComponent.html">DMAppComponent</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Locally create a DMApp component, arguments are forwarded to initDMAppComponent with the DMAppController prepended.</p>
+<p>NB: This method is for Special Circumstances and not for creating locally-scoped components within a DMApp.<br>For locally-scoped components, use <a href="DMAppComponent.html#createChildDMAppComponent">DMAppComponent#createChildDMAppComponent</a> instead.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>This and subsequent parameters are forwarded to initDMAppComponent with the DMAppController prepended.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line750">line 750</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>DMApp component element</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="DMAppComponent.html">DMAppComponent</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createDMAppComponentWithUrl"><span class="type-signature"></span>createDMAppComponentWithUrl<span class="signature">(url<span class="signature-attributes">nullable</span>, id)</span><span class="type-signature"> &rarr; {<a href="global.html#Promise">Promise</a>.&lt;<a href="DMAppComponent.html">DMAppComponent</a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Locally create a DMApp component, arguments starting with 'id', are forwarded to initDMAppComponent with the DMAppController prepended.<br>This first loads the specified HTML import URL if specified.</p>
+<p>NB: This method is for Special Circumstances and not for creating locally-scoped components within a DMApp.<br>For locally-scoped components, use <a href="DMAppComponent.html#createChildDMAppComponent">DMAppComponent#createChildDMAppComponent</a> instead.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional HTML import URL to load before constructing component</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>This and subsequent parameters are forwarded to initDMAppComponent with the DMAppController prepended.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line838">line 838</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>DMApp component element</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Promise">Promise</a>.&lt;<a href="DMAppComponent.html">DMAppComponent</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getCtxStateTopLevelDMAppComponentSignal"><span class="type-signature"></span>getCtxStateTopLevelDMAppComponentSignal<span class="signature">(id<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="RefCountedSignalMap.html#~GetSignalResult">RefCountedSignalMap~GetSignalResult</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get DMApp component signal of the component with the given ID (relative to the current context/dmapp or lack thereof),<br>incrementing its ref count and creating it if it doesn't already exist.<br>Wherever possible <a href="DMAppComponent.html#getTopLevelDMAppComponentSignalById">DMAppComponent#getTopLevelDMAppComponentSignalById</a> should be used instead, as it has fewer edge cases for typical component use cases.<br>The semantics of the returned signal are equivalent to the instantaneous value of <a href="DMAppLayout.html#getDMAppComponentById">DMAppLayout#getDMAppComponentById</a> for the same ID.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>DMApp component ID</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line906">line 906</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Signal result, the signal value has a value of the component instance when the component exists, and null otherwise</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="RefCountedSignalMap.html#~GetSignalResult">RefCountedSignalMap~GetSignalResult</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getDMAppComponentById"><span class="type-signature"></span>getDMAppComponentById<span class="signature">(id)</span><span class="type-signature"> &rarr; (nullable) {<a href="DMAppComponent.html">DMAppComponent</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get a local DMApp component by ID if it exists and is created</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>DMApp component ID (either short or full/prefixed)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line880">line 880</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>DMApp component element</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="DMAppComponent.html">DMAppComponent</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getDMAppComponentIdList"><span class="type-signature"></span>getDMAppComponentIdList<span class="signature">()</span><span class="type-signature"> &rarr; {Array.&lt;string>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get Array set of IDs of local DMApp components which exist and are created</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line960">line 960</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Array of component IDs</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;string></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getDMAppComponents"><span class="type-signature"></span>getDMAppComponents<span class="signature">()</span><span class="type-signature"> &rarr; {Object.&lt;string, <a href="DMAppComponent.html">DMAppComponent</a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get Object set of local DMApp components which exist and are created</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line952">line 952</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Object with component ID keys and component values</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object.&lt;string, <a href="DMAppComponent.html">DMAppComponent</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getDMAppComponentShortIdList"><span class="type-signature"></span>getDMAppComponentShortIdList<span class="signature">()</span><span class="type-signature"> &rarr; {Array.&lt;string>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get Array set of short IDs of local DMApp components which exist and are created</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line968">line 968</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Array of component IDs</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;string></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getLayoutCaps"><span class="type-signature"></span>getLayoutCaps<span class="signature">()</span><span class="type-signature"> &rarr; {Caps}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get Layout capabilities</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line250">line 250</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Caps</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="looksLikeValidComponent"><span class="type-signature"></span>looksLikeValidComponent<span class="signature">(component)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Check whether the input looks like a valid <a href="DMAppComponent.html">DMAppComponent</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>component</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Candidate component to check</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line216">line 216</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>True if it looks a valid <a href="DMAppComponent.html">DMAppComponent</a></p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="removeDMAppComponentById"><span class="type-signature"></span>removeDMAppComponentById<span class="signature">(id)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Locally remove a DMApp component</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>DMApp component ID (full/prefixed)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line862">line 862</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>true if component actually removed</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="requestRemoveDMAppComponentById"><span class="type-signature"></span>requestRemoveDMAppComponentById<span class="signature">(id)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Locally request that a DMApp component remove itself, the component may choose to ignore or defer this request.<br>If the component has not been instantiated, <a href="DMAppLayout.html#removeDMAppComponentById">DMAppLayout#removeDMAppComponentById</a> is called instead.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>DMApp component ID (full/prefixed)</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line871">line 871</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="testCreateLayoutComponent"><span class="type-signature"></span>testCreateLayoutComponent<span class="signature">(component, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {<a href="DMAppComponent.html">DMAppComponent</a>|<a href="global.html#Promise">Promise</a>.&lt;<a href="DMAppComponent.html">DMAppComponent</a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Testing: Load component from Layout RAML DMAppComponent component object</p>
+<p>This method may not be used when connected to a Context/DMApp.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>component</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Layout_RAML_DMAppComponent">Layout_RAML_DMAppComponent</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional options object</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>promise</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Return a promise of the component</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line662">line 662</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>If options.promise is true, returns a promise of the component, otherwise returns the component if it was created immediately or already exists</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="DMAppComponent.html">DMAppComponent</a></span>
+|
+
+<span class="param-type"><a href="global.html#Promise">Promise</a>.&lt;<a href="DMAppComponent.html">DMAppComponent</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="testResetLayoutComponents"><span class="type-signature"></span>testResetLayoutComponents<span class="signature">(components)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Testing: Load full layout from Layout RAML DMAppComponent component array</p>
+<p>This method may not be used when connected to a Context/DMApp.<br>Existing components which are not layout-independent are destroyed if not in<br>the component array.</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>components</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="global.html#Layout_RAML_DMAppComponent">Layout_RAML_DMAppComponent</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line642">line 642</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+        <h3 class="subsection-title">Events</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:contextChange">contextChange</h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Context change event.</p>
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>previousContextId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Previous Context ID</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>previousContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Previous Context object</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>newContextId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>New Context ID</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>newContext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>New Context object</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line391">line 391</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:createdComponent">createdComponent</h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Created component event.</p>
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>component</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="DMAppComponent.html">DMAppComponent</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line732">line 732</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:destroyedComponent">destroyedComponent</h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Destroyed component event.</p>
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>componentId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line849">line 849</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:destroyingComponent">destroyingComponent</h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Destroying component event.</p>
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>component</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="DMAppComponent.html">DMAppComponent</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line842">line 842</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:dmAppChange">dmAppChange</h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>DMApp change event.</p>
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>previousDMAppId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Previous DMApp ID</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>newDMAppId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>New DMApp ID</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayout.js.html">lib/DMAppLayout.js</a>, <a href="lib_DMAppLayout.js.html#line677">line 677</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:orientationChange">orientationChange</h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Orientation change event.</p>
+</div>
+
+
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type">object</span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+
+
+
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    
+
+<table class="props">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>newOrientation</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppLayoutIO.js.html">lib/DMAppLayoutIO.js</a>, <a href="lib_DMAppLayoutIO.js.html#line1112">line 1112</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DMAppAndroid.html">DMAppAndroid</a></li><li><a href="module-DMAppClientLib.html">DMAppClientLib</a></li><li><a href="module-DMAppCompEmuLib.html">DMAppCompEmuLib</a></li><li><a href="module-DMAppCompLib.html">DMAppCompLib</a></li><li><a href="module-DMAppIos.html">DMAppIos</a></li><li><a href="module-DMAppTvEmuLib.html">DMAppTvEmuLib</a></li></ul><h3>Classes</h3><ul><li><a href="AjaxPromise.html">AjaxPromise</a></li><li><a href="App2AppMsgBusCtl.html">App2AppMsgBusCtl</a></li><li><a href="App2AppMsgBusCtl.App2AppMsgBusRecvHandler.html">App2AppMsgBusRecvHandler</a></li><li><a href="BlockableWrapper.html">BlockableWrapper</a></li><li><a href="CiiSyncHandlerBase.html">CiiSyncHandlerBase</a></li><li><a href="ClockArrayIntervalScheduler.html">ClockArrayIntervalScheduler</a></li><li><a href="ComponentContainer.html">ComponentContainer</a></li><li><a href="DebugMiscUtil.SerialisationDumper.html">SerialisationDumper</a></li><li><a href="DeviceOrientationCtl.html">DeviceOrientationCtl</a></li><li><a href="DMAppAndroidCompDiscovery.html">DMAppAndroidCompDiscovery</a></li><li><a href="DMAppAndroidSynchroniser.html">DMAppAndroidSynchroniser</a></li><li><a href="DMAppAVPlayerComponent.html">DMAppAVPlayerComponent</a></li><li><a href="DMAppComp.html">DMAppComp</a></li><li><a href="DMAppCompDiscoveryFilter.html">DMAppCompDiscoveryFilter</a></li><li><a href="DMAppCompEmuDiscovery.html">DMAppCompEmuDiscovery</a></li><li><a href="DMAppComponent.html">DMAppComponent</a></li><li><a href="DMAppComponentWrapper.html">DMAppComponentWrapper</a></li><li><a href="DMAppController.html">DMAppController</a></li><li><a href="DMAppIosCompDiscovery.html">DMAppIosCompDiscovery</a></li><li><a href="DMAppLayout.html">DMAppLayout</a></li><li><a href="DMAppLayoutIO.html">DMAppLayoutIO</a></li><li><a href="DMAppLayoutRegionCtl.html">DMAppLayoutRegionCtl</a></li><li><a href="DMAppTimeline.html">DMAppTimeline</a></li><li><a href="DMAppTvEmuController.html">DMAppTvEmuController</a></li><li><a href="DMAppTvEmuSync.html">DMAppTvEmuSync</a></li><li><a href="ErrorUtil.ErrorFlag.html">ErrorFlag</a></li><li><a href="ErrorUtil.ErrorSignal.html">ErrorSignal</a></li><li><a href="ExecValve.html">ExecValve</a></li><li><a href="InputDocument.InputDocumentHandler.html">InputDocumentHandler</a></li><li><a href="KeyStore.html">KeyStore</a></li><li><a href="LocalSignalMap.html">LocalSignalMap</a></li><li><a href="Logger.html">Logger</a></li><li><a href="MediaElementClockSource.html">MediaElementClockSource</a></li><li><a href="MediaSynchroniser.html">MediaSynchroniser</a></li><li><a href="PromiseExecQueue.html">PromiseExecQueue</a></li><li><a href="RefCountedSignalMap.html">RefCountedSignalMap</a></li><li><a href="ResourceMgmtUtil.RefCountedDelayedDestructor.html">RefCountedDelayedDestructor</a></li><li><a href="Signal.BaseSignal.html">BaseSignal</a></li><li><a href="Signal.BlockCountSignal.html">BlockCountSignal</a></li><li><a href="Signal.ConstWrapperSignal.html">ConstWrapperSignal</a></li><li><a href="Signal.RefCountSignal.html">RefCountSignal</a></li><li><a href="Signal.SettableSignal.html">SettableSignal</a></li><li><a href="Signal.SharedStatePropertySignal.html">SharedStatePropertySignal</a></li><li><a href="StateMapping.ContextGlobalSharedStateMapping.html">ContextGlobalSharedStateMapping</a></li><li><a href="StateMapping.ContextGroupParameterSharedStateMapping.html">ContextGroupParameterSharedStateMapping</a></li><li><a href="StateMapping.SharedStateMappingBase.html">SharedStateMappingBase</a></li><li><a href="StateMapping.StaticPathSharedStateMapping.html">StaticPathSharedStateMapping</a></li><li><a href="StickyClockCorrelationSource.html">StickyClockCorrelationSource</a></li><li><a href="SyncProtocolsCiiSyncHandler.html">SyncProtocolsCiiSyncHandler</a></li><li><a href="TestConfigTestComponent.html">TestConfigTestComponent</a></li><li><a href="TimeoutHandler.html">TimeoutHandler</a></li><li><a href="VersionUtil.FeatureVersionSet.html">FeatureVersionSet</a></li></ul><h3>Events</h3><ul><li><a href="AjaxPromise.html#event:fail">fail</a></li><li><a href="AjaxPromise.html#event:retry">retry</a></li><li><a href="AjaxPromise.html#event:success">success</a></li><li><a href="App2AppMsgBusCtl.html#event:deviceSocketChange">deviceSocketChange</a></li><li><a href="App2AppMsgBusCtl.html#event:enabledStateChange">enabledStateChange</a></li><li><a href="App2AppMsgBusCtl.html#event:upstreamChange">upstreamChange</a></li><li><a href="ClockArrayIntervalScheduler.html#event:change">change</a></li><li><a href="ComponentContainer.html#event:createdComponent">createdComponent</a></li><li><a href="ComponentContainer.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="ComponentContainer.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DiscoveryCtl.html#event:destroy">destroy</a></li><li><a href="DiscoveryCtl.html#event:newDevice">newDevice</a></li><li><a href="DiscoveryCtl.html#event:removeDevice">removeDevice</a></li><li><a href="DiscoveryCtl.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAVPlayerComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppAVPlayerComponent.html#event:destroy">destroy</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppAVPlayerComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppComp.html#event:join">join</a></li><li><a href="DMAppComp.html#event:remoteDeviceIdChange">remoteDeviceIdChange</a></li><li><a href="DMAppComp.html#event:remoteJoinStateChange">remoteJoinStateChange</a></li><li><a href="DMAppCompEmuDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppComponent.html#event:destroy">destroy</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppController.html#event:logRingBufferUpdate">logRingBufferUpdate</a></li><li><a href="DMAppIosCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppLayout.html#event:contextChange">contextChange</a></li><li><a href="DMAppLayout.html#event:createdComponent">createdComponent</a></li><li><a href="DMAppLayout.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="DMAppLayout.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DMAppLayout.html#event:dmAppChange">dmAppChange</a></li><li><a href="DMAppLayout.html#event:orientationChange">orientationChange</a></li><li><a href="DMAppLayoutRegionCtl.html#event:layoutRegionChange">layoutRegionChange</a></li><li><a href="DMAppTimeline.html#event:interContextSyncIdChange">interContextSyncIdChange</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:toggle">toggle</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:toggle">toggle</a></li><li><a href="RefCountedSignalMap.html#event:newSignal">newSignal</a></li><li><a href="RefCountedSignalMap.html#event:removeSignal">removeSignal</a></li><li><a href="Signal.BaseSignal.html#event:change">change</a></li><li><a href="Signal.BaseSignal.html#event:fall">fall</a></li><li><a href="Signal.BaseSignal.html#event:rise">rise</a></li><li><a href="Signal.BaseSignal.html#event:toggle">toggle</a></li><li><a href="Signal.BlockCountSignal.html#event:change">change</a></li><li><a href="Signal.BlockCountSignal.html#event:fall">fall</a></li><li><a href="Signal.BlockCountSignal.html#event:rise">rise</a></li><li><a href="Signal.BlockCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.ConstWrapperSignal.html#event:change">change</a></li><li><a href="Signal.ConstWrapperSignal.html#event:fall">fall</a></li><li><a href="Signal.ConstWrapperSignal.html#event:rise">rise</a></li><li><a href="Signal.ConstWrapperSignal.html#event:toggle">toggle</a></li><li><a href="Signal.RefCountSignal.html#event:change">change</a></li><li><a href="Signal.RefCountSignal.html#event:fall">fall</a></li><li><a href="Signal.RefCountSignal.html#event:rise">rise</a></li><li><a href="Signal.RefCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SettableSignal.html#event:change">change</a></li><li><a href="Signal.SettableSignal.html#event:fall">fall</a></li><li><a href="Signal.SettableSignal.html#event:rise">rise</a></li><li><a href="Signal.SettableSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:change">change</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:fall">fall</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:rise">rise</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:toggle">toggle</a></li></ul><h3>Namespaces</h3><ul><li><a href="ClockMiscUtil.html">ClockMiscUtil</a></li><li><a href="ClockSyncUtil.html">ClockSyncUtil</a></li><li><a href="CustomElementUtil.html">CustomElementUtil</a></li><li><a href="DebugMiscUtil.html">DebugMiscUtil</a></li><li><a href="DMAppTimeline.SharedStateSyncUtil.html">SharedStateSyncUtil</a></li><li><a href="EnumUtil.html">EnumUtil</a></li><li><a href="ErrorUtil.html">ErrorUtil</a></li><li><a href="InputDocument.html">InputDocument</a></li><li><a href="InputUtil.html">InputUtil</a></li><li><a href="MiscUtil.html">MiscUtil</a></li><li><a href="ModuleUtil.html">ModuleUtil</a></li><li><a href="PromiseUtil.html">PromiseUtil</a></li><li><a href="ResourceMgmtUtil.html">ResourceMgmtUtil</a></li><li><a href="Signal.html">Signal</a></li><li><a href="StateMapping.html">StateMapping</a></li><li><a href="TestComponents.html">TestComponents</a></li><li><a href="UpdateUtil.html">UpdateUtil</a></li><li><a href="VersionUtil.html">VersionUtil</a></li></ul><h3>Mixins</h3><ul><li><a href="DMAppAVPlayerComponentBehaviour.html">DMAppAVPlayerComponentBehaviour</a></li><li><a href="DMAppComponentBehaviour.html">DMAppComponentBehaviour</a></li><li><a href="ErrorUtil.ErrorMixin.html">ErrorMixin</a></li></ul><h3>Interfaces</h3><ul><li><a href="Blockable.html">Blockable</a></li><li><a href="CiiSyncHandler.html">CiiSyncHandler</a></li><li><a href="DebugMiscUtil.DebugDumpable.html">DebugDumpable</a></li><li><a href="DebugMiscUtil.DebugDumper.html">DebugDumper</a></li><li><a href="DebugMiscUtil.SerialisationDumper-Dynhandler.html">Dynhandler</a></li><li><a href="DiscoveryCtl.html">DiscoveryCtl</a></li><li><a href="ExternalSync.html">ExternalSync</a></li><li><a href="InputDocument.SetupComponentInterface.html">SetupComponentInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#argCheck">argCheck</a></li><li><a href="global.html#retryPromise">retryPromise</a></li><li><a href="global.html#waitable">waitable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 07 2019 10:14:17 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

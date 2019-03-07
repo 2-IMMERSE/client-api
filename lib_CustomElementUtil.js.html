@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/CustomElementUtil.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/CustomElementUtil.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/************************************************************************/
+/* FILE:                CustomElementUtil.js                            */
+/* DESCRIPTION:         Custom element util                             */
+/* VERSION:             (see git)                                       */
+/* DATE:                (see git)                                       */
+/* AUTHOR:              Jonathan Rennison &lt;jonathan.rennison@bt.com>    */
+/*                                                                      */
+/*                      © British Telecommunications plc 2018           */
+/*                                                                      */
+/* Licensed under the Apache License, Version 2.0 (the "License");      */
+/* you may not use this file except in compliance with the License.     */
+/* You may obtain a copy of the License at                              */
+/*                                                                      */
+/*   http://www.apache.org/licenses/LICENSE-2.0                         */
+/*                                                                      */
+/* Unless required by applicable law or agreed to in writing, software  */
+/* distributed under the License is distributed on an "AS IS" BASIS,    */
+/* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or      */
+/* implied.                                                             */
+/* See the License for the specific language governing permissions and  */
+/* limitations under the License.                                       */
+/************************************************************************/
+
+"use strict";
+
+const $ = require("jquery");
+const Promise = require("promise");
+const URI = require('urijs');
+
+const argCheck = require('./argCheck');
+const DMAppController = require('./DMAppController');
+const DMAppComponentWrapper = require('./DMAppComponentWrapper');
+const StateMapping = require('./StateMapping');
+const ExecValve = require('./ExecValve');
+
+/**
+ * Utilities for custom elements/webcomponents and HTML imports
+ *
+ * @namespace CustomElementUtil
+ */
+
+/**
+ * Web IDL data bindings type for shared state mapping of element attributes
+ *
+ * @memberof CustomElementUtil
+ * @typedef {Object} WebIdlSharedStateMappedElementAttributeConfig
+ * @property {Array.&lt;(string|SharedStateMappedElementAttributeDescriptor)>=} globalAttributes List of attribute names and/or descriptors to map by means of {@link DMAppComponentBehaviour.setupSharedStateElementAttributeMapping} with {@link StateMapping.ContextGlobalSharedStateMapping}
+ * @property {Array.&lt;(string|SharedStateMappedElementAttributeDescriptor)>=} sharedAttributes List of attribute names and/or descriptors to map by means of {@link DMAppComponentBehaviour.setupSharedStateElementAttributeMapping} with {@link StateMapping.ContextGroupParameterSharedStateMapping}
+ */
+
+/**
+ * Static element attribute descriptor
+ *
+ * Exactly one of 'value' and 'getter' must be set
+ *
+ * @memberof CustomElementUtil
+ * @typedef {Object} ElementAttributeStaticDescriptor
+ * @property {!string} attribName Mandatory name of element attribute
+ * @property {?string} value Optional value to set the element attribute to
+ * @property {?CustomElementUtil.ElementAttributeStaticGetHandler} getter Optional callback function used to set the value of the attribute
+ */
+/**
+ * Static attribute "get" handler function
+ *
+ * @memberof CustomElementUtil
+ * @callback ElementAttributeStaticGetHandler
+ *
+ * @param {!DMAppComponent} component The current component
+ * @param {!Element} element The current component's element
+ * @param {!DMAppController} controller The current component's owning instance of DMAppController
+ * @return {?string} Value to assign to the element attribute
+ */
+
+/**
+ * Utility function to wrap a custom element as a DMApp component
+ *
+ * @memberof CustomElementUtil
+ *
+ * @param {!string} elementName Custom element tag name
+ * @param {!string} dMAppComponentName Component class/type name
+ * @param {Object=} options Optional options object
+ * @param {CustomElementUtil.WebIdlSharedStateMappedElementAttributeConfig=} options.dataBindings Optional web IDL data bindings for shared state mapping of element attributes
+ * @param {Object.&lt;string, CustomElementUtil.WebIdlSharedStateMappedElementAttributeConfig>=} options.dataBindingsByParamName Optional object map of string name of component parameter of group name, to web IDL data bindings for shared state mapping of element attributes
+ * @param {boolean=} [options.setActiveAttribute=true] Optional whether to set 'active' attribute on element, default: true
+ * @param {boolean=} [options.copyParametersToAttributes=false] Optional whether to copy component parameters to attributes on element whenever the component parameters change, default: false
+ * @param {boolean=} [options.copyInitialParametersToAttributes=true] Optional whether to copy component parameters to attributes on element at component construction time, default: true
+ * @param {string=} options.sharedStateContextIdOverride Optional shared state element attribute mapping group mapping context ID override
+ * @param {Array.&lt;CustomElementUtil.ElementAttributeStaticDescriptor>=} options.setAttributesAtInit Optional list of element attributes to be set at component init
+ */
+function upgradeCustomElementIntoComponent(elementName, dMAppComponentName, options) {
+	if (DMAppController.getMostRecent()) {
+		argCheck(arguments, 3, DMAppController.getMostRecent().logger, "upgradeCustomElementIntoComponent: (" + elementName + " -> " + dMAppComponentName + ")", options,
+				['dataBindings', 'dataBindingsByParamName', 'setActiveAttribute', 'copyParametersToAttributes', 'copyInitialParametersToAttributes', 'sharedStateContextIdOverride', 'setAttributesAtInit']);
+	}
+
+	const opts = $.extend({
+		dataBindings: null,
+		setActiveAttribute: true,
+		copyParametersToAttributes: false,
+		copyInitialParametersToAttributes: true,
+		sharedStateContextIdOverride: null,
+	}, options || {});
+
+	function CustomElementComponentWrapper(dMAppController) {
+		DMAppComponentWrapper.call(this, document.createElement(elementName), dMAppController);
+	}
+
+	$.extend(CustomElementComponentWrapper.prototype, DMAppComponentWrapper.prototype);
+
+	CustomElementComponentWrapper.prototype.initDMAppComponent = function(dMAppController, id, typeName, config) {
+		DMAppComponentWrapper.prototype.initDMAppComponent.apply(this, arguments);
+
+		// Set component properties on element
+		const elem = this.getComponentElement();
+		Object.defineProperties(elem, {
+			_logger:            { value: this.logger },
+			_debugLog:          { value: this.logger.debug.bind(this.logger), writable: true },
+			_debuglog:          { value: this.logger.debug.bind(this.logger), writable: true },
+			_component:         { value: this },
+			_controller:        { value: dMAppController },
+		});
+
+		this._setupAttributeFlushCtl();
+
+		const flushLatch = this._attributeFlushBlock.latch();
+
+		if (opts.setActiveAttribute) {
+			// Custom elements are created and added to the DOM well before they are made visible.
+			// Inform custom elements when they are eventually made visible so they can respect the
+			// two-step initialisation of DMAppComponent life cycle.
+			this.event.on("isRunningChange", function(running) {
+				this._bufferedSetAttribute("active", running);
+			}.bind(this));
+			this._bufferedSetAttribute("active", this.isRunning());
+		}
+
+		const dataBindingsOptions = {};
+		if (opts.sharedStateContextIdOverride) {
+			dataBindingsOptions.contextIdOverride = opts.sharedStateContextIdOverride;
+		}
+
+		const add_data_binding = function(bindingOpts, baseOptions) {
+			if (bindingOpts.globalAttributes) {
+				this.setupSharedStateElementAttributeMapping(bindingOpts.globalAttributes, new StateMapping.ContextGlobalSharedStateMapping(baseOptions), { blockable: this._attributeFlushBlock });
+			}
+			if (bindingOpts.sharedAttributes) {
+				this.setupSharedStateElementAttributeMapping(bindingOpts.sharedAttributes, new StateMapping.ContextGroupParameterSharedStateMapping(baseOptions), { blockable: this._attributeFlushBlock });
+			}
+		}.bind(this);
+
+		if (opts.dataBindings) {
+			add_data_binding(opts.dataBindings, dataBindingsOptions);
+		}
+		if (opts.dataBindingsByParamName) {
+			for (let prop in opts.dataBindingsByParamName) {
+				add_data_binding(opts.dataBindingsByParamName[prop], $.extend({ parameterName: prop }, dataBindingsOptions));
+			}
+		}
+
+		if (opts.copyInitialParametersToAttributes &amp;&amp; config.parameters) {
+			for (let key in config.parameters) {
+				this._bufferedSetAttribute(key, config.parameters[key]);
+			}
+		}
+
+		if (opts.copyInitialParametersToAttributes) this._haveWarnedNoParamHandler = true;
+
+		if (opts.copyParametersToAttributes) {
+			this.setParameterFunctions.push(function(parameters) {
+				for (let key in parameters) {
+					this._bufferedSetAttribute(key, parameters[key]);
+				}
+			});
+		}
+
+		if (opts.setAttributesAtInit) {
+			for (let i = 0; i &lt; opts.setAttributesAtInit.length; i++) {
+				const item = opts.setAttributesAtInit[i];
+				if (typeof item === "object") {
+					argCheck([], 0, this.logger, "Shared state element attribute mapping: attribute definition object", item, ['attribName', 'value', 'getter']);
+					if (!item.attribName || typeof item.attribName !== "string") {
+						this.logger.throwError("Unexpected or missing attribute item attribName value in setAttributesAtInit attribute definition: ", item);
+					}
+					/* jshint -W018 */
+					if ((!item.value) === (!item.getter)) {
+						this.logger.throwError("Exactly one of attribute items: 'value' and 'getter' must be specified in setAttributesAtInit attribute definition", item);
+					}
+					/* jshint +W018 */
+					if (item.value != null) {
+						this._bufferedSetAttribute(item.attribName, item.value);
+					}
+					if (item.getter) {
+						if (typeof item.getter !== "function") {
+							this.logger.throwError("Unexpected attribute item getter function type in setAttributesAtInit attribute definition: ", item);
+						}
+						this._bufferedSetAttribute(item.attribName, item.getter(this, elem, dMAppController));
+					}
+				} else {
+					this.logger.throwError("Unexpected attribute item type in setAttributesAtInit attribute definition: ", item);
+				}
+			}
+		}
+
+		// Unblock on the next event loop iteration.
+		// This is long enough that parameters, etc. will have been set
+		window.setTimeout(flushLatch, 0);
+	};
+
+	CustomElementComponentWrapper.prototype.dumpDebugInfo = function(dumper) {
+		const cat = dumper.subcategory("CustomElementComponentWrapper");
+		cat.keyValue("Element tag", elementName);
+		cat.keyValue("Copy params -> attribs", !!opts.copyParametersToAttributes);
+		cat.keyValue("Set 'active' attrib", opts.setActiveAttribute);
+		cat.keyValue("Has data bindings", !!opts.dataBindings);
+		if (opts.sharedStateContextIdOverride) {
+			cat.keyValue("Shared state context override", opts.sharedStateContextIdOverride);
+		}
+		DMAppComponentWrapper.prototype.dumpDebugInfo.call(this, dumper);
+	};
+
+	// Register wrapped element as a DMAppComponent
+	DMAppController.prototype.dMAppComponentTypes[dMAppComponentName] = CustomElementComponentWrapper;
+}
+
+/**
+ * {@link ExecValve} instance which is blocked when {@link CustomElementUtil.loadAndConcatHtmlImport} operations are in progress.
+ * This can be used within an appended document to schedule callbacks to run once appending is complete.
+ *
+ * @type ExecValve
+ *
+ * @memberof CustomElementUtil
+ */
+const loadAndConcatHtmlImportsDone = new ExecValve();
+
+/**
+ * Utility function to load a HTML page and concatenate it onto the document DOM
+ *
+ * DOM adjustments:
+ * * The 'href' attribute of `&lt;link>` tags is adjusted such that relative URLs work
+ *
+ * `&lt;script>` tags are not concatenated to the document DOM, as this would result in them being executed more than once.
+ *
+ * {@link CustomElementUtil.loadAndConcatHtmlImportsDone} is blocked until the return promise is resolved or rejected.
+ *
+ * @memberof CustomElementUtil
+ *
+ * @param {!string} url HTML page URL to import
+ * @param {!Logger} logger Logger instance
+ * @param {Object=} options Optional options object
+ * @param {string=} options.name Name to use in logging output
+ * @returns {Promise.&lt;Element>} Promise of import link node
+ */
+function loadAndConcatHtmlImport(url, logger, options) {
+	argCheck(arguments, 3, logger, "loadAndConcatHtmlImport", options,
+			['name']);
+
+	const logName = options.name || "HTML page";
+	loadAndConcatHtmlImportsDone.block();
+	const p = new Promise(function(resolve, reject) {
+		const linkNode = Polymer.Base.importHref(url, function(val) {
+			logger.info(logName + " import load success: URL: " + url);
+			const handleImportNode = function(imported, appendTo) {
+				const nodes = $(document.importNode(imported, true)).children();
+				nodes.filter("link").each(function() {
+					const je = $(this);
+					if (je.attr("href")) {
+						je.attr("href", new URI(je.attr("href"), url).toString());
+					}
+				});
+				$(appendTo).append(nodes.not('script'));
+			};
+			handleImportNode(linkNode.import.head, document.head);
+			handleImportNode(linkNode.import.body, document.body);
+			resolve(linkNode);
+		}, function(e) {
+			const msg = logName + " import load failed: URL: " + url;
+			logger.error(msg);
+			reject(msg);
+		}, true);
+	});
+	p.finally(function() {
+		loadAndConcatHtmlImportsDone.unblock();
+	});
+	return p;
+}
+
+module.exports = {
+	upgradeCustomElementIntoComponent: upgradeCustomElementIntoComponent,
+	loadAndConcatHtmlImport: loadAndConcatHtmlImport,
+	loadAndConcatHtmlImportsDone: loadAndConcatHtmlImportsDone,
+};
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DMAppAndroid.html">DMAppAndroid</a></li><li><a href="module-DMAppClientLib.html">DMAppClientLib</a></li><li><a href="module-DMAppCompEmuLib.html">DMAppCompEmuLib</a></li><li><a href="module-DMAppCompLib.html">DMAppCompLib</a></li><li><a href="module-DMAppIos.html">DMAppIos</a></li><li><a href="module-DMAppTvEmuLib.html">DMAppTvEmuLib</a></li></ul><h3>Classes</h3><ul><li><a href="AjaxPromise.html">AjaxPromise</a></li><li><a href="App2AppMsgBusCtl.html">App2AppMsgBusCtl</a></li><li><a href="App2AppMsgBusCtl.App2AppMsgBusRecvHandler.html">App2AppMsgBusRecvHandler</a></li><li><a href="BlockableWrapper.html">BlockableWrapper</a></li><li><a href="CiiSyncHandlerBase.html">CiiSyncHandlerBase</a></li><li><a href="ClockArrayIntervalScheduler.html">ClockArrayIntervalScheduler</a></li><li><a href="ComponentContainer.html">ComponentContainer</a></li><li><a href="DebugMiscUtil.SerialisationDumper.html">SerialisationDumper</a></li><li><a href="DeviceOrientationCtl.html">DeviceOrientationCtl</a></li><li><a href="DMAppAndroidCompDiscovery.html">DMAppAndroidCompDiscovery</a></li><li><a href="DMAppAndroidSynchroniser.html">DMAppAndroidSynchroniser</a></li><li><a href="DMAppAVPlayerComponent.html">DMAppAVPlayerComponent</a></li><li><a href="DMAppComp.html">DMAppComp</a></li><li><a href="DMAppCompDiscoveryFilter.html">DMAppCompDiscoveryFilter</a></li><li><a href="DMAppCompEmuDiscovery.html">DMAppCompEmuDiscovery</a></li><li><a href="DMAppComponent.html">DMAppComponent</a></li><li><a href="DMAppComponentWrapper.html">DMAppComponentWrapper</a></li><li><a href="DMAppController.html">DMAppController</a></li><li><a href="DMAppIosCompDiscovery.html">DMAppIosCompDiscovery</a></li><li><a href="DMAppLayout.html">DMAppLayout</a></li><li><a href="DMAppLayoutIO.html">DMAppLayoutIO</a></li><li><a href="DMAppLayoutRegionCtl.html">DMAppLayoutRegionCtl</a></li><li><a href="DMAppTimeline.html">DMAppTimeline</a></li><li><a href="DMAppTvEmuController.html">DMAppTvEmuController</a></li><li><a href="DMAppTvEmuSync.html">DMAppTvEmuSync</a></li><li><a href="ErrorUtil.ErrorFlag.html">ErrorFlag</a></li><li><a href="ErrorUtil.ErrorSignal.html">ErrorSignal</a></li><li><a href="ExecValve.html">ExecValve</a></li><li><a href="InputDocument.InputDocumentHandler.html">InputDocumentHandler</a></li><li><a href="KeyStore.html">KeyStore</a></li><li><a href="LocalSignalMap.html">LocalSignalMap</a></li><li><a href="Logger.html">Logger</a></li><li><a href="MediaElementClockSource.html">MediaElementClockSource</a></li><li><a href="MediaSynchroniser.html">MediaSynchroniser</a></li><li><a href="PromiseExecQueue.html">PromiseExecQueue</a></li><li><a href="RefCountedSignalMap.html">RefCountedSignalMap</a></li><li><a href="ResourceMgmtUtil.RefCountedDelayedDestructor.html">RefCountedDelayedDestructor</a></li><li><a href="Signal.BaseSignal.html">BaseSignal</a></li><li><a href="Signal.BlockCountSignal.html">BlockCountSignal</a></li><li><a href="Signal.ConstWrapperSignal.html">ConstWrapperSignal</a></li><li><a href="Signal.RefCountSignal.html">RefCountSignal</a></li><li><a href="Signal.SettableSignal.html">SettableSignal</a></li><li><a href="Signal.SharedStatePropertySignal.html">SharedStatePropertySignal</a></li><li><a href="StateMapping.ContextGlobalSharedStateMapping.html">ContextGlobalSharedStateMapping</a></li><li><a href="StateMapping.ContextGroupParameterSharedStateMapping.html">ContextGroupParameterSharedStateMapping</a></li><li><a href="StateMapping.SharedStateMappingBase.html">SharedStateMappingBase</a></li><li><a href="StateMapping.StaticPathSharedStateMapping.html">StaticPathSharedStateMapping</a></li><li><a href="StickyClockCorrelationSource.html">StickyClockCorrelationSource</a></li><li><a href="SyncProtocolsCiiSyncHandler.html">SyncProtocolsCiiSyncHandler</a></li><li><a href="TestConfigTestComponent.html">TestConfigTestComponent</a></li><li><a href="TimeoutHandler.html">TimeoutHandler</a></li><li><a href="VersionUtil.FeatureVersionSet.html">FeatureVersionSet</a></li></ul><h3>Events</h3><ul><li><a href="AjaxPromise.html#event:fail">fail</a></li><li><a href="AjaxPromise.html#event:retry">retry</a></li><li><a href="AjaxPromise.html#event:success">success</a></li><li><a href="App2AppMsgBusCtl.html#event:deviceSocketChange">deviceSocketChange</a></li><li><a href="App2AppMsgBusCtl.html#event:enabledStateChange">enabledStateChange</a></li><li><a href="App2AppMsgBusCtl.html#event:upstreamChange">upstreamChange</a></li><li><a href="ClockArrayIntervalScheduler.html#event:change">change</a></li><li><a href="ComponentContainer.html#event:createdComponent">createdComponent</a></li><li><a href="ComponentContainer.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="ComponentContainer.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DiscoveryCtl.html#event:destroy">destroy</a></li><li><a href="DiscoveryCtl.html#event:newDevice">newDevice</a></li><li><a href="DiscoveryCtl.html#event:removeDevice">removeDevice</a></li><li><a href="DiscoveryCtl.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAVPlayerComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppAVPlayerComponent.html#event:destroy">destroy</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppAVPlayerComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppComp.html#event:join">join</a></li><li><a href="DMAppComp.html#event:remoteDeviceIdChange">remoteDeviceIdChange</a></li><li><a href="DMAppComp.html#event:remoteJoinStateChange">remoteJoinStateChange</a></li><li><a href="DMAppCompEmuDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppComponent.html#event:destroy">destroy</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppController.html#event:logRingBufferUpdate">logRingBufferUpdate</a></li><li><a href="DMAppIosCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppLayout.html#event:contextChange">contextChange</a></li><li><a href="DMAppLayout.html#event:createdComponent">createdComponent</a></li><li><a href="DMAppLayout.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="DMAppLayout.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DMAppLayout.html#event:dmAppChange">dmAppChange</a></li><li><a href="DMAppLayout.html#event:orientationChange">orientationChange</a></li><li><a href="DMAppLayoutRegionCtl.html#event:layoutRegionChange">layoutRegionChange</a></li><li><a href="DMAppTimeline.html#event:interContextSyncIdChange">interContextSyncIdChange</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:toggle">toggle</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:toggle">toggle</a></li><li><a href="RefCountedSignalMap.html#event:newSignal">newSignal</a></li><li><a href="RefCountedSignalMap.html#event:removeSignal">removeSignal</a></li><li><a href="Signal.BaseSignal.html#event:change">change</a></li><li><a href="Signal.BaseSignal.html#event:fall">fall</a></li><li><a href="Signal.BaseSignal.html#event:rise">rise</a></li><li><a href="Signal.BaseSignal.html#event:toggle">toggle</a></li><li><a href="Signal.BlockCountSignal.html#event:change">change</a></li><li><a href="Signal.BlockCountSignal.html#event:fall">fall</a></li><li><a href="Signal.BlockCountSignal.html#event:rise">rise</a></li><li><a href="Signal.BlockCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.ConstWrapperSignal.html#event:change">change</a></li><li><a href="Signal.ConstWrapperSignal.html#event:fall">fall</a></li><li><a href="Signal.ConstWrapperSignal.html#event:rise">rise</a></li><li><a href="Signal.ConstWrapperSignal.html#event:toggle">toggle</a></li><li><a href="Signal.RefCountSignal.html#event:change">change</a></li><li><a href="Signal.RefCountSignal.html#event:fall">fall</a></li><li><a href="Signal.RefCountSignal.html#event:rise">rise</a></li><li><a href="Signal.RefCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SettableSignal.html#event:change">change</a></li><li><a href="Signal.SettableSignal.html#event:fall">fall</a></li><li><a href="Signal.SettableSignal.html#event:rise">rise</a></li><li><a href="Signal.SettableSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:change">change</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:fall">fall</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:rise">rise</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:toggle">toggle</a></li></ul><h3>Namespaces</h3><ul><li><a href="ClockMiscUtil.html">ClockMiscUtil</a></li><li><a href="ClockSyncUtil.html">ClockSyncUtil</a></li><li><a href="CustomElementUtil.html">CustomElementUtil</a></li><li><a href="DebugMiscUtil.html">DebugMiscUtil</a></li><li><a href="DMAppTimeline.SharedStateSyncUtil.html">SharedStateSyncUtil</a></li><li><a href="EnumUtil.html">EnumUtil</a></li><li><a href="ErrorUtil.html">ErrorUtil</a></li><li><a href="InputDocument.html">InputDocument</a></li><li><a href="InputUtil.html">InputUtil</a></li><li><a href="MiscUtil.html">MiscUtil</a></li><li><a href="ModuleUtil.html">ModuleUtil</a></li><li><a href="PromiseUtil.html">PromiseUtil</a></li><li><a href="ResourceMgmtUtil.html">ResourceMgmtUtil</a></li><li><a href="Signal.html">Signal</a></li><li><a href="StateMapping.html">StateMapping</a></li><li><a href="TestComponents.html">TestComponents</a></li><li><a href="UpdateUtil.html">UpdateUtil</a></li><li><a href="VersionUtil.html">VersionUtil</a></li></ul><h3>Mixins</h3><ul><li><a href="DMAppAVPlayerComponentBehaviour.html">DMAppAVPlayerComponentBehaviour</a></li><li><a href="DMAppComponentBehaviour.html">DMAppComponentBehaviour</a></li><li><a href="ErrorUtil.ErrorMixin.html">ErrorMixin</a></li></ul><h3>Interfaces</h3><ul><li><a href="Blockable.html">Blockable</a></li><li><a href="CiiSyncHandler.html">CiiSyncHandler</a></li><li><a href="DebugMiscUtil.DebugDumpable.html">DebugDumpable</a></li><li><a href="DebugMiscUtil.DebugDumper.html">DebugDumper</a></li><li><a href="DebugMiscUtil.SerialisationDumper-Dynhandler.html">Dynhandler</a></li><li><a href="DiscoveryCtl.html">DiscoveryCtl</a></li><li><a href="ExternalSync.html">ExternalSync</a></li><li><a href="InputDocument.SetupComponentInterface.html">SetupComponentInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#argCheck">argCheck</a></li><li><a href="global.html#retryPromise">retryPromise</a></li><li><a href="global.html#waitable">waitable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 07 2019 10:14:17 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

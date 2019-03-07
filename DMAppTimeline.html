@@ -1,0 +1,5357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Class: DMAppTimeline</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Class: DMAppTimeline</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2><span class="attribs"><span class="type-signature"></span></span>DMAppTimeline<span class="signature">(dMAppController)</span><span class="type-signature"></span></h2>
+        
+            <div class="class-description"><p>Handles Timeline functionality.<br>This should not be directly constructed. Use: <a href="DMAppController.html#timeline">DMAppController#timeline</a>.</p></div>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+    <h2>Constructor</h2>
+    
+
+    
+    <h4 class="name" id="DMAppTimeline"><span class="type-signature"></span>new DMAppTimeline<span class="signature">(dMAppController)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>dMAppController</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="DMAppController.html">DMAppController</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>parent controller</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line60">line 60</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>EventEmitter</li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Namespaces</h3>
+
+        <dl>
+            <dt><a href="DMAppTimeline.SharedStateSyncUtil.html">SharedStateSyncUtil</a></dt>
+            <dd></dd>
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="dateNowClock"><span class="type-signature"></span>dateNowClock<span class="type-signature"> :<a href="global.html#Clock">Clock</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Date based clock</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line131">line 131</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="defaultClock"><span class="type-signature"></span>defaultClock<span class="type-signature"> :<a href="global.html#Clock">Clock</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Default component clock</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line134">line 134</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="dMAppController"><span class="type-signature"></span>dMAppController<span class="type-signature"> :<a href="DMAppController.html">DMAppController</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>parent controller</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="DMAppController.html">DMAppController</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line130">line 130</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="logger"><span class="type-signature"></span>logger<span class="type-signature"> :<a href="Logger.html">Logger</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>logger for this instance</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="Logger.html">Logger</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line136">line 136</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="monotonicClock"><span class="type-signature"></span>monotonicClock<span class="type-signature"> :<a href="global.html#Clock">Clock</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Monotonic clock</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line132">line 132</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="timelineStartClock"><span class="type-signature"></span>timelineStartClock<span class="type-signature"> :<a href="global.html#Clock">Clock</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Timeline start time based clock</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line133">line 133</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="wallClock"><span class="type-signature"></span>wallClock<span class="type-signature"> :<a href="global.html#Clock">Clock</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>Wall clock (adjusted from wall clock service)</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line135">line 135</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="wallclockServiceRemoteClockSyncEnableRefCount"><span class="type-signature"></span>wallclockServiceRemoteClockSyncEnableRefCount<span class="type-signature"> :<a href="Signal.RefCountSignal.html">Signal.RefCountSignal</a></span></h4>
+
+
+
+
+<div class="description">
+    <p>reference count signal to control whether wall clock service remote clock sync is enabled</p>
+</div>
+
+
+
+    <h5>Type:</h5>
+    <ul>
+        <li>
+            
+<span class="param-type"><a href="Signal.RefCountSignal.html">Signal.RefCountSignal</a></span>
+
+
+        </li>
+    </ul>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line137">line 137</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createCorrelatedClock"><span class="type-signature"></span>createCorrelatedClock<span class="signature">(input, parentOffset, childOffset, optional<span class="signature-attributes">opt</span>, optional<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {CorrelatedClock}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create a CorrelatedClock offsetted from the input clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>clock</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>parentOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>in s</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>childOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>in s</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>optional</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>descriptive name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>optional</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>speed</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line522">line 522</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">CorrelatedClock</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createOffsettedClock"><span class="type-signature"></span>createOffsettedClock<span class="signature">(input, offset, optional<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {CorrelatedClock}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Create a CorrelatedClock offsetted from the input clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>input</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>clock</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>in s</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>optional</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>descriptive name</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line505">line 505</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">CorrelatedClock</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="enumerateClocks"><span class="type-signature"></span>enumerateClocks<span class="signature">()</span><span class="type-signature"> &rarr; {Array.&lt;<a href="global.html#enumerateClocksReturnType">enumerateClocksReturnType</a>>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Enumerate member clocks</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line735">line 735</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;<a href="global.html#enumerateClocksReturnType">enumerateClocksReturnType</a>></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="formatHMS"><span class="type-signature"></span>formatHMS<span class="signature">(time)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Format a time value in seconds as an H:M:S string</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>time</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Time in seconds</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line756">line 756</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>H:M:S string</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getClockByName"><span class="type-signature"></span>getClockByName<span class="signature">(name<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {<a href="global.html#Clock">Clock</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get clock by name:</p>
+<p>The name is comprised of a type prefix, followed by /, followed by the type-specific key</p>
+<table>
+<thead>
+<tr>
+<th>Short prefix</th>
+<th>Long prefix</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>m</td>
+<td>member</td>
+<td>Member clocks (see below)</td>
+</tr>
+<tr>
+<td>r</td>
+<td>registered</td>
+<td>Registered clocks (see <a href="DMAppTimeline.html#getRegisteredClock">DMAppTimeline#getRegisteredClock</a>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Member clocks</th>
+<th>Member</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dateNowClock</td>
+<td><a href="DMAppTimeline.html#dateNowClock">DMAppTimeline#dateNowClock</a></td>
+</tr>
+<tr>
+<td>monotonicClock</td>
+<td><a href="DMAppTimeline.html#monotonicClock">DMAppTimeline#monotonicClock</a></td>
+</tr>
+<tr>
+<td>timelineStartClock</td>
+<td><a href="DMAppTimeline.html#timelineStartClock">DMAppTimeline#timelineStartClock</a></td>
+</tr>
+<tr>
+<td>defaultClock</td>
+<td><a href="DMAppTimeline.html#defaultClock">DMAppTimeline#defaultClock</a></td>
+</tr>
+<tr>
+<td>wallClock</td>
+<td><a href="DMAppTimeline.html#wallClock">DMAppTimeline#wallClock</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Prefix followed by string key</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line248">line 248</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Clock</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getClockInfo"><span class="type-signature"></span>getClockInfo<span class="signature">(clock, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get string describing a clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional options object</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>source</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>optional boolean whether to include source info</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line146">line 146</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getClockInfoObject"><span class="type-signature"></span>getClockInfoObject<span class="signature">(clock)</span><span class="type-signature"> &rarr; (nullable) {object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get object describing a clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line177">line 177</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>information object, or null</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getClockName"><span class="type-signature"></span>getClockName<span class="signature">(clock)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get name of a clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line196">line 196</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getInterContextSyncId"><span class="type-signature"></span>getInterContextSyncId<span class="signature">()</span><span class="type-signature"> &rarr; (nullable) {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get the current local direct shared-state sync inter-context ID, or null</p>
+<p>This is set if direct inter-context sync between the current instance and the shared-state service is currently enabled</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line910">line 910</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>id Inter-context sync ID, or null</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getRegisteredClock"><span class="type-signature"></span>getRegisteredClock<span class="signature">(name<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; (non-null) {CorrelatedClock}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get registered clock by name<br>Registered clocks are created on first use</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Registration name to use</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line211">line 211</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>Registered clock (created on first use)</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">CorrelatedClock</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="getStickyDefaultClock"><span class="type-signature"></span>getStickyDefaultClock<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="global.html#Clock">Clock</a>}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get the sticky clock which shadows the default clock<br>Do not modify the returned sticky clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line826">line 826</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="isClockMasterOverride"><span class="type-signature"></span>isClockMasterOverride<span class="signature">(clock)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Get whether a clock is in master override mode</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line277">line 277</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>true if in master override mode</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">boolean</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setClockSource"><span class="type-signature"></span>setClockSource<span class="signature">(clock, clockSource, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set the source clock for a re-assignable clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>clock to change source of</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>clockSource</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>clock source to use</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional options object</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>isMaster</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional boolean is the clock source now the master</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>synchroniserElement</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional master media element</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>getSynchroniserElementOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional get master media element offset in s relative to clock callback</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>player</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">MediaPlayer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional master media player</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sourceName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional name for the source</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>priority</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional priority, this is used for ordering when more than one clock source is defined</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>masterOverride</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional whether other clock sources which are or would be attempting to drive this clock should set themselves to slave mode, when this clock source is the highest priority source</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line405">line 405</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setCorrelatedClockParent"><span class="type-signature"></span>setCorrelatedClockParent<span class="signature">(parentClock, childClock, parentOffset, childOffset, speed, name<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Reparent/re-offset a child CorrelatedClock to be offsetted from a parent input clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>parentClock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>input parent clock</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>childClock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">CorrelatedClock</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>CorrelatedClock to re-parent and offset onto parentClock</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>parentOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>in s</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>childOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>in s</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>speed</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional descriptive name</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line540">line 540</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setDefaultClockSource"><span class="type-signature"></span>setDefaultClockSource<span class="signature">(clockSource, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set the source clock for the <a href="DMAppTimeline.html#defaultClock">DMAppTimeline#defaultClock</a> member</p>
+<p>Calls <a href="DMAppTimeline.html#setClockSource">DMAppTimeline#setClockSource</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clockSource</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>clock source to use</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional options object</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>isMaster</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional boolean is the clock source now the master</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>synchroniserElement</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional master media element</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>getSynchroniserElementOffset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional get master media element offset in s relative to clock callback</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>player</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">MediaPlayer</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional master media player</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sourceName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional name for the source</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>priority</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional priority, this is used for ordering when more than one clock source is defined</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>masterOverride</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional whether other clock sources which are or would be attempting to drive this clock should set themselves to slave mode, when this clock source is the highest priority source</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line387">line 387</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setInterContextSyncId"><span class="type-signature"></span>setInterContextSyncId<span class="signature">(id<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Set the current local direct shared-state sync inter-context ID</p>
+<p>Set to a truthy value to enable direct inter-context sync between the current instance and the shared-state service<br>Set to null/undefined to disable direct inter-context sync between the current instance and the shared-state service</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Inter-context sync ID</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line888">line 888</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="setupStickyDefaultClock"><span class="type-signature"></span>setupStickyDefaultClock<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Setup the default clock source as a sticky clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line843">line 843</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="synchroniseExternalToClock"><span class="type-signature"></span>synchroniseExternalToClock<span class="signature">(clock, ext)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Synchronise an external sync interface to a clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>MUST be a member clock or a clock from <a href="DMAppTimeline.html#getRegisteredClock">DMAppTimeline#getRegisteredClock</a>, or a clock derived from a member/registered clock using <a href="DMAppTimeline.html#createOffsettedClock">DMAppTimeline#createOffsettedClock</a>/<a href="DMAppTimeline.html#createCorrelatedClock">DMAppTimeline#createCorrelatedClock</a>/<a href="DMAppTimeline.html#setCorrelatedClockParent">DMAppTimeline#setCorrelatedClockParent</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ext</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ExternalSync.html">ExternalSync</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>external sync interface</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line571">line 571</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="synchroniseMediaElementToClock"><span class="type-signature"></span>synchroniseMediaElementToClock<span class="signature">(clock, element, name<span class="signature-attributes">opt</span>, options<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Synchronise a media element to a clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>MUST be a member clock or a clock from <a href="DMAppTimeline.html#getRegisteredClock">DMAppTimeline#getRegisteredClock</a>, or a clock derived from a member/registered clock using <a href="DMAppTimeline.html#createOffsettedClock">DMAppTimeline#createOffsettedClock</a>/<a href="DMAppTimeline.html#createCorrelatedClock">DMAppTimeline#createCorrelatedClock</a>/<a href="DMAppTimeline.html#setCorrelatedClockParent">DMAppTimeline#setCorrelatedClockParent</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>media element</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional options object</p>
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pauseOnSyncStop</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>optional whether to pause the media element when sync is stopped due to the clock being unavailable</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line560">line 560</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="unsetClockSource"><span class="type-signature"></span>unsetClockSource<span class="signature">(clock, clockSource)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Unset the source clock for a re-assignable clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>clock to change source of</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>clockSource</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>clock source to unset, which was previously passed to <a href="DMAppTimeline.html#setClockSource">DMAppTimeline#setClockSource</a> with the same clock to change the source of</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line443">line 443</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="unsetDefaultClockSource"><span class="type-signature"></span>unsetDefaultClockSource<span class="signature">(clockSource)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Unset the source clock for the <a href="DMAppTimeline.html#defaultClock">DMAppTimeline#defaultClock</a> member</p>
+<p>Calls <a href="DMAppTimeline.html#unsetClockSource">DMAppTimeline#unsetClockSource</a></p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clockSource</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>clock source to unset, which was previously passed to <a href="DMAppTimeline.html#setDefaultClockSource">DMAppTimeline#setDefaultClockSource</a></p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line433">line 433</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="unsynchroniseFromClock"><span class="type-signature"></span>unsynchroniseFromClock<span class="signature">(clock, element)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Unsynchronise an external sync interface to a clock</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>clock</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="global.html#Clock">Clock</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>MUST be a member clock or a clock from <a href="DMAppTimeline.html#getRegisteredClock">DMAppTimeline#getRegisteredClock</a>, or a clock derived from a member/registered clock using <a href="DMAppTimeline.html#createOffsettedClock">DMAppTimeline#createOffsettedClock</a>/<a href="DMAppTimeline.html#createCorrelatedClock">DMAppTimeline#createCorrelatedClock</a>/<a href="DMAppTimeline.html#setCorrelatedClockParent">DMAppTimeline#setCorrelatedClockParent</a></p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+|
+
+<span class="param-type"><a href="ExternalSync.html">ExternalSync</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>element or external sync interface previously passed to <a href="DMAppTimeline.html#synchroniseMediaElementToClock">DMAppTimeline#synchroniseMediaElementToClock</a> or <a href="DMAppTimeline.html#synchroniseExternalToClock">DMAppTimeline#synchroniseExternalToClock</a> for the given clock</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line624">line 624</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+        <h3 class="subsection-title">Events</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="event:interContextSyncIdChange">interContextSyncIdChange</h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Local direct shared state sync inter-context ID change</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="lib_DMAppTimeline.js.html">lib/DMAppTimeline.js</a>, <a href="lib_DMAppTimeline.js.html#line874">line 874</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DMAppAndroid.html">DMAppAndroid</a></li><li><a href="module-DMAppClientLib.html">DMAppClientLib</a></li><li><a href="module-DMAppCompEmuLib.html">DMAppCompEmuLib</a></li><li><a href="module-DMAppCompLib.html">DMAppCompLib</a></li><li><a href="module-DMAppIos.html">DMAppIos</a></li><li><a href="module-DMAppTvEmuLib.html">DMAppTvEmuLib</a></li></ul><h3>Classes</h3><ul><li><a href="AjaxPromise.html">AjaxPromise</a></li><li><a href="App2AppMsgBusCtl.html">App2AppMsgBusCtl</a></li><li><a href="App2AppMsgBusCtl.App2AppMsgBusRecvHandler.html">App2AppMsgBusRecvHandler</a></li><li><a href="BlockableWrapper.html">BlockableWrapper</a></li><li><a href="CiiSyncHandlerBase.html">CiiSyncHandlerBase</a></li><li><a href="ClockArrayIntervalScheduler.html">ClockArrayIntervalScheduler</a></li><li><a href="ComponentContainer.html">ComponentContainer</a></li><li><a href="DebugMiscUtil.SerialisationDumper.html">SerialisationDumper</a></li><li><a href="DeviceOrientationCtl.html">DeviceOrientationCtl</a></li><li><a href="DMAppAndroidCompDiscovery.html">DMAppAndroidCompDiscovery</a></li><li><a href="DMAppAndroidSynchroniser.html">DMAppAndroidSynchroniser</a></li><li><a href="DMAppAVPlayerComponent.html">DMAppAVPlayerComponent</a></li><li><a href="DMAppComp.html">DMAppComp</a></li><li><a href="DMAppCompDiscoveryFilter.html">DMAppCompDiscoveryFilter</a></li><li><a href="DMAppCompEmuDiscovery.html">DMAppCompEmuDiscovery</a></li><li><a href="DMAppComponent.html">DMAppComponent</a></li><li><a href="DMAppComponentWrapper.html">DMAppComponentWrapper</a></li><li><a href="DMAppController.html">DMAppController</a></li><li><a href="DMAppIosCompDiscovery.html">DMAppIosCompDiscovery</a></li><li><a href="DMAppLayout.html">DMAppLayout</a></li><li><a href="DMAppLayoutIO.html">DMAppLayoutIO</a></li><li><a href="DMAppLayoutRegionCtl.html">DMAppLayoutRegionCtl</a></li><li><a href="DMAppTimeline.html">DMAppTimeline</a></li><li><a href="DMAppTvEmuController.html">DMAppTvEmuController</a></li><li><a href="DMAppTvEmuSync.html">DMAppTvEmuSync</a></li><li><a href="ErrorUtil.ErrorFlag.html">ErrorFlag</a></li><li><a href="ErrorUtil.ErrorSignal.html">ErrorSignal</a></li><li><a href="ExecValve.html">ExecValve</a></li><li><a href="InputDocument.InputDocumentHandler.html">InputDocumentHandler</a></li><li><a href="KeyStore.html">KeyStore</a></li><li><a href="LocalSignalMap.html">LocalSignalMap</a></li><li><a href="Logger.html">Logger</a></li><li><a href="MediaElementClockSource.html">MediaElementClockSource</a></li><li><a href="MediaSynchroniser.html">MediaSynchroniser</a></li><li><a href="PromiseExecQueue.html">PromiseExecQueue</a></li><li><a href="RefCountedSignalMap.html">RefCountedSignalMap</a></li><li><a href="ResourceMgmtUtil.RefCountedDelayedDestructor.html">RefCountedDelayedDestructor</a></li><li><a href="Signal.BaseSignal.html">BaseSignal</a></li><li><a href="Signal.BlockCountSignal.html">BlockCountSignal</a></li><li><a href="Signal.ConstWrapperSignal.html">ConstWrapperSignal</a></li><li><a href="Signal.RefCountSignal.html">RefCountSignal</a></li><li><a href="Signal.SettableSignal.html">SettableSignal</a></li><li><a href="Signal.SharedStatePropertySignal.html">SharedStatePropertySignal</a></li><li><a href="StateMapping.ContextGlobalSharedStateMapping.html">ContextGlobalSharedStateMapping</a></li><li><a href="StateMapping.ContextGroupParameterSharedStateMapping.html">ContextGroupParameterSharedStateMapping</a></li><li><a href="StateMapping.SharedStateMappingBase.html">SharedStateMappingBase</a></li><li><a href="StateMapping.StaticPathSharedStateMapping.html">StaticPathSharedStateMapping</a></li><li><a href="StickyClockCorrelationSource.html">StickyClockCorrelationSource</a></li><li><a href="SyncProtocolsCiiSyncHandler.html">SyncProtocolsCiiSyncHandler</a></li><li><a href="TestConfigTestComponent.html">TestConfigTestComponent</a></li><li><a href="TimeoutHandler.html">TimeoutHandler</a></li><li><a href="VersionUtil.FeatureVersionSet.html">FeatureVersionSet</a></li></ul><h3>Events</h3><ul><li><a href="AjaxPromise.html#event:fail">fail</a></li><li><a href="AjaxPromise.html#event:retry">retry</a></li><li><a href="AjaxPromise.html#event:success">success</a></li><li><a href="App2AppMsgBusCtl.html#event:deviceSocketChange">deviceSocketChange</a></li><li><a href="App2AppMsgBusCtl.html#event:enabledStateChange">enabledStateChange</a></li><li><a href="App2AppMsgBusCtl.html#event:upstreamChange">upstreamChange</a></li><li><a href="ClockArrayIntervalScheduler.html#event:change">change</a></li><li><a href="ComponentContainer.html#event:createdComponent">createdComponent</a></li><li><a href="ComponentContainer.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="ComponentContainer.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DiscoveryCtl.html#event:destroy">destroy</a></li><li><a href="DiscoveryCtl.html#event:newDevice">newDevice</a></li><li><a href="DiscoveryCtl.html#event:removeDevice">removeDevice</a></li><li><a href="DiscoveryCtl.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAVPlayerComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppAVPlayerComponent.html#event:destroy">destroy</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppAVPlayerComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppComp.html#event:join">join</a></li><li><a href="DMAppComp.html#event:remoteDeviceIdChange">remoteDeviceIdChange</a></li><li><a href="DMAppComp.html#event:remoteJoinStateChange">remoteJoinStateChange</a></li><li><a href="DMAppCompEmuDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppComponent.html#event:destroy">destroy</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppController.html#event:logRingBufferUpdate">logRingBufferUpdate</a></li><li><a href="DMAppIosCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppLayout.html#event:contextChange">contextChange</a></li><li><a href="DMAppLayout.html#event:createdComponent">createdComponent</a></li><li><a href="DMAppLayout.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="DMAppLayout.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DMAppLayout.html#event:dmAppChange">dmAppChange</a></li><li><a href="DMAppLayout.html#event:orientationChange">orientationChange</a></li><li><a href="DMAppLayoutRegionCtl.html#event:layoutRegionChange">layoutRegionChange</a></li><li><a href="DMAppTimeline.html#event:interContextSyncIdChange">interContextSyncIdChange</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:toggle">toggle</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:toggle">toggle</a></li><li><a href="RefCountedSignalMap.html#event:newSignal">newSignal</a></li><li><a href="RefCountedSignalMap.html#event:removeSignal">removeSignal</a></li><li><a href="Signal.BaseSignal.html#event:change">change</a></li><li><a href="Signal.BaseSignal.html#event:fall">fall</a></li><li><a href="Signal.BaseSignal.html#event:rise">rise</a></li><li><a href="Signal.BaseSignal.html#event:toggle">toggle</a></li><li><a href="Signal.BlockCountSignal.html#event:change">change</a></li><li><a href="Signal.BlockCountSignal.html#event:fall">fall</a></li><li><a href="Signal.BlockCountSignal.html#event:rise">rise</a></li><li><a href="Signal.BlockCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.ConstWrapperSignal.html#event:change">change</a></li><li><a href="Signal.ConstWrapperSignal.html#event:fall">fall</a></li><li><a href="Signal.ConstWrapperSignal.html#event:rise">rise</a></li><li><a href="Signal.ConstWrapperSignal.html#event:toggle">toggle</a></li><li><a href="Signal.RefCountSignal.html#event:change">change</a></li><li><a href="Signal.RefCountSignal.html#event:fall">fall</a></li><li><a href="Signal.RefCountSignal.html#event:rise">rise</a></li><li><a href="Signal.RefCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SettableSignal.html#event:change">change</a></li><li><a href="Signal.SettableSignal.html#event:fall">fall</a></li><li><a href="Signal.SettableSignal.html#event:rise">rise</a></li><li><a href="Signal.SettableSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:change">change</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:fall">fall</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:rise">rise</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:toggle">toggle</a></li></ul><h3>Namespaces</h3><ul><li><a href="ClockMiscUtil.html">ClockMiscUtil</a></li><li><a href="ClockSyncUtil.html">ClockSyncUtil</a></li><li><a href="CustomElementUtil.html">CustomElementUtil</a></li><li><a href="DebugMiscUtil.html">DebugMiscUtil</a></li><li><a href="DMAppTimeline.SharedStateSyncUtil.html">SharedStateSyncUtil</a></li><li><a href="EnumUtil.html">EnumUtil</a></li><li><a href="ErrorUtil.html">ErrorUtil</a></li><li><a href="InputDocument.html">InputDocument</a></li><li><a href="InputUtil.html">InputUtil</a></li><li><a href="MiscUtil.html">MiscUtil</a></li><li><a href="ModuleUtil.html">ModuleUtil</a></li><li><a href="PromiseUtil.html">PromiseUtil</a></li><li><a href="ResourceMgmtUtil.html">ResourceMgmtUtil</a></li><li><a href="Signal.html">Signal</a></li><li><a href="StateMapping.html">StateMapping</a></li><li><a href="TestComponents.html">TestComponents</a></li><li><a href="UpdateUtil.html">UpdateUtil</a></li><li><a href="VersionUtil.html">VersionUtil</a></li></ul><h3>Mixins</h3><ul><li><a href="DMAppAVPlayerComponentBehaviour.html">DMAppAVPlayerComponentBehaviour</a></li><li><a href="DMAppComponentBehaviour.html">DMAppComponentBehaviour</a></li><li><a href="ErrorUtil.ErrorMixin.html">ErrorMixin</a></li></ul><h3>Interfaces</h3><ul><li><a href="Blockable.html">Blockable</a></li><li><a href="CiiSyncHandler.html">CiiSyncHandler</a></li><li><a href="DebugMiscUtil.DebugDumpable.html">DebugDumpable</a></li><li><a href="DebugMiscUtil.DebugDumper.html">DebugDumper</a></li><li><a href="DebugMiscUtil.SerialisationDumper-Dynhandler.html">Dynhandler</a></li><li><a href="DiscoveryCtl.html">DiscoveryCtl</a></li><li><a href="ExternalSync.html">ExternalSync</a></li><li><a href="InputDocument.SetupComponentInterface.html">SetupComponentInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#argCheck">argCheck</a></li><li><a href="global.html#retryPromise">retryPromise</a></li><li><a href="global.html#waitable">waitable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 07 2019 10:14:17 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

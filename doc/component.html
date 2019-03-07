@@ -1,0 +1,101 @@
+<!DOCTYPE html><html><meta charset="UTF-8" /><link type="text/css" rel="stylesheet" href="../styles/jsdoc-default.css">
+<h3 id="componentrequirements">Component Requirements</h3>
+<p>A 'component' is defined as an object meeting the interface defined by <code>DMAppComponent</code>, which is
+defined in terms of exposing and/or overriding all properties the of mixin: <code>DMAppComponentBehaviour</code>.</p>
+<p>A component MUST:</p>
+<ul>
+<li>Satisfy the interface defined by <code>DMAppComponent</code> which is defined in terms of <code>DMAppComponentBehaviour</code>.</li>
+<li>Mix-in, inherit, extend, or otherwise expose all properties of <code>DMAppComponentBehaviour</code> which are not overridden
+by the component, either directly or via intermediary behaviours/mixins/classes.</li>
+<li>Return a valid <code>HTMLElement</code> from the <code>getComponentElement()</code> method, or null/undefined.</li>
+</ul>
+<p>A component SHOULD:</p>
+<ul>
+<li>Always return the same value from the <code>getComponentElement()</code> method.
+If the return value changes during the lifetime of the component, the resulting behaviour is undefined.</li>
+</ul>
+<p>A component MAY:</p>
+<ul>
+<li>Return a reference to itself in the <code>getComponentElement()</code> method (i.e. <code>return this;</code>)
+(this is the default defined in <code>DMAppComponentBehaviour</code>).
+This requires that the component is itself a <code>HTMLElement</code>.</li>
+<li>Return a reference to a seperate <code>HTMLElement</code> object in the <code>getComponentElement()</code> method.
+This requires that the default implementation in <code>DMAppComponentBehaviour</code> is overriden.</li>
+<li>Return null/undefined in the <code>getComponentElement()</code> method.</li>
+</ul>
+<p>The HTMLElement returned by the <code>getComponentElement()</code> method MAY be a Web Component and/or a custom element.</p>
+<h3 id="componentconstruction">Component Construction</h3>
+<ul>
+<li>Components construction is specified using the tuple formed by: component ID, component class, component URL.</li>
+<li>See 'HTML Imports' section for the meaning of 'component URL'.</li>
+<li>The <code>dMAppComponentTypes</code> map contains key value pairs of component class to <code>DMAppComponentConstructorFunction</code> constructor function.</li>
+<li>If the <code>dMAppComponentTypes</code> map contains a key equal to the component class, the corresponding constructor function is invoked using <code>operator new(DMAppController)</code>. The return value is the constructed component.<ul>
+<li>If invoking <code>operator new(DMAppController)</code> throws a TypeError which includes (case-insensitive) the string: 'This constructor should be called without arguments', construction is re-tried using <code>operator new()</code>, this is for compatability with custom elements.</li></ul></li>
+<li>The <code>DMAppComponentConstructorFunction</code> constructor function SHOULD NOT call <code>initDMAppComponent()</code>, this will be called after construction.</li>
+<li>The <code>DMAppComponentConstructorFunction</code> constructor function MUST return a valid component.</li>
+<li>If the <code>dMAppComponentTypes</code> map does not contains a key equal to the component class, and the component class looks like a custom element tag name
+(matches the regexes: <code>/^[-0-9a-z]+$/i</code> and <code>/[0-9a-z]-+[0-9a-z]/i</code>), an element is created using a tag name equal to the component class.<ul>
+<li>If the created element is a valid component, it is used as-is.</li>
+<li>If the created element is not a valid component:<ul>
+<li>If the created element appears to have constructed from a registered custom element, it is wrapped using <code>DMAppComponentWrapper</code>.</li>
+<li>Otherwise, component construction is aborted.</li></ul></li></ul></li>
+<li>If construction by means of a custom element tag name is not intended, it is RECOMMENDED that component class names and the corresponding keys in the <code>dMAppComponentTypes</code> map
+use CamelCased names which cannot be used to create a custom element, instead of dash-separated names.</li>
+</ul>
+<h3 id="htmlimports">HTML Imports</h3>
+<ul>
+<li>The component URL MAY be null/blank/empty, in which case no HTML import is used.</li>
+<li>If the component URL is non-null and has non-zero length, the URL is loaded as a HTML import (i.e. by appending
+a <code>&lt;link rel="import" /&gt;</code> tag to the document), and component construction occurs after the import and its dependencies
+have completed loading.</li>
+<li>A HTML import MAY recursively load further HTML imports.</li>
+<li>A HTML import MAY:<ul>
+<li>Add zero or more <code>DMAppComponentConstructorFunction</code> constructors to the <code>dMAppComponentTypes</code> map.</li>
+<li>Register zero or more custom elements.</li>
+<li>Perform zero or more other actions.</li></ul></li>
+<li>A HTML import SHOULD avoid polluting the global JavaScript scope as much as possible.</li>
+<li>A HTML import SHOULD avoid assuming that global JavaScript variables have been defined, except where documented.</li>
+<li>A HTML import SHOULD define any local JavaScript variables that are required within an IIFE or equivalent isolated scope.</li>
+<li>A HTML import SHOULD avoid adding/removing/modifying JavaScript, CSS, DOM nodes, etc. in the global scope which are likely
+to interfere with operation of other components, functionality and/or modules.</li>
+<li>It is RECOMMENDED that a HTML import which is specified as a component URL, defines the constructor and/or custom element
+which is referenced by the corresponding component class, but this is not strictly required.</li>
+</ul>
+<h3 id="componentimplementationoptions">Component Implementation Options</h3>
+<ul>
+<li>The variable <code>Polymer</code> SHALL be available at global scope. The Polymer library MAY be used to create custom elements.<ul>
+<li>The created custom element MAY itself be a component, by use of the Polymer's behaviour mechanism.<ul>
+<li>The return value of the Polymer() method is a constructor function which MAY be inserted directly into the <code>dMAppComponentTypes</code> map.</li>
+<li>Any other constructor function which creates such an element MAY be inserted directly into the <code>dMAppComponentTypes</code> map.</li></ul></li>
+<li>The Polymer documentation should be read, in particular component developers should familiarise themselves with the concepts of shadow/shady DOM, and the Polymer-specific DOM and CSS manipulation functions.<ul>
+<li>Particularly useful/relevant methods include: <code>scopeSubtree</code>, <code>updateStyles</code>, <code>$$</code>, <code>Polymer.dom</code>.</li></ul></li>
+<li>The Polymer library is loaded with the global settings: <code>lazyRegister: true</code>, <code>passiveTouchGestures: true</code>, and <code>useNativeCSSProperties: true</code>.</li></ul></li>
+<li>Custom elements and/or Web Components MAY be created using other libraries/mechanisms/etc,
+or an arbitrary <code>HTMLElement</code> which is not a Web Component, custom element and/or the output of Polymer may be used.<ul>
+<li>The created element MAY itself be a component, by use of prototype extension and/or equivalent mechanisms.<ul>
+<li>A constructor function which creates such an element MAY be inserted directly into the <code>dMAppComponentTypes</code> map.</li></ul></li></ul></li>
+<li>A constructor function which creates a valid component which returns an element of one or more of the forms above
+in its <code>getComponentElement()</code> method MAY be inserted directly into the <code>dMAppComponentTypes</code> map.<ul>
+<li>This constructor function MAY be implemented by extension of the <code>DMAppComponentWrapper</code> class, or by implementing equivalent functionality.</li></ul></li>
+<li>A custom element MAY be registered using Polymer, <code>document.registerElement()</code>, or any other equivalent mechanism.<ul>
+<li>The component class MAY be set to the registered element's tag name to construct the custom element directly,
+if no constructors is defined in the <code>dMAppComponentTypes</code> map with the same component class name.<ul>
+<li>If the custom element is not itself a valid component, it will be wrapped using <code>DMAppComponentWrapper</code>.
+This is useful for static UI elements.</li></ul></li></ul></li>
+<li>It is RECOMMENDED that components which are AV players, mix-in, inherit, extend and/or otherwise include the <code>DMAppAVPlayerComponentBehaviour</code>
+behaviour mix-in; this extends the <code>DMAppComponentBehaviour</code> mix-in.</li>
+</ul>
+<h3 id="nonrequirements">Non-Requirements</h3>
+<ul>
+<li>Use of Polymer is not required.</li>
+<li>Use of Web Components is not required.</li>
+<li>Use of custom elements is not required.</li>
+<li>Components are not required to also be their own element.</li>
+<li>Components are not required to be a separate object from their own element.</li>
+<li>Implementation of 2-Immerse specific code for components is not required if the component is a custom element which
+does not require 2-Immerse functionality and can therefore be automatically wrapped using <code>DMAppComponentWrapper</code>.</li>
+<li>Implementation of 2-Immerse specific code is not required to be in the same file, module, scope or object as a custom element
+or other form of element and/or object/class/function/module implementing functionality to be exposed by the component. A component
+may be written which wraps zero or more external items of functionality. This may be implemented by use, extension or re-implementation
+of the <code>DMAppComponentWrapper</code> class or otherwise. This can be conveniently done by use of a HTML import which recursively loads its own dependencies.</li>
+</ul></html>

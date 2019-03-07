@@ -1,0 +1,410 @@
+<!DOCTYPE html><html><meta charset="UTF-8" /><link type="text/css" rel="stylesheet" href="../styles/jsdoc-default.css">
+<h3 id="setup">Setup</h3>
+<p>app2app socket setup and pairing is as in HbbTV.</p>
+<p>Once paired, messages can be sent from companion to TV or vice versa.</p>
+<h3 id="syntax">Syntax</h3>
+<p>All messages are JSON.</p>
+<p>All messages have a <code>type</code> field which indicates the message type.</p>
+<p>The field(s) used for the message body vary depending on the type (and where applicable, subtype) of the message.
+Message body fields are indicated in the tables below.</p>
+<h3 id="messagesbothdirections">Messages: Both directions</h3>
+<table>
+<thead>
+<tr>
+<th><code>type</code> field</th>
+<th>message body fields</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>device</td>
+<td><code>value</code> = sender's device ID</td>
+<td>SHOULD be sent on pairing</td>
+</tr>
+<tr>
+<td>instance</td>
+<td><code>value</code> = sender's instance ID</td>
+<td>SHOULD be sent on pairing</td>
+</tr>
+<tr>
+<td>app2appMsgBus</td>
+<td>various: see section below</td>
+<td>various: see section below</td>
+</tr>
+</tbody>
+</table>
+<h3 id="messagestvcompanion">Messages: TV --&gt; Companion</h3>
+<table>
+<thead>
+<tr>
+<th><code>type</code> field</th>
+<th>message body fields</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>context</td>
+<td><code>value</code> = Context ID (or null)</td>
+<td>Context ID. SHOULD be sent on pairing and on change</td>
+</tr>
+<tr>
+<td>dmApp</td>
+<td><code>value</code> = DMApp ID (or null)</td>
+<td>DMApp ID. SHOULD be sent on pairing and on change</td>
+</tr>
+<tr>
+<td>interContext</td>
+<td><code>value</code> = Inter Context ID (or null)</td>
+<td>Inter-context ID. SHOULD be sent on pairing and on change</td>
+</tr>
+<tr>
+<td>session</td>
+<td><code>value</code> = Session ID (or null)</td>
+<td>Session ID. SHOULD be sent on pairing and on change</td>
+</tr>
+<tr>
+<td>setMode</td>
+<td><code>value</code> = Mode signal variable</td>
+<td>Mode signal (this is not the same as the TV vs companion mode). SHOULD be sent on pairing (if defined) and on change</td>
+</tr>
+<tr>
+<td>app2appSyncEvent</td>
+<td><code>subtype</code> = sync event type</td>
+<td>Only sent after app2appSyncCtl received</td>
+</tr>
+<tr>
+<td>serviceUrls</td>
+<td><code>value</code> = service URL object</td>
+<td>Listing of service URLs used on the TV. SHOULD be sent on pairing</td>
+</tr>
+<tr>
+<td>localDevGroupErrorSummary</td>
+<td><code>value</code> = error summary</td>
+<td>Summary of error state of all devices in local group. SHOULD be sent on pairing and on change</td>
+</tr>
+<tr>
+<td>sharedSignalChange</td>
+<td><code>key</code> = signal name, <code>value</code> = value</td>
+<td>Sent only for signals subscribed using <em>subscribeSharedSignals</em></td>
+</tr>
+<tr>
+<td>mergedPerDeviceSignalChange</td>
+<td><code>key</code> = signal name, <code>value</code> = value</td>
+<td>Sent only for signals subscribed using <em>subscribeMergedPerDeviceSignals</em></td>
+</tr>
+<tr>
+<td>setAllAuxData</td>
+<td><code>value</code> = auxiliary data object</td>
+<td>TV auxiliary discovery data object</td>
+</tr>
+</tbody>
+</table>
+<p>After a companion device receives a <em>context</em>, <em>dmApp</em>, <em>interContext</em>, or <em>session</em> message, it SHOULD join or leave the context, DMApp, inter-context group, or session respectively.</p>
+<p>app2appSyncEvent event types:</p>
+<table>
+<thead>
+<tr>
+<th><code>subtype</code> field</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>available</td>
+<td>A notification that the clock has become available</td>
+</tr>
+<tr>
+<td>unavailable</td>
+<td>A notification that the clock has become unavailable</td>
+</tr>
+<tr>
+<td>change</td>
+<td>A timestamp update indicating a notifiable change</td>
+</tr>
+<tr>
+<td>update</td>
+<td>A regular timestamp update</td>
+</tr>
+</tbody>
+</table>
+<p>Message subtypes: <em>available</em>, <em>change</em>, <em>update</em>, additionally have the following fields.</p>
+<table>
+<thead>
+<tr>
+<th>field</th>
+<th>unit</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>speed</td>
+<td>relative</td>
+<td>Normal speed = 1, paused = 0, other values MAY be sent</td>
+</tr>
+<tr>
+<td>time</td>
+<td>s</td>
+<td>Timestamps do not include correction for network or other delays</td>
+</tr>
+</tbody>
+</table>
+<p>A companion device MUST assume that the clock is unavailable until a subtype <em>available</em> message is received.</p>
+<p>When the app2app socket is disconnected/unpaired, the sync state becomes <em>unavailable</em>, even if the socket is later reconnected.</p>
+<p>If the clock at the TV is available when the socket is later reconnected and re-paired, it MAY send a further <em>available</em> message
+after it receives a suitable <em>app2appSyncCtl</em> message.</p>
+<h3 id="messagescompaniontv">Messages: Companion --&gt; TV</h3>
+<table>
+<thead>
+<tr>
+<th><code>type</code> field</th>
+<th>message body fields</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>app2appSyncCtl</td>
+<td><code>sync</code> = boolean</td>
+<td>Set to true to request app2app sync messages from TV</td>
+</tr>
+<tr>
+<td>errorSummary</td>
+<td><code>value</code> = error summary</td>
+<td>Summary of error state of companion device</td>
+</tr>
+<tr>
+<td>subscribeSharedSignals</td>
+<td><code>keys</code> = array of signal names</td>
+<td>Subscribe to shared signals with given keys/names</td>
+</tr>
+<tr>
+<td>unsubscribeSharedSignals</td>
+<td><code>keys</code> = array of signal names</td>
+<td>Unsubscribe from shared signals with given keys/names</td>
+</tr>
+<tr>
+<td>subscribeMergedPerDeviceSignals</td>
+<td><code>keys</code> = array of signal names</td>
+<td>Subscribe to merged per-device signals with given keys/names</td>
+</tr>
+<tr>
+<td>unsubscribeMergedPerDeviceSignals</td>
+<td><code>keys</code> = array of signal names</td>
+<td>Unsubscribe to merged per-device signals with given keys/names</td>
+</tr>
+<tr>
+<td>setPerDeviceSignal</td>
+<td><code>key</code> = signal name, <code>value</code> = value</td>
+<td>Notify update of value of single per-device signal</td>
+</tr>
+<tr>
+<td>setAllPerDeviceSignals</td>
+<td><code>signals</code> = array of signal name/value pairs</td>
+<td>Notify names/values of all per-device signals</td>
+</tr>
+</tbody>
+</table>
+<p>Any sync enabled by use of the <em>app2appSyncCtl</em> message only persists as long as the socket remains connected and paired.</p>
+<p>Any signal subscriptions enabled by use of the <em>subscribeSharedSignals</em> and <em>subscribeMergedPerDeviceSignals</em> messages only persists as long as the socket remains connected and paired.</p>
+<h3 id="messagestvemulatorapp2appservertvafterpairingcomplete">Messages: TV emulator app2app server --&gt; TV (after pairing complete)</h3>
+<table>
+<thead>
+<tr>
+<th><code>type</code> field</th>
+<th>message body fields</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>remoteAddr</td>
+<td><code>address</code> = IP, <code>port</code> = port</td>
+<td>Address of companion device app2app socket</td>
+</tr>
+</tbody>
+</table>
+<h3 id="messagetypeapp2appmsgbus">Message type: app2appMsgBus</h3>
+<p>Messages of this type are used for messaging between devices/components using the app2app channel.
+Messages of this type have the following additional fields.</p>
+<table>
+<thead>
+<tr>
+<th>field</th>
+<th>type</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>subtype</td>
+<td>string</td>
+<td>'msg' for outgoing messages, 'ack' or 'nack' for replies, see below</td>
+</tr>
+<tr>
+<td>msgId</td>
+<td>string</td>
+<td>Message ID, replies use the same ID as the outgoing message</td>
+</tr>
+<tr>
+<td>body</td>
+<td>arbitrary</td>
+<td>Message contents, of an arbitrary type, used for 'msg' and 'ack' subtypes</td>
+</tr>
+<tr>
+<td>error</td>
+<td>object</td>
+<td>Negative acknowledgement message, used for 'nack' subtype, see below</td>
+</tr>
+<tr>
+<td>toDeviceId</td>
+<td>string</td>
+<td>Target device ID of this message</td>
+</tr>
+<tr>
+<td>toComponentId</td>
+<td>string</td>
+<td>Target component ID of this message, not used for replies</td>
+</tr>
+<tr>
+<td>fromDeviceId</td>
+<td>string</td>
+<td>Source device ID of this message, not used for replies</td>
+</tr>
+<tr>
+<td>fromComponentId</td>
+<td>string</td>
+<td>Optional source component ID of this message, not used for replies</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><code>subtype</code> field</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>msg</td>
+<td>Outgoing message</td>
+</tr>
+<tr>
+<td>ack</td>
+<td>Reply message: positive acknowledgement</td>
+</tr>
+<tr>
+<td>nack</td>
+<td>Reply message: negative acknowledgement</td>
+</tr>
+</tbody>
+</table>
+<p>'nack' subtype messages may be sent by intermediary devices/components if the target device/component is not reachable.</p>
+<table>
+<thead>
+<tr>
+<th><code>error</code> object fields</th>
+<th>type</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>type</td>
+<td>string</td>
+<td>Type of negative acknowledgement/error, see below</td>
+</tr>
+<tr>
+<td>deviceId</td>
+<td>string</td>
+<td>Device ID emitting the 'nack' message, not necessarily the destination</td>
+</tr>
+<tr>
+<td>componentId</td>
+<td>string</td>
+<td>Component ID emitting the 'nack' message, used for 'component_error' type</td>
+</tr>
+<tr>
+<td>body</td>
+<td>arbitrary</td>
+<td>Message contents, of an arbitrary type, used for 'component_error' type</td>
+</tr>
+<tr>
+<td>msg</td>
+<td>string</td>
+<td>Message text, used for types other than 'component_error'</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><code>error</code> object <code>type</code> field</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>component_error</td>
+<td>Error emitted by receiving component</td>
+</tr>
+<tr>
+<td>config_error</td>
+<td>Configuration error</td>
+</tr>
+<tr>
+<td>send_timeout</td>
+<td>Send timeout</td>
+</tr>
+<tr>
+<td>no_route_to_device</td>
+<td>No route to device</td>
+</tr>
+<tr>
+<td>component_not_found</td>
+<td>Component not found on device</td>
+</tr>
+<tr>
+<td>exception</td>
+<td>Exception thrown</td>
+</tr>
+</tbody>
+</table>
+<p>Component IDs may be suffixed with zero or more '/'-separated sub-component parts. This is for routing within components and/or to sub-components.</p>
+<p>The device and component ID fields may also take the special values listed below:</p>
+<table>
+<thead>
+<tr>
+<th>Device ID</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>@self</td>
+<td>The current device, this value is never sent as it is device-local</td>
+</tr>
+<tr>
+<td>@master</td>
+<td>The master device</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Component ID</th>
+<th>notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>*echo</td>
+<td>Echo service: Returns an 'ack' with the same message body</td>
+</tr>
+</tbody>
+</table>
+<p>Special/debug operation component IDs are generally prefixed with two '*' characters.</p></html>

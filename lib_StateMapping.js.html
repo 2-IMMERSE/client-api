@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/StateMapping.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/StateMapping.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/************************************************************************/
+/* FILE:                StateMapping.js                                 */
+/* DESCRIPTION:         DMApp component shared state mapping            */
+/* VERSION:             (see git)                                       */
+/* DATE:                (see git)                                       */
+/* AUTHOR:              Jonathan Rennison &lt;jonathan.rennison@bt.com>    */
+/*                                                                      */
+/*                      © British Telecommunications plc 2018           */
+/*                                                                      */
+/* Licensed under the Apache License, Version 2.0 (the "License");      */
+/* you may not use this file except in compliance with the License.     */
+/* You may obtain a copy of the License at                              */
+/*                                                                      */
+/*   http://www.apache.org/licenses/LICENSE-2.0                         */
+/*                                                                      */
+/* Unless required by applicable law or agreed to in writing, software  */
+/* distributed under the License is distributed on an "AS IS" BASIS,    */
+/* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or      */
+/* implied.                                                             */
+/* See the License for the specific language governing permissions and  */
+/* limitations under the License.                                       */
+/************************************************************************/
+
+"use strict";
+
+const inherits = require('inherits');
+
+/**
+ * Namespace for shared state mapping descriptors
+ *
+ * @namespace StateMapping
+ */
+
+/**
+ * @classdesc
+ *
+ * Base type of shared state mapping descriptors.
+ * This type is not directly constructable.
+ *
+ * @abstract
+ * @memberof StateMapping
+ *
+ * @constructor
+ */
+function SharedStateMappingBase() {
+}
+
+SharedStateMappingBase.prototype.setup = function(component, logger) {
+	Object.defineProperties(this, {
+		component:            { value: component },
+		logger:               { value: logger },
+	});
+};
+
+SharedStateMappingBase.prototype.getName = function() {
+	return this.name;
+};
+
+SharedStateMappingBase.prototype.getGroupPath = function() {
+	throw new Error("Unimplemented");
+};
+
+SharedStateMappingBase.prototype.setSetupClosure = function(setup) {
+	throw new Error("Unimplemented");
+};
+
+SharedStateMappingBase.prototype.getPropertyPrefixSeparator = function() {
+	return "\u00A7";
+};
+
+function ContextGroupSharedStateMappingBase(options) {
+	if (!options) options = {};
+	Object.defineProperties(this, {
+		options:              { value: options },
+	});
+}
+inherits(ContextGroupSharedStateMappingBase, SharedStateMappingBase);
+
+ContextGroupSharedStateMappingBase.prototype.getGroupPath = function() {
+	const layoutContextId = this.options.contextIdOverride || (this.options.dynamicContextId ? this.component.dMAppController.layout.contextId : this.component.dMAppComponentContextId);
+	if (this.currentStatePath &amp;&amp; layoutContextId) {
+		return {
+			path: '/context/' + layoutContextId + '/' + this.currentStatePath,
+			propertyPrefix: this.currentPropertyPrefix,
+		};
+	} else {
+		return null;
+	}
+};
+
+ContextGroupSharedStateMappingBase.prototype.setSetupClosure = function(setup) {
+	if (!this.options.contextIdOverride &amp;&amp; this.options.dynamicContextId) {
+		this.component.listenerTracker.subscribeTo(this.component.dMAppController.layout).on('contextChange', setup);
+	}
+	this.setContextPathSetupClosure(function(statePath, propertyPrefix) {
+		if (statePath !== this.currentStatePath || propertyPrefix !== this.currentPropertyPrefix) {
+			this.currentStatePath = statePath;
+			this.currentPropertyPrefix = propertyPrefix;
+			setup();
+		}
+	}.bind(this));
+};
+
+ContextGroupSharedStateMappingBase.prototype.setContextPathSetupClosure = function(setPath) {
+	throw new Error("Unimplemented");
+};
+
+/**
+ * @classdesc
+ *
+ * State mapping of the per-context shared state group defined by the value of a component config parameter. The parameter name defaults to 'groupStateId'.
+ *
+ * The shared state path is given by: /context/{context ID}/state
+ * The property prefix is given by group/{value of (by default 'groupStateId') component parameter}
+ * No shared state mapping is created until the component parameter from which the group name is read has a non-empty/truthy value.
+ *
+ * @memberof StateMapping
+ * @extends StateMapping.SharedStateMappingBase
+ *
+ * @constructor
+ * @param {Object=} options Optional options object
+ * @param {string=} options.contextIdOverride Optional group mapping context ID override
+ * @param {string=} options.parameterName Optional component config parameter name to use for the group name, default: groupStateId, (note that this is the name of the parameter from which the shared state group name is read from, not the group name itself)
+ */
+function ContextGroupParameterSharedStateMapping(options) {
+	ContextGroupSharedStateMappingBase.call(this, options);
+	Object.defineProperties(this, {
+		paramName:            { value: this.options.parameterName || 'groupStateId' },
+	});
+	Object.defineProperties(this, {
+		name:                 { value: "Per-context state: Group parameter: " + this.paramName },
+	});
+}
+inherits(ContextGroupParameterSharedStateMapping, ContextGroupSharedStateMappingBase);
+
+ContextGroupParameterSharedStateMapping.prototype.setContextPathSetupClosure = function(setPath) {
+	const self = this;
+	const check = function() {
+		const parameters = self.component.configParameterSignal.getValue();
+		if (parameters[self.paramName]) {
+			setPath('state', 'group/' + parameters[self.paramName]);
+		} else {
+			setPath(null, null);
+		}
+	};
+	self.component.configParameterSignal.on("change", check);
+	check();
+};
+
+/**
+ * @classdesc
+ *
+ * State mapping of the per-context global shared state group.
+ *
+ * The shared state path is given by: /context/{context ID}/global
+ * or if options.path is given, by: /context/{context ID}/{options.path}
+ *
+ * The property prefix is given by {options.propertyPrefix}
+ *
+ * @memberof StateMapping
+ * @extends StateMapping.SharedStateMappingBase
+ *
+ * @constructor
+ * @param {Object=} options Optional options object
+ * @param {string=} options.contextIdOverride Optional group mapping context ID override
+ * @param {string=} [options.path=global] Optional shared state path, this defaults to: 'global'
+ * @param {string=} [options.propertyPrefix=] Optional shared state property prefix
+ */
+function ContextGlobalSharedStateMapping(options) {
+	ContextGroupSharedStateMappingBase.call(this, options);
+	Object.defineProperties(this, {
+		path:                 { value: this.options.path ? this.options.path : 'global' },
+		propertyPrefix:       { value: this.options.propertyPrefix ? this.options.propertyPrefix : '' },
+	});
+	Object.defineProperties(this, {
+		name:                 { value: "Per-context state: Global: " + this.path + (this.propertyPrefix ? ", prefix: " + this.propertyPrefix : "") },
+	});
+}
+inherits(ContextGlobalSharedStateMapping, ContextGroupSharedStateMappingBase);
+
+ContextGlobalSharedStateMapping.prototype.setContextPathSetupClosure = function(setPath) {
+	setPath(this.path, this.propertyPrefix);
+};
+
+/**
+ * @classdesc
+ *
+ * Setup mapping of component parameters or element attributes to a shared state group given by a complete static path.
+ * Per-context paths SHOULD NOT be used, use {@link StateMapping.ContextGlobalSharedStateMapping} instead
+ *
+ * @memberof StateMapping
+ * @extends StateMapping.SharedStateMappingBase
+ *
+ * @constructor
+ * @param {string} path Complete shared state path
+ * @param {string=} propertyPrefix Optional shared state property prefix
+ */
+function StaticPathSharedStateMapping(path, propertyPrefix) {
+	if (!propertyPrefix) propertyPrefix = null;
+	let name = "Static path: " + path;
+	if (propertyPrefix) name += ", prefix: " + propertyPrefix;
+	Object.defineProperties(this, {
+		path:                 { value: path },
+		propertyPrefix:       { value: propertyPrefix },
+		name:                 { value: name },
+	});
+}
+inherits(StaticPathSharedStateMapping, SharedStateMappingBase);
+
+StaticPathSharedStateMapping.prototype.setup = function() {
+	SharedStateMappingBase.prototype.setup.apply(this, arguments);
+	if (this.path.indexOf('/context/') === 0) {
+		this.logger.warn('Shared state paths starting with "/context/" should not be used with StaticPathSharedStateMapping');
+	}
+};
+
+StaticPathSharedStateMapping.prototype.getGroupPath = function() {
+	return {
+		path: this.path,
+		propertyPrefix: this.propertyPrefix,
+	};
+};
+
+StaticPathSharedStateMapping.prototype.setSetupClosure = function(setup) {
+	setup();
+};
+
+try {
+	Object.freeze(SharedStateMappingBase.prototype);
+	Object.freeze(ContextGroupSharedStateMappingBase.prototype);
+	Object.freeze(ContextGroupParameterSharedStateMapping.prototype);
+	Object.freeze(ContextGlobalSharedStateMapping.prototype);
+	Object.freeze(StaticPathSharedStateMapping.prototype);
+} catch (e) {
+	/* swallow: doesn't matter too much if this fails */
+}
+
+module.exports = {
+	ContextGroupParameterSharedStateMapping: ContextGroupParameterSharedStateMapping,
+	ContextGlobalSharedStateMapping: ContextGlobalSharedStateMapping,
+	StaticPathSharedStateMapping: StaticPathSharedStateMapping,
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DMAppAndroid.html">DMAppAndroid</a></li><li><a href="module-DMAppClientLib.html">DMAppClientLib</a></li><li><a href="module-DMAppCompEmuLib.html">DMAppCompEmuLib</a></li><li><a href="module-DMAppCompLib.html">DMAppCompLib</a></li><li><a href="module-DMAppIos.html">DMAppIos</a></li><li><a href="module-DMAppTvEmuLib.html">DMAppTvEmuLib</a></li></ul><h3>Classes</h3><ul><li><a href="AjaxPromise.html">AjaxPromise</a></li><li><a href="App2AppMsgBusCtl.html">App2AppMsgBusCtl</a></li><li><a href="App2AppMsgBusCtl.App2AppMsgBusRecvHandler.html">App2AppMsgBusRecvHandler</a></li><li><a href="BlockableWrapper.html">BlockableWrapper</a></li><li><a href="CiiSyncHandlerBase.html">CiiSyncHandlerBase</a></li><li><a href="ClockArrayIntervalScheduler.html">ClockArrayIntervalScheduler</a></li><li><a href="ComponentContainer.html">ComponentContainer</a></li><li><a href="DebugMiscUtil.SerialisationDumper.html">SerialisationDumper</a></li><li><a href="DeviceOrientationCtl.html">DeviceOrientationCtl</a></li><li><a href="DMAppAndroidCompDiscovery.html">DMAppAndroidCompDiscovery</a></li><li><a href="DMAppAndroidSynchroniser.html">DMAppAndroidSynchroniser</a></li><li><a href="DMAppAVPlayerComponent.html">DMAppAVPlayerComponent</a></li><li><a href="DMAppComp.html">DMAppComp</a></li><li><a href="DMAppCompDiscoveryFilter.html">DMAppCompDiscoveryFilter</a></li><li><a href="DMAppCompEmuDiscovery.html">DMAppCompEmuDiscovery</a></li><li><a href="DMAppComponent.html">DMAppComponent</a></li><li><a href="DMAppComponentWrapper.html">DMAppComponentWrapper</a></li><li><a href="DMAppController.html">DMAppController</a></li><li><a href="DMAppIosCompDiscovery.html">DMAppIosCompDiscovery</a></li><li><a href="DMAppLayout.html">DMAppLayout</a></li><li><a href="DMAppLayoutIO.html">DMAppLayoutIO</a></li><li><a href="DMAppLayoutRegionCtl.html">DMAppLayoutRegionCtl</a></li><li><a href="DMAppTimeline.html">DMAppTimeline</a></li><li><a href="DMAppTvEmuController.html">DMAppTvEmuController</a></li><li><a href="DMAppTvEmuSync.html">DMAppTvEmuSync</a></li><li><a href="ErrorUtil.ErrorFlag.html">ErrorFlag</a></li><li><a href="ErrorUtil.ErrorSignal.html">ErrorSignal</a></li><li><a href="ExecValve.html">ExecValve</a></li><li><a href="InputDocument.InputDocumentHandler.html">InputDocumentHandler</a></li><li><a href="KeyStore.html">KeyStore</a></li><li><a href="LocalSignalMap.html">LocalSignalMap</a></li><li><a href="Logger.html">Logger</a></li><li><a href="MediaElementClockSource.html">MediaElementClockSource</a></li><li><a href="MediaSynchroniser.html">MediaSynchroniser</a></li><li><a href="PromiseExecQueue.html">PromiseExecQueue</a></li><li><a href="RefCountedSignalMap.html">RefCountedSignalMap</a></li><li><a href="ResourceMgmtUtil.RefCountedDelayedDestructor.html">RefCountedDelayedDestructor</a></li><li><a href="Signal.BaseSignal.html">BaseSignal</a></li><li><a href="Signal.BlockCountSignal.html">BlockCountSignal</a></li><li><a href="Signal.ConstWrapperSignal.html">ConstWrapperSignal</a></li><li><a href="Signal.RefCountSignal.html">RefCountSignal</a></li><li><a href="Signal.SettableSignal.html">SettableSignal</a></li><li><a href="Signal.SharedStatePropertySignal.html">SharedStatePropertySignal</a></li><li><a href="StateMapping.ContextGlobalSharedStateMapping.html">ContextGlobalSharedStateMapping</a></li><li><a href="StateMapping.ContextGroupParameterSharedStateMapping.html">ContextGroupParameterSharedStateMapping</a></li><li><a href="StateMapping.SharedStateMappingBase.html">SharedStateMappingBase</a></li><li><a href="StateMapping.StaticPathSharedStateMapping.html">StaticPathSharedStateMapping</a></li><li><a href="StickyClockCorrelationSource.html">StickyClockCorrelationSource</a></li><li><a href="SyncProtocolsCiiSyncHandler.html">SyncProtocolsCiiSyncHandler</a></li><li><a href="TestConfigTestComponent.html">TestConfigTestComponent</a></li><li><a href="TimeoutHandler.html">TimeoutHandler</a></li><li><a href="VersionUtil.FeatureVersionSet.html">FeatureVersionSet</a></li></ul><h3>Events</h3><ul><li><a href="AjaxPromise.html#event:fail">fail</a></li><li><a href="AjaxPromise.html#event:retry">retry</a></li><li><a href="AjaxPromise.html#event:success">success</a></li><li><a href="App2AppMsgBusCtl.html#event:deviceSocketChange">deviceSocketChange</a></li><li><a href="App2AppMsgBusCtl.html#event:enabledStateChange">enabledStateChange</a></li><li><a href="App2AppMsgBusCtl.html#event:upstreamChange">upstreamChange</a></li><li><a href="ClockArrayIntervalScheduler.html#event:change">change</a></li><li><a href="ComponentContainer.html#event:createdComponent">createdComponent</a></li><li><a href="ComponentContainer.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="ComponentContainer.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DiscoveryCtl.html#event:destroy">destroy</a></li><li><a href="DiscoveryCtl.html#event:newDevice">newDevice</a></li><li><a href="DiscoveryCtl.html#event:removeDevice">removeDevice</a></li><li><a href="DiscoveryCtl.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAVPlayerComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppAVPlayerComponent.html#event:destroy">destroy</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppAVPlayerComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppComp.html#event:join">join</a></li><li><a href="DMAppComp.html#event:remoteDeviceIdChange">remoteDeviceIdChange</a></li><li><a href="DMAppComp.html#event:remoteJoinStateChange">remoteJoinStateChange</a></li><li><a href="DMAppCompEmuDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppComponent.html#event:destroy">destroy</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppController.html#event:logRingBufferUpdate">logRingBufferUpdate</a></li><li><a href="DMAppIosCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppLayout.html#event:contextChange">contextChange</a></li><li><a href="DMAppLayout.html#event:createdComponent">createdComponent</a></li><li><a href="DMAppLayout.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="DMAppLayout.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DMAppLayout.html#event:dmAppChange">dmAppChange</a></li><li><a href="DMAppLayout.html#event:orientationChange">orientationChange</a></li><li><a href="DMAppLayoutRegionCtl.html#event:layoutRegionChange">layoutRegionChange</a></li><li><a href="DMAppTimeline.html#event:interContextSyncIdChange">interContextSyncIdChange</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:toggle">toggle</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:toggle">toggle</a></li><li><a href="RefCountedSignalMap.html#event:newSignal">newSignal</a></li><li><a href="RefCountedSignalMap.html#event:removeSignal">removeSignal</a></li><li><a href="Signal.BaseSignal.html#event:change">change</a></li><li><a href="Signal.BaseSignal.html#event:fall">fall</a></li><li><a href="Signal.BaseSignal.html#event:rise">rise</a></li><li><a href="Signal.BaseSignal.html#event:toggle">toggle</a></li><li><a href="Signal.BlockCountSignal.html#event:change">change</a></li><li><a href="Signal.BlockCountSignal.html#event:fall">fall</a></li><li><a href="Signal.BlockCountSignal.html#event:rise">rise</a></li><li><a href="Signal.BlockCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.ConstWrapperSignal.html#event:change">change</a></li><li><a href="Signal.ConstWrapperSignal.html#event:fall">fall</a></li><li><a href="Signal.ConstWrapperSignal.html#event:rise">rise</a></li><li><a href="Signal.ConstWrapperSignal.html#event:toggle">toggle</a></li><li><a href="Signal.RefCountSignal.html#event:change">change</a></li><li><a href="Signal.RefCountSignal.html#event:fall">fall</a></li><li><a href="Signal.RefCountSignal.html#event:rise">rise</a></li><li><a href="Signal.RefCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SettableSignal.html#event:change">change</a></li><li><a href="Signal.SettableSignal.html#event:fall">fall</a></li><li><a href="Signal.SettableSignal.html#event:rise">rise</a></li><li><a href="Signal.SettableSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:change">change</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:fall">fall</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:rise">rise</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:toggle">toggle</a></li></ul><h3>Namespaces</h3><ul><li><a href="ClockMiscUtil.html">ClockMiscUtil</a></li><li><a href="ClockSyncUtil.html">ClockSyncUtil</a></li><li><a href="CustomElementUtil.html">CustomElementUtil</a></li><li><a href="DebugMiscUtil.html">DebugMiscUtil</a></li><li><a href="DMAppTimeline.SharedStateSyncUtil.html">SharedStateSyncUtil</a></li><li><a href="EnumUtil.html">EnumUtil</a></li><li><a href="ErrorUtil.html">ErrorUtil</a></li><li><a href="InputDocument.html">InputDocument</a></li><li><a href="InputUtil.html">InputUtil</a></li><li><a href="MiscUtil.html">MiscUtil</a></li><li><a href="ModuleUtil.html">ModuleUtil</a></li><li><a href="PromiseUtil.html">PromiseUtil</a></li><li><a href="ResourceMgmtUtil.html">ResourceMgmtUtil</a></li><li><a href="Signal.html">Signal</a></li><li><a href="StateMapping.html">StateMapping</a></li><li><a href="TestComponents.html">TestComponents</a></li><li><a href="UpdateUtil.html">UpdateUtil</a></li><li><a href="VersionUtil.html">VersionUtil</a></li></ul><h3>Mixins</h3><ul><li><a href="DMAppAVPlayerComponentBehaviour.html">DMAppAVPlayerComponentBehaviour</a></li><li><a href="DMAppComponentBehaviour.html">DMAppComponentBehaviour</a></li><li><a href="ErrorUtil.ErrorMixin.html">ErrorMixin</a></li></ul><h3>Interfaces</h3><ul><li><a href="Blockable.html">Blockable</a></li><li><a href="CiiSyncHandler.html">CiiSyncHandler</a></li><li><a href="DebugMiscUtil.DebugDumpable.html">DebugDumpable</a></li><li><a href="DebugMiscUtil.DebugDumper.html">DebugDumper</a></li><li><a href="DebugMiscUtil.SerialisationDumper-Dynhandler.html">Dynhandler</a></li><li><a href="DiscoveryCtl.html">DiscoveryCtl</a></li><li><a href="ExternalSync.html">ExternalSync</a></li><li><a href="InputDocument.SetupComponentInterface.html">SetupComponentInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#argCheck">argCheck</a></li><li><a href="global.html#retryPromise">retryPromise</a></li><li><a href="global.html#waitable">waitable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 07 2019 10:14:17 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html><html><meta charset="UTF-8" /><link type="text/css" rel="stylesheet" href="../styles/jsdoc-default.css">
+<h3 id="building">Building</h3>
+<p>To build all the things (except Cordova apps) (this installs dependencies as necessary):
+Run <code>make all</code> from the root directory</p>
+<h3 id="installation">Installation</h3>
+<p>To install all the things (except Cordova and its dependencies), without building anything:
+Run <code>make npm-install</code> from the root directory</p>
+<h3 id="browsertests">Browser Tests</h3>
+<p>For each of the non-Android test subdirectories (general-test).</p>
+<p>Run <code>make build</code> to build.</p>
+<p>To output a single vulcanized HTML file run <code>make vulcanize</code> in the directory.
+Note that this does not generate source maps, use the non-vulcanized version for debugging.</p>
+<p>To install the required subset of general client-api dependencies without building anything or setting up Cordova: run <code>make preinstall</code>.</p>
+<h4 id="servingpages">Serving pages:</h4>
+<p>The root dir of your server should the parent of this directory (the client-api repo root) or an ancestor of it.
+file:// URLs may be used if using the vulcanized/bundled test pages, or if browser security restrictions are bypassed, see below.</p>
+<h3 id="androidtests">Android Tests</h3>
+<p>For each of the Android test subdirectories (android-general-test).</p>
+<p>In addition to the dependencies required for Browser Tests, as installed above, you will need Cordova to be installed: <code>npm install -g cordova</code></p>
+<p>Run <code>make build</code> to build.
+Run <code>make run</code> to build and run.</p>
+<p>To clear the Cordova state: run <code>make cordova-clean</code>.
+To install the required subset of general client-api dependencies without building anything or setting up Cordova: run <code>make preinstall</code>.</p>
+<h3 id="iostests">iOS Tests</h3>
+<p>For each of the iOS test subdirectories (ios-general-test).</p>
+<p>You will need a Mac to build for iOS.</p>
+<p>In addition to the dependencies required for Browser Tests, as installed above, you will need Cordova and ios-deploy to be installed:</p>
+<pre><code>[sudo] npm install -g cordova
+[sudo] npm install -g [--unsafe-perm=true] ios-deploy
+</code></pre>
+<p>It is recommended that the Cordova version is &gt;= <em>7.0.1</em>. You can check this by running <code>cordova -v</code>.</p>
+<p>Whether you have to use <code>sudo</code> depends on your permission setup, and the <code>unsafe-perm</code> option is required if you are using OSX 10.11 or greater.</p>
+<p>If you have not already installed the xcode command line tools, you will need to do so using: <code>xcode-select --install</code></p>
+<p>Run <code>make pre-build</code>.</p>
+<p>This will create an xcode project.
+You will need to use xcode to set up iOS dev account team names/etc, and if necessary resolve any other build environment requirements/issues, etc.
+The xcode project can be found at <code>./platforms/ios/2-Immerse iOS General Test 1.xcodeproj/</code>. Open it in xcode, then double click the project (on the left) and set the developer team name.
+See the <a href="https://cordova.apache.org/docs/en/latest/guide/platforms/ios/#open-a-project-within-xcode">documentation</a> for more details.</p>
+<p>Run <code>make run</code> to build and run on an iOS device.
+(Run <code>make build</code> to build for the simulator, note that not all plugins currently support this, so this will fail).</p>
+<p>For further details on Cordova setup on iOS, see the <a href="https://cordova.apache.org/docs/en/latest/guide/platforms/ios/">Cordova iOS documentation</a></p>
+<p>To clear the Cordova state: run <code>make cordova-clean</code>, after executing this, the xcode project signing key steps will need to be performed again.
+To install the required subset of general client-api dependencies without building anything or setting up Cordova: run <code>make preinstall</code>.</p>
+<h5 id="resolvedissues">Resolved issues</h5>
+<blockquote>
+  <blockquote>
+    <p>Note (by Jack): on my machine (OSX 10.12.5, Xcode 8.3.3, npm 3.10.10, cordova 7.0.1) I had to manually add the <code>AsyncSocket.framework</code>, <code>SimpleLogger.framework</code>, <code>JSONModelFramework.framework</code> and <code>DIALDeviceDiscovery.framework</code> frameworks to the <em>Embedded Binaries</em> section of <em>Project Navigator</em> -&gt; <em>Target</em> -&gt; <em>General</em>. Failure to do so gave an error "<em>dyld: […..] image not found</em>" on run.</p>
+  </blockquote>
+  <p>This should be fixed as of af4bb8a2 (see also bd69c44b)</p>
+</blockquote>
+<h3 id="serviceurls">Service URLs:</h3>
+<p>To use non-default service URLs, use the test pages at <code>general-test/</code>, <code>android-general-test/</code> or <code>ios-general-test/</code>, which include a mechanism to override the service URLs used at run-time.
+Otherwise change the defaults in /lib/DMAppController.js
+The 'standalone without services' mode of the general test pages do not use local or remote services except where otherwise required.</p>
+<p>The layout and websocket services currently do not set CORS headers, browser CORS policies will need to be bypassed.</p>
+<h3 id="browsersecuritypolicy">Browser security policy</h3>
+<p>When using chrome/chromium, browser security can be disabled using the <code>--disable-web-security</code> switch.
+Use of the <code>--user-data-dir=PATH</code> switch to use an isolated profile may also be useful.</p>
+<h3 id="runninglocalservices">Running local services</h3>
+<p>The <code>run_local_servers.sh</code> script can be used to conveniently run services locally, run with no arguments for usage instructions.
+In the case where both local services are to be run locally, use: <code>run_local_servers.sh -T -c</code>.</p></html>

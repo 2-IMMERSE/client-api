@@ -1,0 +1,110 @@
+<!DOCTYPE html><html><meta charset="UTF-8" /><link type="text/css" rel="stylesheet" href="../styles/jsdoc-default.css">
+<h3 id="intraclientcommunicationssignallinganddatastrategiesandsuggestions">Intra-Client Communications, Signalling, and Data: Strategies and Suggestions</h3>
+<p>The client-api includes a number of different mechanisms and channels for communication, between and within components, DMApps, devices, contexts, etc.</p>
+<p>These include:</p>
+<h4 id="signals">Signals</h4>
+<p>Signals are observable variables which can be used for various types of communication and signalling at a number of different scopes. See <a href="../Signal.html">here</a> for full details.</p>
+<p>Key signal types/scopes include:</p>
+<ul>
+<li>Local settable signals: These are scoped to within a single device. These can be anonymous or named.<br />
+See <a href="localSignalMap">../jsdoc/DMAppController.html#localSignalMap</a>, <a href="../Signal.SettableSignal.html">SettableSignal</a>.</li>
+<li>Local reference count signals: These have reference count semantics and are scoped to within a single device. These can be anonymous or named.<br />
+Block count signals have similar reference-count functionality but differing semantics (negative instead of positive usage).<br />
+See <a href="../DMAppController.html#localRefCountSignalMap">localRefCountSignalMap</a>, <a href="../Signal.RefCountSignal.html">RefCountSignal</a>, <a href="../Signal.BlockCountSignal.html">BlockCountSignal</a>.</li>
+<li>Shared signals: These are scoped to within the local set of devices (generally this is the same as the DMApp and Context). These are named. These are by nature asynchronous.<br />
+See <a href="../DMAppController.html#getSharedSignal">getSharedSignal</a>, <a href="../DMAppController.html#setSharedSignal">setSharedSignal</a>, <a href="../DMAppController.html#setSharedSignalCas">setSharedSignalCas</a>.</li>
+<li>Local per-device signals: These are scoped to within a single device, however an aggregated read-only view (merged per-device signals) of the different per-device values of an individual signal name is scoped to within the local set of devices.<br />
+These are named. The aggregated views (merged per-device signals) are by nature asynchronous.<br />
+See <a href="../DMAppController.html#localPerDeviceSignalMap">localPerDeviceSignalMap</a>, <a href="../DMAppController.html#getMergedPerDeviceSignal">getMergedPerDeviceSignal</a>, <a href="../Signal.SettableSignal.html">SettableSignal</a>.</li>
+</ul>
+<p>Type-independent access mechanisms for named signals are available, see: <a href="../DMAppController.html#getSignalByName">getSignalByName</a>, <a href="../DMAppController.html#setSignalByName">setSignalByName</a>.</p>
+<p>Signals are also used for various other internal uses, and client-api/component interfaces. See <a href="../">documentation</a> for full details.</p>
+<p>Signals should not be used for RPC-style interactions.</p>
+<p>Signals support both edge and level triggered semantics, see <a href="../Signal.html">documentation</a> for full details. Care should be taken to use an appropriate triggering/listening mechanism to ensure proper operation and avoid race conditions or unintended timing dependencies.</p>
+<p>When using named signals, care should be taken to choose sensible and descriptive names with a low probability of name collisions.</p>
+<p>Local signal changes are not routed via the network and do not impose additional latency, and so are suitable for local UI control.</p>
+<p>Shared and merged per-device signals require local network communication between devices and so a small additional latency is incurred. They are still suitable for UI control across the set of local devices.</p>
+<p>Reference count signals should be used in scenarios where an arbitrary entity should be allocated/enabled/on/etc. when one or more references to it are held, and deallocated/disabled/off/etc. when zero references to it are held.<br />
+Block count signals should be used in scenarios where an arbitrary entity should be deallocated/disabled/off/etc. when one or more references to it are held, and allocated/enabled/on/etc. when zero references to it are held.<br />
+(For reference count semantics with deallocation/disabling/off timer hysteresis, consider using: <a href="../ResourceMgmtUtil.RefCountedDelayedDestructor.html">RefCountedDelayedDestructor</a> instead).</p>
+<p>It is often useful for interfaces to provide read-only views of signals, in order to prevent undesired/unintentional modification of the current value.<br />
+This can be achieved by mechanisms including: <a href="../Signal.ConstWrapperSignal.html">ConstWrapperSignal</a>, <a href="../Signal.SettableSignal.html#makeConst">makeConst</a>, <a href="../Signal.SettableSignal.html#setAutoFreeze">setAutoFreeze</a>.</p>
+<h4 id="app2appmessaging">App2App messaging</h4>
+<p>App2App messaging is primarily intended for RPC-style interactions between components, whether on the same or on different devices.</p>
+<p>Components should generally create sub-handlers with descriptive names for individual sub-functions exposed over the app2app mechanism.</p>
+<p>In the case where an action should be automatically taken whenever an item of state changes/has been changed, generally a signal should be used instead.</p>
+<p>App2app message receive handlers may reply to messages asynchronously, by means of returning a promise. However the sender will consider the message to have timed out if no response is received within ~10s.</p>
+<p>See <a href="../DMAppComponent.html#setupApp2AppRecvHandler">setupApp2AppRecvHandler</a>, <a href="../App2AppMsgBusCtl.App2AppMsgBusRecvHandler.html#setSubHandler">setSubHandler</a>, <a href="../DMAppComponent.html#sendApp2AppMsg">sendApp2AppMsg</a>.</p>
+<h4 id="changingcomponentlayoutandparametersviaservices">Changing component layout and parameters via services</h4>
+<p>Layout and parameters for top-level components which are created by the timeline/layout services can be altered by sending a request to one or other of the services.</p>
+<p>Generally this requires the layout and/or timeline documents to be pre-prepared with support for the desired change.</p>
+<p>This requires at least one round trip to the services, is very expensive compared to local signalling/messaging, and imposes a significant latency.</p>
+<p>This is most appropriate when it is necessary to make a change which requires the layout service to recalculate a new layout.</p>
+<p>See <a href="../DMAppLayoutIO.html#setDMAppComponentPriority">setDMAppComponentPriority</a>, <a href="../DMAppLayoutIO.html#postDMAppComponentTimelineEvent">postDMAppComponentTimelineEvent</a>.</p>
+<h4 id="childcomponentparametersconfig">Child component parameters/config</h4>
+<p>In the case where a component creates a child component, the parent component can set and change the parameters and other fields of the child component as required.<br />
+The most convenient way to do this is by using the Signal input type for the config.parameters field of <a href="../DMAppComponent.html#createChildDMAppComponent">createChildDMAppComponent</a>.</p>
+<p>In general components should refrain from trying to change the parameters or other fields of components other than themselves and their direct children, however this is still permitted and occasionally useful.</p>
+<h4 id="componentparameteradjustments">Component parameter adjustments</h4>
+<p>A component can adjust or filter the value of its own parameters as necessary.</p>
+<p>Most usefully, this can include parameter type checking/correction, and use of one or more signals as local parameter overrides or filter/transform inputs.</p>
+<p>Type checking/correction is useful as the timeline service only supports flat objects with string values, whereas the layout service and client support arbitrary objects.</p>
+<p>Parameter transforms are the most robust way to use a parameter (in the timeline document) as an external index or signal name from which to retrieve (a subset of) the actual parameters.</p>
+<p>Parameter transforms/filtering are also useful if it is necessary to temporarily override component parameters in reponse to local conditions, without needing to create an additional abstraction layer to handle seperate operating modes.</p>
+<p>A component may also perform these operations on its children (or on other components, subject to caveats in child components section above).</p>
+<p>See <a href="../DMAppComponent.html#setExpectedConfigParameterType">setExpectedConfigParameterType</a>, <a href="../DMAppComponent.html#addEffectiveParameterSignalOverlay">addEffectiveParameterSignalOverlay</a>, <a href="../DMAppComponent.html#addEffectiveParameterSignalTransform">addEffectiveParameterSignalTransform</a>, <a href="../DMAppComponent.html#effectiveParameterSignal">effectiveParameterSignal</a></p>
+<h4 id="componenttimingexpressionssignals">Component timing expressions/signals</h4>
+<p>Component universal parameters as described in the <a href="./component-params.md">component parameters documentation</a> can be used to signal timing values between components on the same device.</p>
+<p>This does not require any additional code to be written, as the expressions can be encoded in the component parameters, in the timeline document. See <a href="../DMAppController.html#setExpressionSignal">setExpressionSignal</a> and <a href="https://www.npmjs.com/package/expr-eval">expr-eval</a> for details of expression strings.</p>
+<p>This is somewhat non-obvious to use, so generally should only be used when the more straightforward mechanisms (timeline document structure, and local mechanisms such as child components and signalling) are not suitable.</p>
+<h4 id="organisationandtopology">Organisation and topology</h4>
+<p>The client-api does not impose any topology restrictions on how DMApps/components choose to organise their communications/signalling.</p>
+<p>However for maintenance and debugging purposes it is suggested that some form of strategy is used.</p>
+<p>Possible suggestions include:</p>
+<ul>
+<li>If there is a need for per-device or per-DMApp centralisation of non-component-specific signals or functions, these should be encapsulated into the DMApp/input document setup component (see setupComponent field of <a href="../InputDocument.html#.InputDocumentObject">InputDocumentObject</a>).<ul>
+<li>This may include things like loading/processing config files, initialising signals, processing merged per-device signals, etc.</li>
+<li>Where appropriate this can be performed before the rest of the DMApp is loaded.</li>
+<li>This may include local control such as adjusting the DOM or region definitions in response to changes in signal values.</li></ul></li>
+<li>Important/interesting signal values should be exposed in the debug dump interface (typically in that of the DMApp/input document setup component) for inspection. See <a href="../DMAppComponent.html#dumpDebugInfo">dumpDebugInfo</a>.<ul>
+<li>It is sometimes useful to allow these signal values to be manually overridden for debugging purposes.</li></ul></li>
+<li>Per-DMApp or per-device app2app endpoints should also be encapsulated into the DMApp/input document setup component.</li>
+</ul>
+<h4 id="directlyaccessingotherlocalcomponents">Directly accessing other local components</h4>
+<p>It is sometimes useful for a component to acquire a direct reference to the instance of another component on the same device.<br />
+For example the target component could expose a bespoke interface for other local components to use.</p>
+<p>This would typically be controlled by means of specifying the ID of the target component using a parameter.</p>
+<p>This functionality should be used with due care and attention as the holder of the reference to the component instance has full access to the target component. This includes the ability to (unintentionally or otherwise) interfere with proper operation of the target component.</p>
+<p>In general the most straightforward and robust mechanism to do this for top-level components is by using: <a href="../DMAppComponent.html#getTopLevelDMAppComponentSignalById">getTopLevelDMAppComponentSignalById</a>.</p>
+<h4 id="datawhichisautomaticallypropagatedbytheclientapi">Data which is automatically propagated by the client-api</h4>
+<p>Some important or generally useful data is automatically propagated between devices over the app2app channel and made available to components and other parts of the client-api, to remove the need for this to be manually implemented by DMApp or component authors.</p>
+<p>This includes (non-exhaustive list):</p>
+<ul>
+<li>Context, DMApp, inter-context, and session IDs (TV -&gt; companions)</li>
+<li>Device and instance IDs (both directions)</li>
+<li>Clock sync over app2app (when DVB-CSS sync is not available)</li>
+<li>Error signal summaries (both directions)</li>
+</ul>
+<p>See <a href="./app2app-protocol.md">app2app protocol documentation</a> for more details.</p>
+<h4 id="sharedstateservice">Shared state service</h4>
+<p>Components/DMApps can store and retrieve state in the shared state service.</p>
+<p>This is organised in the form of shared state groups, which are addressed by a globally-scoped ID, each of which contain 0 or more arbitrary key-value pairs which are scoped within that shared state group.</p>
+<p>There is a non-negligible overhead per shared state group connection, and operations on separate groups are not ordered with respect to each other.<br />
+Therefore the number of groups in use by a DMApp is typically minimised. The most typical configuration uses 1 group per DMApp.</p>
+<p>A (subset of) a shared state group can be overlaid onto a component parameter set using <a href="../DMAppComponent.html#setupSharedStateParameterOverlayMapping">setupSharedStateParameterOverlayMapping</a>.</p>
+<p>Utility methods exist which can be used to automatically propagate state between a (subset of) a shared state group and custom element attributes.<br />
+This is typically used when adding inter-component functionality to existing components which are written as non 2-immerse custom element web-components.<br />
+This does have some caveats on ordering and permitted key values due to the restrictions of the element attribute interface, the documentation should be read carefully before use.<br />
+See: <a href="../CustomElementUtil.html#.upgradeCustomElementIntoComponent">upgradeCustomElementIntoComponent</a>, <a href="../DMAppComponent.html#setupSharedStateElementAttributeMapping">setupSharedStateElementAttributeMapping</a>.</p>
+<p>See also: <a href="../DMAppController.html#createSharedStateFromGroupMapping">createSharedStateFromGroupMapping</a>, and <a href="../Signal.SharedStatePropertySignal.html">SharedStatePropertySignal</a>.</p>
+<p>All shared state changes require at least one round trip to the shared state service which adds significant latency. Therefore it should not be used for local UI changes on the same device which require immediate propagation.</p>
+<p>The shared state service is (currently) a singleton service backed by a single MongoDB database. Therefore changes should be rate-limited and not excessively large to avoid overloading the back-end and globally interfering with shared state operations.</p>
+<p>In general more local communications mechanisms are preferable, and use of the shared state service should be reserved for small quanitities of infrequently updated state shared between non-local devices.</p>
+<h4 id="websocketservicegenericbus">Websocket service (generic bus)</h4>
+<p>The websocket service uses socket.io and has a generic bus namespace which can be used to setup arbitrary socket groups.</p>
+<p>This could be used to propagate messages between non-local devices/DMApps/components.</p>
+<p>As this namespace is shared globally, group IDs which are used should be chosen to avoid name collisions (e.g. by prefixing a suitably unique ID such as the context or session ID).</p>
+<p>This is an event-bus type mechanism and so in general does not guarantee reliable delivery to particular clients or store messages/state for disconnected clients.<br />
+Users of this interface will need to provide their own reliability mechanisms on top as necessary if these guarantees are required.<br />
+Socket.io does additionally support point-to-point messaging with acknowledgements between clients and servers, however this does not imply client to client point-to-point messaging.</p>
+<p>The client-api does not include an API/interface to use this, but does provide the socket.io client and the URL of the websocket service, which components/DMApps can use as required.</p></html>

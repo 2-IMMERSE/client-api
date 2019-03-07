@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: lib/MediaSynchroniser.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: lib/MediaSynchroniser.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+const dvbcssClocks = require('dvbcss-clocks/src/main');
+const argCheck = require('./argCheck');
+
+/**
+ * @classdesc
+ *
+ * Synchronise a media element (slave) to either a clock or another media element (master).
+ * This should generally not be used directly by DMApp components.
+ * When constructed, synchronisation is started.
+ * `slave` and `master` must be valid/available whenever synchronisation is in the started state,
+ * or when setOffset is called.
+ *
+ * @constructor
+ * @param {Object} params                    object containing key value pairs:
+ * @param {Element|Clock} params.master      must be a media element or an available dvb-css clock
+ * @param {Element} params.slave             must be a media element
+ * @param {Logger} params.logger             logger
+ * @param {number=} params.offset            optional offset in s by which slave should lag master
+ * @param {Function=} params.notifyThrashing optional callback to call when media is thrashing
+ * @param {boolean=} params.pauseOnSyncStop  optional whether to pause the media element when sync is stopped
+ */
+function MediaSynchroniser(params) {
+	this.avgCorrection = [];
+	this.lastSeek = undefined;
+	this.thrashing = 0;
+	this.playInProgress = false;
+
+	if (!params) {
+		throw new Error("MediaSynchroniser constructor: No parameters supplied");
+	}
+
+	if (params.logger) {
+		this.logger = params.logger;
+	} else {
+		throw new Error("MediaSynchroniser constructor: No logger supplied");
+	}
+
+	this.offset = params.offset || 0;
+	this.notifyThrashing = params.notifyThrashing || function() { };
+	this.pauseOnSyncStop = !!params.pauseOnSyncStop;
+
+	argCheck(arguments, 1, this.logger, "MediaSynchroniser constructor", params,
+			['master', 'slave', 'offset', 'notifyThrashing', 'logger', 'pauseOnSyncStop']);
+
+	if (!params.master) {
+		this.logger.throwError("MediaSynchroniser constructor: No master supplied");
+	} else if (params.master instanceof dvbcssClocks.ClockBase) {
+		this.masterClock = params.master;
+		this.isMasterPaused = function() {
+			return this.masterClock.getEffectiveSpeed() === 0;
+		};
+		this.getMasterPosition = function() {
+			return this.masterClock.now() / this.masterClock.getTickRate();
+		};
+	} else {
+		this.masterElem = params.master;
+		this.isMasterPaused = function() {
+			return this.masterElem.paused;
+		};
+		this.getMasterPosition = function() {
+			return this.masterElem.currentTime;
+		};
+	}
+
+	if (params.slave) {
+		this.slaveElem = params.slave;
+	} else {
+		this.logger.throwError("MediaSynchroniser constructor: No slave supplied");
+	}
+
+	this._syncEnabled = false;
+	this.startSync();
+}
+
+MediaSynchroniser.prototype = {
+
+	_eventSetupCommon: function(handler) {
+		handler('timeupdate');
+		handler('play');
+		handler('pause');
+	},
+
+	/** start synchronisation if not already started */
+	startSync: function() {
+		if (this._syncEnabled) return;
+		this._syncEnabled = true;
+		if (this.masterElem) {
+			this._eventSetupCommon(function(ev) {
+				const propfunc = "_" + ev + "Event";
+				const propbind = "_" + ev + "EventBind";
+				if (!this[propbind]) {
+					this[propbind] = this[propfunc].bind(this);
+					this.masterElem.addEventListener(ev, this[propbind], false);
+				}
+			}.bind(this));
+			this._clockChangeEvent();
+		}
+		if (this.masterClock) {
+			this._clockEventHandler = this._clockChangeEvent.bind(this);
+			this.masterClock.on('change', this._clockEventHandler);
+			this._clockChangeEvent();
+			this._checkTimer();
+		}
+
+		this._slaveCheck = function(ev) {
+			const isPause = (ev.type === 'pause');
+			if (this.isMasterPaused() !== isPause) {
+				this._clockChangeEvent();
+			}
+			this._lastSeekCheckValue = null;
+		}.bind(this);
+		this.slaveElem.addEventListener("play", this._slaveCheck, false);
+		this.slaveElem.addEventListener("pause", this._slaveCheck, false);
+
+		this._slaveSeekCheck = function() {
+			if (this._checkDuration()) return;
+			if (this.isMasterPaused() &amp;&amp; this.slaveElem.paused &amp;&amp; this.slaveElem.currentTime !== this.getMasterPosition() - this.offset) {
+				if (this._lastSeekCheckValue !== this.slaveElem.currentTime) {
+					this._lastSeekCheckValue = this.slaveElem.currentTime;
+					this._setTimeNow();
+				}
+			}
+		}.bind(this);
+		this.slaveElem.addEventListener("seeked", this._slaveSeekCheck, false);
+
+		this._slaveLoadedMetadataCheck = this._clockChangeEvent.bind(this);
+		this.slaveElem.addEventListener("loadedmetadata", this._slaveLoadedMetadataCheck, false);
+	},
+
+	/** stop synchronisation if not already stopped */
+	stopSync: function() {
+		if (!this._syncEnabled) return;
+		this._syncEnabled = false;
+		if (this.masterElem) {
+			this._eventSetupCommon(function(ev) {
+				const prop = "_" + ev + "EventBind";
+				if (this[prop]) {
+					this.masterElem.removeEventListener(ev, this[prop], false);
+					delete this[prop];
+				}
+			}.bind(this));
+		}
+		if (this.masterClock) {
+			this.masterClock.removeListener('change', this._clockEventHandler);
+			this._checkTimer();
+		}
+		this.slaveElem.removeEventListener("play", this._slaveCheck, false);
+		this.slaveElem.removeEventListener("pause", this._slaveCheck, false);
+		this.slaveElem.removeEventListener("seeked", this._slaveSeekCheck, false);
+		this.slaveElem.removeEventListener("loadedmetadata", this._slaveLoadedMetadataCheck, false);
+		this.slaveElem.playbackRate = 1;
+		if (this.pauseOnSyncStop) {
+			this.slaveElem.pause();
+		} else {
+			this.slaveElem.play();
+		}
+	},
+
+	_clockChangeEvent: function() {
+		if (!this._syncEnabled) this.logger.throwError("_clockChangeEvent called when sync not enabled");
+		if (this._checkDuration()) return;
+		if (this.isMasterPaused()) {
+			this._pauseEvent();
+		} else {
+			this._playEvent();
+		}
+		this._checkTimer();
+	},
+
+	_checkTimer: function() {
+		const shouldHaveTimer = this._syncEnabled &amp;&amp; this.masterClock &amp;&amp; !this.isMasterPaused();
+		if (shouldHaveTimer &amp;&amp; !this._timerHandle) {
+			this._timerHandle = window.setInterval(this._timeupdateEvent.bind(this), 100);
+		} else if (!shouldHaveTimer &amp;&amp; this._timerHandle) {
+			window.clearInterval(this._timerHandle);
+			delete this._timerHandle;
+		}
+	},
+
+	_checkDuration: function() {
+		const curTime = this.getMasterPosition() - this.offset;
+		if (this.slaveElem.duration &lt;= curTime) {
+			if (this.slaveElem.currentTime !== this.slaveElem.duration) this.slaveElem.currentTime = this.slaveElem.duration;
+			if (!this.slaveElem.paused) this.slaveElem.pause();
+			return true;
+		}
+		return false;
+	},
+
+	_playEvent: function() {
+		if (!this._syncEnabled) this.logger.throwError("_playEvent called when sync not enabled");
+		if (this.playInProgress) return;
+		if (this.slaveElem.readyState &lt; this.slaveElem.HAVE_METADATA) return;
+		if (this._checkDuration()) return;
+
+		if (this.slaveElem.paused) this.slaveElem.play();
+		this._timeupdateEvent();
+	},
+
+	_pauseEvent: function() {
+		if (!this._syncEnabled) this.logger.throwError("_pauseEvent called when sync not enabled");
+		if (this.slaveElem.readyState &lt; this.slaveElem.HAVE_METADATA) return;
+		if (this._checkDuration()) return;
+
+		if (!this.slaveElem.paused) this.slaveElem.pause();
+		this._setTimeNow();
+	},
+
+	_setTimeNow: function() {
+		if (!this._syncEnabled) this.logger.throwError("_setTimeNow called when sync not enabled");
+		if (this.slaveElem.readyState &lt; this.slaveElem.HAVE_METADATA) return;
+		if (this._checkDuration()) return;
+		this.slaveElem.currentTime = this.getMasterPosition() - this.offset;
+	},
+
+	/**
+	 * set synchronisation offset
+	 *
+	 * @param {number} offset offset in s by which slave should lag master
+	 */
+	setOffset: function(offset) {
+		if (this.offset !== offset) {
+			this.offset = offset;
+			if (this._syncEnabled) {
+				if (this._checkDuration()) return;
+				if (this.isMasterPaused()) {
+					this._setTimeNow();
+				} else {
+					this._timeupdateEvent();
+				}
+			}
+		}
+	},
+
+	// playbackRate based solution - speed up or slow down playback to align video with audio.
+	// Based on https://github.com/webtiming/timingsrc/blob/gh-pages/source/mediasync/mediasync.js
+	_timeupdateEvent: function() {
+		if (!this._syncEnabled) this.logger.throwError("_timeupdateEvent called when sync not enabled");
+		if (this.isMasterPaused()) {
+			this._pauseEvent();
+			return;
+		}
+		if (this.playInProgress) {
+			return;
+		}
+		if (this.slaveElem.readyState &lt; this.slaveElem.HAVE_METADATA) return;
+		if (this._checkDuration()) return;
+
+		// Determine how out of sync the slave video player is w.r.t the master.
+		const curTime = this.getMasterPosition() - this.offset;
+		// Compute different in playback position between the two videos.
+		let delta = curTime - this.slaveElem.currentTime;
+
+		// A large delta will be corrected with a seek. Small delta with playbackRate changes.
+		if (Math.abs(delta) > 1) {
+			const now = performance.now();
+			let adjust = 0;
+			if (this.lastSeek !== undefined) {
+				// Thrash detection - still out of sync despite an accurate seek.  This indicates
+				// the system is under load and cannot seek fast enough to get back in sync.
+				const elapsed = now - this.lastSeek.ts;
+				if (elapsed &lt; 1500) {
+					// We seeked only a short time ago, we are thrashing
+					++this.thrashing;
+					if (this.thrashing > 3) {
+						this.logger.warn("Thrashing");
+						this.notifyThrashing();
+						//thrashing = 0;
+					}
+				} else {
+					this.thrashing = 0;
+				}
+				const miss = (this.lastSeek.pos + elapsed) - curTime;
+				adjust = this.lastSeek.adjust + miss;
+				if (Math.abs(adjust) > 5) {
+					adjust = 0;
+				}
+			}
+
+			this.slaveElem.playbackRate = 1;
+			if (this.thrashing > 3) {
+				// Don't compound the thrashing behaviour by issuing more seeks.
+				// Obviously, the video will remain out of sync / for longer.
+				this.lastSeek = undefined;
+				this.thrashing = 0;
+			} else {
+				// seeking is more efficient if the video element is paused.
+				if (!this.slaveElem.paused &amp;&amp; this.slaveElem.readyState >= this.slaveElem.HAVE_CURRENT_DATA &amp;&amp; this.slaveElem.buffered.length > 0) {
+					this.slaveElem.pause();
+				}
+				// Factor a computed adjustment which represents the measured overhead of seek operations.
+				this.slaveElem.currentTime = curTime + adjust;
+				const playPromise = this.slaveElem.play();
+				if (playPromise != null) {
+					const self = this;
+					self.playInProgress = true;
+					playPromise.then(function() {
+						self.playInProgress = false;
+					}).catch(function(error) {
+						self.logger.warn("Call to play() failed: ", error);
+						self.playInProgress = false;
+					});
+				}
+
+				this.lastSeek = {
+					ts: now, //performance.now(),
+					pos: curTime,
+					adjust: adjust
+				};
+			}
+			//console.log('i: ' + i + ', seek: ' + slaveElem.currentTime);
+		} else {
+
+			// Use average of last three deltas
+			const samples = this.avgCorrection;
+			samples.push(delta);
+			if (samples.length >= 3) {
+				let avg = 0;
+				for (let j = 0; j &lt; samples.length; j++) {
+					avg += samples[j];
+				}
+				delta = avg / samples.length;
+				samples.splice(0, 1); // This could be shift()? - remove 1 at index 0
+			} else {
+				return;
+			}
+
+			const clampRate = function(limit, rate) {
+				return Math.max(Math.min(1 + rate, 1 + limit), 1 - limit);
+			};
+
+			if (Math.abs(delta) > 1) {
+				samples.length = 0;
+				this.slaveElem.playbackRate = clampRate(1, delta * 1.3);
+			} else if (Math.abs(delta) > 0.5) {
+				samples.length = 0;
+				this.slaveElem.playbackRate = clampRate(0.5, delta * 0.75);
+			} else if (Math.abs(delta) > 0.1) {
+				samples.length = 0;
+				this.slaveElem.playbackRate = clampRate(0.4, delta * 0.75);
+			} else if (Math.abs(delta) > 0.025) {
+				samples.length = 0;
+				this.slaveElem.playbackRate = clampRate(0.30, delta * 0.60);
+			} else {
+				this.slaveElem.playbackRate = clampRate(0.02, delta * 0.07);
+			}
+			//console.log('i: ' + i + ', playbackRate: ' + slaveElem.playbackRate + ',correction: ' + delta);
+		}
+	},
+};
+
+try {
+	Object.freeze(MediaSynchroniser.prototype);
+} catch (e) {
+	/* swallow: doesn't matter too much if this fails */
+}
+
+module.exports = MediaSynchroniser;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DMAppAndroid.html">DMAppAndroid</a></li><li><a href="module-DMAppClientLib.html">DMAppClientLib</a></li><li><a href="module-DMAppCompEmuLib.html">DMAppCompEmuLib</a></li><li><a href="module-DMAppCompLib.html">DMAppCompLib</a></li><li><a href="module-DMAppIos.html">DMAppIos</a></li><li><a href="module-DMAppTvEmuLib.html">DMAppTvEmuLib</a></li></ul><h3>Classes</h3><ul><li><a href="AjaxPromise.html">AjaxPromise</a></li><li><a href="App2AppMsgBusCtl.html">App2AppMsgBusCtl</a></li><li><a href="App2AppMsgBusCtl.App2AppMsgBusRecvHandler.html">App2AppMsgBusRecvHandler</a></li><li><a href="BlockableWrapper.html">BlockableWrapper</a></li><li><a href="CiiSyncHandlerBase.html">CiiSyncHandlerBase</a></li><li><a href="ClockArrayIntervalScheduler.html">ClockArrayIntervalScheduler</a></li><li><a href="ComponentContainer.html">ComponentContainer</a></li><li><a href="DebugMiscUtil.SerialisationDumper.html">SerialisationDumper</a></li><li><a href="DeviceOrientationCtl.html">DeviceOrientationCtl</a></li><li><a href="DMAppAndroidCompDiscovery.html">DMAppAndroidCompDiscovery</a></li><li><a href="DMAppAndroidSynchroniser.html">DMAppAndroidSynchroniser</a></li><li><a href="DMAppAVPlayerComponent.html">DMAppAVPlayerComponent</a></li><li><a href="DMAppComp.html">DMAppComp</a></li><li><a href="DMAppCompDiscoveryFilter.html">DMAppCompDiscoveryFilter</a></li><li><a href="DMAppCompEmuDiscovery.html">DMAppCompEmuDiscovery</a></li><li><a href="DMAppComponent.html">DMAppComponent</a></li><li><a href="DMAppComponentWrapper.html">DMAppComponentWrapper</a></li><li><a href="DMAppController.html">DMAppController</a></li><li><a href="DMAppIosCompDiscovery.html">DMAppIosCompDiscovery</a></li><li><a href="DMAppLayout.html">DMAppLayout</a></li><li><a href="DMAppLayoutIO.html">DMAppLayoutIO</a></li><li><a href="DMAppLayoutRegionCtl.html">DMAppLayoutRegionCtl</a></li><li><a href="DMAppTimeline.html">DMAppTimeline</a></li><li><a href="DMAppTvEmuController.html">DMAppTvEmuController</a></li><li><a href="DMAppTvEmuSync.html">DMAppTvEmuSync</a></li><li><a href="ErrorUtil.ErrorFlag.html">ErrorFlag</a></li><li><a href="ErrorUtil.ErrorSignal.html">ErrorSignal</a></li><li><a href="ExecValve.html">ExecValve</a></li><li><a href="InputDocument.InputDocumentHandler.html">InputDocumentHandler</a></li><li><a href="KeyStore.html">KeyStore</a></li><li><a href="LocalSignalMap.html">LocalSignalMap</a></li><li><a href="Logger.html">Logger</a></li><li><a href="MediaElementClockSource.html">MediaElementClockSource</a></li><li><a href="MediaSynchroniser.html">MediaSynchroniser</a></li><li><a href="PromiseExecQueue.html">PromiseExecQueue</a></li><li><a href="RefCountedSignalMap.html">RefCountedSignalMap</a></li><li><a href="ResourceMgmtUtil.RefCountedDelayedDestructor.html">RefCountedDelayedDestructor</a></li><li><a href="Signal.BaseSignal.html">BaseSignal</a></li><li><a href="Signal.BlockCountSignal.html">BlockCountSignal</a></li><li><a href="Signal.ConstWrapperSignal.html">ConstWrapperSignal</a></li><li><a href="Signal.RefCountSignal.html">RefCountSignal</a></li><li><a href="Signal.SettableSignal.html">SettableSignal</a></li><li><a href="Signal.SharedStatePropertySignal.html">SharedStatePropertySignal</a></li><li><a href="StateMapping.ContextGlobalSharedStateMapping.html">ContextGlobalSharedStateMapping</a></li><li><a href="StateMapping.ContextGroupParameterSharedStateMapping.html">ContextGroupParameterSharedStateMapping</a></li><li><a href="StateMapping.SharedStateMappingBase.html">SharedStateMappingBase</a></li><li><a href="StateMapping.StaticPathSharedStateMapping.html">StaticPathSharedStateMapping</a></li><li><a href="StickyClockCorrelationSource.html">StickyClockCorrelationSource</a></li><li><a href="SyncProtocolsCiiSyncHandler.html">SyncProtocolsCiiSyncHandler</a></li><li><a href="TestConfigTestComponent.html">TestConfigTestComponent</a></li><li><a href="TimeoutHandler.html">TimeoutHandler</a></li><li><a href="VersionUtil.FeatureVersionSet.html">FeatureVersionSet</a></li></ul><h3>Events</h3><ul><li><a href="AjaxPromise.html#event:fail">fail</a></li><li><a href="AjaxPromise.html#event:retry">retry</a></li><li><a href="AjaxPromise.html#event:success">success</a></li><li><a href="App2AppMsgBusCtl.html#event:deviceSocketChange">deviceSocketChange</a></li><li><a href="App2AppMsgBusCtl.html#event:enabledStateChange">enabledStateChange</a></li><li><a href="App2AppMsgBusCtl.html#event:upstreamChange">upstreamChange</a></li><li><a href="ClockArrayIntervalScheduler.html#event:change">change</a></li><li><a href="ComponentContainer.html#event:createdComponent">createdComponent</a></li><li><a href="ComponentContainer.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="ComponentContainer.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DiscoveryCtl.html#event:destroy">destroy</a></li><li><a href="DiscoveryCtl.html#event:newDevice">newDevice</a></li><li><a href="DiscoveryCtl.html#event:removeDevice">removeDevice</a></li><li><a href="DiscoveryCtl.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAVPlayerComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppAVPlayerComponent.html#event:destroy">destroy</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppAVPlayerComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppComp.html#event:join">join</a></li><li><a href="DMAppComp.html#event:remoteDeviceIdChange">remoteDeviceIdChange</a></li><li><a href="DMAppComp.html#event:remoteJoinStateChange">remoteJoinStateChange</a></li><li><a href="DMAppCompEmuDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppComponent.html#event:destroy">destroy</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppController.html#event:logRingBufferUpdate">logRingBufferUpdate</a></li><li><a href="DMAppIosCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppLayout.html#event:contextChange">contextChange</a></li><li><a href="DMAppLayout.html#event:createdComponent">createdComponent</a></li><li><a href="DMAppLayout.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="DMAppLayout.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DMAppLayout.html#event:dmAppChange">dmAppChange</a></li><li><a href="DMAppLayout.html#event:orientationChange">orientationChange</a></li><li><a href="DMAppLayoutRegionCtl.html#event:layoutRegionChange">layoutRegionChange</a></li><li><a href="DMAppTimeline.html#event:interContextSyncIdChange">interContextSyncIdChange</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:toggle">toggle</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:toggle">toggle</a></li><li><a href="RefCountedSignalMap.html#event:newSignal">newSignal</a></li><li><a href="RefCountedSignalMap.html#event:removeSignal">removeSignal</a></li><li><a href="Signal.BaseSignal.html#event:change">change</a></li><li><a href="Signal.BaseSignal.html#event:fall">fall</a></li><li><a href="Signal.BaseSignal.html#event:rise">rise</a></li><li><a href="Signal.BaseSignal.html#event:toggle">toggle</a></li><li><a href="Signal.BlockCountSignal.html#event:change">change</a></li><li><a href="Signal.BlockCountSignal.html#event:fall">fall</a></li><li><a href="Signal.BlockCountSignal.html#event:rise">rise</a></li><li><a href="Signal.BlockCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.ConstWrapperSignal.html#event:change">change</a></li><li><a href="Signal.ConstWrapperSignal.html#event:fall">fall</a></li><li><a href="Signal.ConstWrapperSignal.html#event:rise">rise</a></li><li><a href="Signal.ConstWrapperSignal.html#event:toggle">toggle</a></li><li><a href="Signal.RefCountSignal.html#event:change">change</a></li><li><a href="Signal.RefCountSignal.html#event:fall">fall</a></li><li><a href="Signal.RefCountSignal.html#event:rise">rise</a></li><li><a href="Signal.RefCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SettableSignal.html#event:change">change</a></li><li><a href="Signal.SettableSignal.html#event:fall">fall</a></li><li><a href="Signal.SettableSignal.html#event:rise">rise</a></li><li><a href="Signal.SettableSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:change">change</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:fall">fall</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:rise">rise</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:toggle">toggle</a></li></ul><h3>Namespaces</h3><ul><li><a href="ClockMiscUtil.html">ClockMiscUtil</a></li><li><a href="ClockSyncUtil.html">ClockSyncUtil</a></li><li><a href="CustomElementUtil.html">CustomElementUtil</a></li><li><a href="DebugMiscUtil.html">DebugMiscUtil</a></li><li><a href="DMAppTimeline.SharedStateSyncUtil.html">SharedStateSyncUtil</a></li><li><a href="EnumUtil.html">EnumUtil</a></li><li><a href="ErrorUtil.html">ErrorUtil</a></li><li><a href="InputDocument.html">InputDocument</a></li><li><a href="InputUtil.html">InputUtil</a></li><li><a href="MiscUtil.html">MiscUtil</a></li><li><a href="ModuleUtil.html">ModuleUtil</a></li><li><a href="PromiseUtil.html">PromiseUtil</a></li><li><a href="ResourceMgmtUtil.html">ResourceMgmtUtil</a></li><li><a href="Signal.html">Signal</a></li><li><a href="StateMapping.html">StateMapping</a></li><li><a href="TestComponents.html">TestComponents</a></li><li><a href="UpdateUtil.html">UpdateUtil</a></li><li><a href="VersionUtil.html">VersionUtil</a></li></ul><h3>Mixins</h3><ul><li><a href="DMAppAVPlayerComponentBehaviour.html">DMAppAVPlayerComponentBehaviour</a></li><li><a href="DMAppComponentBehaviour.html">DMAppComponentBehaviour</a></li><li><a href="ErrorUtil.ErrorMixin.html">ErrorMixin</a></li></ul><h3>Interfaces</h3><ul><li><a href="Blockable.html">Blockable</a></li><li><a href="CiiSyncHandler.html">CiiSyncHandler</a></li><li><a href="DebugMiscUtil.DebugDumpable.html">DebugDumpable</a></li><li><a href="DebugMiscUtil.DebugDumper.html">DebugDumper</a></li><li><a href="DebugMiscUtil.SerialisationDumper-Dynhandler.html">Dynhandler</a></li><li><a href="DiscoveryCtl.html">DiscoveryCtl</a></li><li><a href="ExternalSync.html">ExternalSync</a></li><li><a href="InputDocument.SetupComponentInterface.html">SetupComponentInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#argCheck">argCheck</a></li><li><a href="global.html#retryPromise">retryPromise</a></li><li><a href="global.html#waitable">waitable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 07 2019 10:14:17 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

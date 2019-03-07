@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Home</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Home</h1>
+
+    
+
+
+
+    
+
+
+    <h3> </h3>
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    <section>
+        <article><h2>Client API:</h2><h3>Directory structure:</h3><ul>
+<li><code>example-boilerplate/</code><br>Example boilerplate files to get started with</li>
+<li><code>lib/</code><br>Main library common to all in-browser components/libraries</li>
+<li><code>libcomp/</code><br>Companion library common to all companions</li>
+<li><code>libcompemu/</code><br>Companion emulation library, for use with <code>server-compemu/</code></li>
+<li><code>libtvemu/</code><br>TV emulation library, for use with <code>server-tvemu/</code></li>
+<li><code>libandroid/</code><br>Android Cordova interface library</li>
+<li><code>libios/</code><br>iOS Cordova interface library</li>
+<li><code>components/</code><br>DMApp components</li>
+<li><code>server-compemu/</code><br>Companion emulation server, implements DIAL discovery</li>
+<li><code>server-tvemu/</code><br>TV emulation server, implements DIAL server and HbbTV app2app websockets proxy</li>
+<li><code>bundle/</code><br>Source for dist bundles</li>
+<li><code>test/</code><br>Test pages</li>
+<li><code>test/general-test/</code><br>General test page</li>
+<li><code>test/android-general-test/</code><br>General Android Cordova test page app</li>
+<li><code>test/ios-general-test/</code><br>General iOS Cordova test page app</li>
+<li><code>test/test-components/</code><br>General test DMApp components</li>
+<li><code>build-tools/</code><br>Common build tool dependencies</li>
+<li><code>deps/</code><br>Common dependencies</li>
+<li><code>doc/</code><br>General documentation</li>
+<li><code>jsdoc/</code><br>Auto-generated JSDoc documentation is output here</li>
+<li><code>dist/</code><br>Tarball of 'dist' outputs is generated in here, see: <code>make tarball</code> below</li>
+<li><code>build/</code><br>Temporary build files</li>
+</ul>
+<h3>Building</h3><p>To build everything, ensure Docker is installed and:<br>Run <code>make -f Makefile.docker GIT_PRIVATE_KEY_FILENAME=~/.ssh/&lt;private-git-key&gt; all</code></p>
+<p>This creates a docker image called 'bbcrd-clientapi-builder' containing the build tools and SDKs necessary to compile the client API and tests. There is no need to install Cordova, Gradle or the Android SDK on your host computer.</p>
+<p>To build just the test applications (Android .apks etc.):<br>Run <code>make -f Makefile.docker GIT_PRIVATE_KEY_FILENAME=~/.ssh/&lt;private-git-key&gt; android-general-test</code></p>
+<p>Any target defined in 'Makefile' can be specified to 'Makefile.docker' instead to have the build execute within the docker container instead of the host computer.</p>
+<p>The build can be invoked on the host computer. This can be achieved as follows:</p>
+<p>To install all the things:<br>Run <code>make npm-install</code> from the root directory</p>
+<p>To build all the things:<br>Run <code>make all</code> from the root directory</p>
+<p>To build the jsdoc code documentation:<br>Run <code>make docs</code> from the root directory, the output is written into the jsdoc/ directory. The <a href="../jsdoc/index.html">jsdoc/index.html file</a> file can then be opened in a web browser.</p>
+<p>To build just the vulcanized test pages and their dependencies:<br>Run <code>make vulcanize</code> from the root directory</p>
+<p>To build just the libs (this is enough to run the non-vulcanized test pages):<br>Run <code>make</code> or <code>make libs</code> from the root directory</p>
+<p>To make <code>make</code> go faster, use the <code>-j</code> switch.</p>
+<h3>Documentation</h3><p>JSDoc documentation:</p>
+<ul>
+<li>To build: run <code>make docs</code> from the root directory.</li>
+<li>Documentation will be placed in <code>jsdoc/</code>.</li>
+</ul>
+<p>See the <a href="../doc/">doc/ directory</a> for general documentation.<br>This includes:</p>
+<ul>
+<li><a href="doc/component.html">General component documentation</a></li>
+<li><a href="doc/app2app-protocol.html">App2app protocol documentation</a></li>
+<li><a href="doc/component-params.html">Component parameters documentation</a></li>
+<li><a href="doc/comms-signalling-data.html">Intra-client communications, signalling, and data: strategies and suggestions</a></li>
+<li><a href="doc/general-utilities.html">General utilities</a></li>
+</ul>
+<p>See <a href="test/readme.html">Test page readme</a> for documentation of the test pages in the test directory.</p>
+<h3>Services</h3><p>The client library and tests require the use of local and/or remote services.</p>
+<p>The <code>test/run_local_servers.sh</code> script in the test directory can be used to conveniently run the local services below, see the <a href="test/readme.html">test page readme</a>.</p>
+<h4>Local services, for browser clients</h4><p>TV emulator clients currently expects local services at the URLs below:</p>
+<ul>
+<li>server-tvemu server: ws://127.0.0.1:7692/</li>
+<li>dvbcsstv-lib server: ws://127.0.0.1:7681/</li>
+</ul>
+<p>Companion emulator clients currently expect a local service at the URL below:</p>
+<ul>
+<li>server-compemu server: ws://127.0.0.1:7693/</li>
+</ul>
+<p>Local functionality will still work if the remote services are unavailable or not being used.</p>
+<h4>Test pages</h4><p>The test pages at <code>test/general-test/</code>, <code>test/android-general-test/</code> and <code>test/ios-general-test/</code> include a mechanism to override the service URLs used at run-time.<br>The 'standalone without services' mode of the general test pages does not use local or remote layout, timeline or websocket services.</p>
+<p>See the <a href="test/readme.html">test page readme</a> for installation, setup, and usage information.</p>
+<h3>Other build targets</h3><p>Individual lib directories or output files can be passed as arguments to make for a partial build.<br>Partial installs or lints can be specified as <code>make npm-install-DIR</code> or <code>make lint-DIR</code> respectively.</p>
+<p>To delete all built files:<br>Run <code>make clean</code> from the root directory</p>
+<p>To lint files:<br>Run <code>make lint</code> from the root directory</p>
+<p>To generate a tarball of all the 'dist' outputs:<br>Run <code>make tarball</code> from the root directory, this is output in the <code>dist/</code> directory.</p>
+<h3>Input documents</h3><p>Client input documents are JSON files which can be used to launch a DMApp.</p>
+<p>The syntax is documented <a href="../jsdoc/InputDocument.html#.InputDocumentObject">here</a>.</p>
+<h3>Code policy</h3><h4>Backwards compatibility</h4><p>Where pragmatic, existing DMApps, components, test pages, services, etc. outside of this repo should not be broken by future updates.</p>
+<p>If method/etc. is not documented, it is more or less fair game to be removed or refactored away.</p>
+<p>If a documented method is not observably used externally by anyone, it may still be removed or refactored away.</p>
+<p>Documented methods which are observably used externally may still be replaced with an undocumented stub which implements the old behaviour required for backwards compatibility in terms of a newer mechanism.</p>
+<h4>Versioning</h4><p>Feature updates/additions which are &quot;significant&quot; should update an appropriate <code>FeatureVersions.js</code> file accordingly.<br>These may be checked in future by external codebases such as components in the case where both: use of new functionality where available, and backwards compatibilty with older non-supporting client-api versions, are required.</p>
+<h3>Licence and Authors</h3><p>All code and documentation is licensed by the original author and contributors under the Apache License v2.0:</p>
+<ul>
+<li><a href="http://www.bt.com/">British Telecommunications (BT) PLC</a> (original author)</li>
+<li><a href="http://www.bbc.co.uk/rd">British Broadcasting Corporation</a></li>
+<li><a href="http://www.irt.de/">Institut für Rundfunktechnik</a></li>
+<li><a href="http://www.cwi.nl/">Centrum Wiskunde &amp; Informatica</a></li>
+</ul>
+<p>See AUTHORS.md file for a full list of individuals and organisations that have<br>contributed to this code.</p>
+<h3>Contributing</h3><p>If you wish to contribute to this project, please get in touch with the authors.</p>
+<p><img src="https://2immerse.eu/wp-content/uploads/2016/04/2-IMM_150x50.png" align="left"/><em>This project was originally developed as part of the <a href="https://2immerse.eu/">2-IMMERSE</a> project, co-funded by the European Commission’s <a hef="http://ec.europa.eu/programmes/horizon2020/">Horizon 2020</a> Research Programme</em></p>
+<h3>Version</h3><p>Generated from: 8a38266 (public-release)</p></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-DMAppAndroid.html">DMAppAndroid</a></li><li><a href="module-DMAppClientLib.html">DMAppClientLib</a></li><li><a href="module-DMAppCompEmuLib.html">DMAppCompEmuLib</a></li><li><a href="module-DMAppCompLib.html">DMAppCompLib</a></li><li><a href="module-DMAppIos.html">DMAppIos</a></li><li><a href="module-DMAppTvEmuLib.html">DMAppTvEmuLib</a></li></ul><h3>Classes</h3><ul><li><a href="AjaxPromise.html">AjaxPromise</a></li><li><a href="App2AppMsgBusCtl.html">App2AppMsgBusCtl</a></li><li><a href="App2AppMsgBusCtl.App2AppMsgBusRecvHandler.html">App2AppMsgBusRecvHandler</a></li><li><a href="BlockableWrapper.html">BlockableWrapper</a></li><li><a href="CiiSyncHandlerBase.html">CiiSyncHandlerBase</a></li><li><a href="ClockArrayIntervalScheduler.html">ClockArrayIntervalScheduler</a></li><li><a href="ComponentContainer.html">ComponentContainer</a></li><li><a href="DebugMiscUtil.SerialisationDumper.html">SerialisationDumper</a></li><li><a href="DeviceOrientationCtl.html">DeviceOrientationCtl</a></li><li><a href="DMAppAndroidCompDiscovery.html">DMAppAndroidCompDiscovery</a></li><li><a href="DMAppAndroidSynchroniser.html">DMAppAndroidSynchroniser</a></li><li><a href="DMAppAVPlayerComponent.html">DMAppAVPlayerComponent</a></li><li><a href="DMAppComp.html">DMAppComp</a></li><li><a href="DMAppCompDiscoveryFilter.html">DMAppCompDiscoveryFilter</a></li><li><a href="DMAppCompEmuDiscovery.html">DMAppCompEmuDiscovery</a></li><li><a href="DMAppComponent.html">DMAppComponent</a></li><li><a href="DMAppComponentWrapper.html">DMAppComponentWrapper</a></li><li><a href="DMAppController.html">DMAppController</a></li><li><a href="DMAppIosCompDiscovery.html">DMAppIosCompDiscovery</a></li><li><a href="DMAppLayout.html">DMAppLayout</a></li><li><a href="DMAppLayoutIO.html">DMAppLayoutIO</a></li><li><a href="DMAppLayoutRegionCtl.html">DMAppLayoutRegionCtl</a></li><li><a href="DMAppTimeline.html">DMAppTimeline</a></li><li><a href="DMAppTvEmuController.html">DMAppTvEmuController</a></li><li><a href="DMAppTvEmuSync.html">DMAppTvEmuSync</a></li><li><a href="ErrorUtil.ErrorFlag.html">ErrorFlag</a></li><li><a href="ErrorUtil.ErrorSignal.html">ErrorSignal</a></li><li><a href="ExecValve.html">ExecValve</a></li><li><a href="InputDocument.InputDocumentHandler.html">InputDocumentHandler</a></li><li><a href="KeyStore.html">KeyStore</a></li><li><a href="LocalSignalMap.html">LocalSignalMap</a></li><li><a href="Logger.html">Logger</a></li><li><a href="MediaElementClockSource.html">MediaElementClockSource</a></li><li><a href="MediaSynchroniser.html">MediaSynchroniser</a></li><li><a href="PromiseExecQueue.html">PromiseExecQueue</a></li><li><a href="RefCountedSignalMap.html">RefCountedSignalMap</a></li><li><a href="ResourceMgmtUtil.RefCountedDelayedDestructor.html">RefCountedDelayedDestructor</a></li><li><a href="Signal.BaseSignal.html">BaseSignal</a></li><li><a href="Signal.BlockCountSignal.html">BlockCountSignal</a></li><li><a href="Signal.ConstWrapperSignal.html">ConstWrapperSignal</a></li><li><a href="Signal.RefCountSignal.html">RefCountSignal</a></li><li><a href="Signal.SettableSignal.html">SettableSignal</a></li><li><a href="Signal.SharedStatePropertySignal.html">SharedStatePropertySignal</a></li><li><a href="StateMapping.ContextGlobalSharedStateMapping.html">ContextGlobalSharedStateMapping</a></li><li><a href="StateMapping.ContextGroupParameterSharedStateMapping.html">ContextGroupParameterSharedStateMapping</a></li><li><a href="StateMapping.SharedStateMappingBase.html">SharedStateMappingBase</a></li><li><a href="StateMapping.StaticPathSharedStateMapping.html">StaticPathSharedStateMapping</a></li><li><a href="StickyClockCorrelationSource.html">StickyClockCorrelationSource</a></li><li><a href="SyncProtocolsCiiSyncHandler.html">SyncProtocolsCiiSyncHandler</a></li><li><a href="TestConfigTestComponent.html">TestConfigTestComponent</a></li><li><a href="TimeoutHandler.html">TimeoutHandler</a></li><li><a href="VersionUtil.FeatureVersionSet.html">FeatureVersionSet</a></li></ul><h3>Events</h3><ul><li><a href="AjaxPromise.html#event:fail">fail</a></li><li><a href="AjaxPromise.html#event:retry">retry</a></li><li><a href="AjaxPromise.html#event:success">success</a></li><li><a href="App2AppMsgBusCtl.html#event:deviceSocketChange">deviceSocketChange</a></li><li><a href="App2AppMsgBusCtl.html#event:enabledStateChange">enabledStateChange</a></li><li><a href="App2AppMsgBusCtl.html#event:upstreamChange">upstreamChange</a></li><li><a href="ClockArrayIntervalScheduler.html#event:change">change</a></li><li><a href="ComponentContainer.html#event:createdComponent">createdComponent</a></li><li><a href="ComponentContainer.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="ComponentContainer.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DiscoveryCtl.html#event:destroy">destroy</a></li><li><a href="DiscoveryCtl.html#event:newDevice">newDevice</a></li><li><a href="DiscoveryCtl.html#event:removeDevice">removeDevice</a></li><li><a href="DiscoveryCtl.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppAndroidCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppAVPlayerComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppAVPlayerComponent.html#event:destroy">destroy</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppAVPlayerComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppAVPlayerComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppAVPlayerComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppComp.html#event:join">join</a></li><li><a href="DMAppComp.html#event:remoteDeviceIdChange">remoteDeviceIdChange</a></li><li><a href="DMAppComp.html#event:remoteJoinStateChange">remoteJoinStateChange</a></li><li><a href="DMAppCompEmuDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppCompEmuDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppComponent.html#event:componentInfoUpdate">componentInfoUpdate</a></li><li><a href="DMAppComponent.html#event:destroy">destroy</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusChange">dMAppComponentStatusChange</a></li><li><a href="DMAppComponent.html#event:dMAppComponentStatusDurationChange">dMAppComponentStatusDurationChange</a></li><li><a href="DMAppComponent.html#event:elementAttached">elementAttached</a></li><li><a href="DMAppComponent.html#event:elementDetached">elementDetached</a></li><li><a href="DMAppComponent.html#event:isRunningChange">isRunningChange</a></li><li><a href="DMAppComponent.html#event:referenceClockChange">referenceClockChange</a></li><li><a href="DMAppComponent.html#event:runningStateChange">runningStateChange</a></li><li><a href="DMAppComponent.html#event:startStopTimeChange">startStopTimeChange</a></li><li><a href="DMAppComponent.html#event:startTimeChange">startTimeChange</a></li><li><a href="DMAppComponent.html#event:stopTimeChange">stopTimeChange</a></li><li><a href="DMAppComponent.html#event:visibilityChange">visibilityChange</a></li><li><a href="DMAppController.html#event:logRingBufferUpdate">logRingBufferUpdate</a></li><li><a href="DMAppIosCompDiscovery.html#event:newDevice">newDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:removeDevice">removeDevice</a></li><li><a href="DMAppIosCompDiscovery.html#event:updateDevice">updateDevice</a></li><li><a href="DMAppLayout.html#event:contextChange">contextChange</a></li><li><a href="DMAppLayout.html#event:createdComponent">createdComponent</a></li><li><a href="DMAppLayout.html#event:destroyedComponent">destroyedComponent</a></li><li><a href="DMAppLayout.html#event:destroyingComponent">destroyingComponent</a></li><li><a href="DMAppLayout.html#event:dmAppChange">dmAppChange</a></li><li><a href="DMAppLayout.html#event:orientationChange">orientationChange</a></li><li><a href="DMAppLayoutRegionCtl.html#event:layoutRegionChange">layoutRegionChange</a></li><li><a href="DMAppTimeline.html#event:interContextSyncIdChange">interContextSyncIdChange</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorFlag.html#event:toggle">toggle</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:change">change</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:fall">fall</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:rise">rise</a></li><li><a href="ErrorUtil.ErrorSignal.html#event:toggle">toggle</a></li><li><a href="RefCountedSignalMap.html#event:newSignal">newSignal</a></li><li><a href="RefCountedSignalMap.html#event:removeSignal">removeSignal</a></li><li><a href="Signal.BaseSignal.html#event:change">change</a></li><li><a href="Signal.BaseSignal.html#event:fall">fall</a></li><li><a href="Signal.BaseSignal.html#event:rise">rise</a></li><li><a href="Signal.BaseSignal.html#event:toggle">toggle</a></li><li><a href="Signal.BlockCountSignal.html#event:change">change</a></li><li><a href="Signal.BlockCountSignal.html#event:fall">fall</a></li><li><a href="Signal.BlockCountSignal.html#event:rise">rise</a></li><li><a href="Signal.BlockCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.ConstWrapperSignal.html#event:change">change</a></li><li><a href="Signal.ConstWrapperSignal.html#event:fall">fall</a></li><li><a href="Signal.ConstWrapperSignal.html#event:rise">rise</a></li><li><a href="Signal.ConstWrapperSignal.html#event:toggle">toggle</a></li><li><a href="Signal.RefCountSignal.html#event:change">change</a></li><li><a href="Signal.RefCountSignal.html#event:fall">fall</a></li><li><a href="Signal.RefCountSignal.html#event:rise">rise</a></li><li><a href="Signal.RefCountSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SettableSignal.html#event:change">change</a></li><li><a href="Signal.SettableSignal.html#event:fall">fall</a></li><li><a href="Signal.SettableSignal.html#event:rise">rise</a></li><li><a href="Signal.SettableSignal.html#event:toggle">toggle</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:change">change</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:fall">fall</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:rise">rise</a></li><li><a href="Signal.SharedStatePropertySignal.html#event:toggle">toggle</a></li></ul><h3>Namespaces</h3><ul><li><a href="ClockMiscUtil.html">ClockMiscUtil</a></li><li><a href="ClockSyncUtil.html">ClockSyncUtil</a></li><li><a href="CustomElementUtil.html">CustomElementUtil</a></li><li><a href="DebugMiscUtil.html">DebugMiscUtil</a></li><li><a href="DMAppTimeline.SharedStateSyncUtil.html">SharedStateSyncUtil</a></li><li><a href="EnumUtil.html">EnumUtil</a></li><li><a href="ErrorUtil.html">ErrorUtil</a></li><li><a href="InputDocument.html">InputDocument</a></li><li><a href="InputUtil.html">InputUtil</a></li><li><a href="MiscUtil.html">MiscUtil</a></li><li><a href="ModuleUtil.html">ModuleUtil</a></li><li><a href="PromiseUtil.html">PromiseUtil</a></li><li><a href="ResourceMgmtUtil.html">ResourceMgmtUtil</a></li><li><a href="Signal.html">Signal</a></li><li><a href="StateMapping.html">StateMapping</a></li><li><a href="TestComponents.html">TestComponents</a></li><li><a href="UpdateUtil.html">UpdateUtil</a></li><li><a href="VersionUtil.html">VersionUtil</a></li></ul><h3>Mixins</h3><ul><li><a href="DMAppAVPlayerComponentBehaviour.html">DMAppAVPlayerComponentBehaviour</a></li><li><a href="DMAppComponentBehaviour.html">DMAppComponentBehaviour</a></li><li><a href="ErrorUtil.ErrorMixin.html">ErrorMixin</a></li></ul><h3>Interfaces</h3><ul><li><a href="Blockable.html">Blockable</a></li><li><a href="CiiSyncHandler.html">CiiSyncHandler</a></li><li><a href="DebugMiscUtil.DebugDumpable.html">DebugDumpable</a></li><li><a href="DebugMiscUtil.DebugDumper.html">DebugDumper</a></li><li><a href="DebugMiscUtil.SerialisationDumper-Dynhandler.html">Dynhandler</a></li><li><a href="DiscoveryCtl.html">DiscoveryCtl</a></li><li><a href="ExternalSync.html">ExternalSync</a></li><li><a href="InputDocument.SetupComponentInterface.html">SetupComponentInterface</a></li></ul><h3>Global</h3><ul><li><a href="global.html#argCheck">argCheck</a></li><li><a href="global.html#retryPromise">retryPromise</a></li><li><a href="global.html#waitable">waitable</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 07 2019 10:14:17 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

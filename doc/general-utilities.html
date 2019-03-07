@@ -1,0 +1,102 @@
+<!DOCTYPE html><html><meta charset="UTF-8" /><link type="text/css" rel="stylesheet" href="../styles/jsdoc-default.css">
+<h3 id="generalutilities">General utilities</h3>
+<p>The client-api includes various general utilities which are useful for development of components, DMApps and the client-api in general.</p>
+<p>Information on communications, signalling, ref-counting, etc. mechanisms is in <a href="comms-signalling-data.html">Intra-client communications, signalling, and data: strategies and suggestions</a> documentation, rather than this document.</p>
+<p>General information on component development is in the <a href="component.html">General component documentation</a>, rather than this document.</p>
+<p>General information on component parameters is in the <a href="component-params.html">Component parameters documentation</a>, rather than this document.</p>
+<p>Full details are included in the relevant documentation, rather than this document.</p>
+<p>This document is not exhaustive.</p>
+<h4 id="controller">Controller</h4>
+<ul>
+<li><a href="../DMAppController.html">DMAppController</a>: Top-level controller class which is the "entry-point" for running instances of the client-api, this has various documented options, methods and members which are worth noting.</li>
+</ul>
+<h4 id="logging">Logging</h4>
+<ul>
+<li><a href="../Logger.html">Logger</a>: Logger class, components and other entities are allocated these already.</li>
+<li>See also: <a href="../DMAppComponent.html#logger">component logger instance</a>, <a href="../DMAppController.html#createNamedLogger">createNamedLogger</a>.</li>
+</ul>
+<h4 id="networkcommunication">Network communication</h4>
+<ul>
+<li><a href="../AjaxPromise.html">AjaxPromise</a>: Used for making network requests (e.g. HTTP), includes logging, auto-retry, signal-interaction, etc.</li>
+<li>Use <a href="../DMAppController.html#ajaxPromise">ajaxPromise</a> or <a href="../DMAppController.html#ajaxPromiseNX">ajaxPromiseNX</a> to get an instance with sensible defaults.</li>
+</ul>
+<h4 id="controlflow">Control flow</h4>
+<ul>
+<li><a href="../ExecValve.html">ExecValve</a>: Blockable utility wrapper to queue or exec functions.</li>
+<li><a href="../PromiseExecQueue.html">PromiseExecQueue</a>: Blockable queue for serialised execution of job functions.</li>
+<li><a href="../Blockable.html">Blockable</a>, <a href="../BlockableWrapper.html">BlockableWrapper</a>: Useful interfaces related to blockables, see also <a href="../Signal.BlockCountSignal.html">BlockCountSignal</a> in <a href="comms-signalling-data.html">Intra-client communications, signalling, and data: strategies and suggestions</a> documentation.</li>
+<li><a href="../ResourceMgmtUtil.RefCountedDelayedDestructor.html">RefCountedDelayedDestructor</a>: Reference counter with delayed destructor semantics.</li>
+<li><a href="../global.html#retryPromise">retryPromise</a>: Utilitity to auto-retry a promise-returning job function.</li>
+<li><a href="../global.html#waitable">waitable</a>: Promise wrapper utility with external resolve/reject methods.</li>
+<li><a href="../PromiseUtil.html">PromiseUtil</a>: Promise utilities: Promise.all() for objects.</li>
+<li><a href="../UpdateUtil.html">UpdateUtil</a>: Utilities for updates in async contexts (perform update call(s) when something is in a writable/ready state).</li>
+<li>See <a href="comms-signalling-data.html">Intra-client communications, signalling, and data: strategies and suggestions</a> documentation in general.</li>
+</ul>
+<h4 id="clockmanagement">Clock management</h4>
+<ul>
+<li>See various members and methods of <a href="../DMAppTimeline.html">DMAppTimeline</a>.</li>
+<li><a href="../ClockArrayIntervalScheduler.html">ClockArrayIntervalScheduler</a>: Clock array interval scheduler</li>
+<li>Low-level media/clock sync tools in: <a href="../MediaElementClockSource.html">MediaElementClockSource</a>, <a href="../MediaSynchroniser.html">MediaSynchroniser</a>.</li>
+<li>Miscellaneous low-level utilities in: <a href="../ClockSyncUtil.html">ClockSyncUtil</a> and <a href="../DMAppTimeline.SharedStateSyncUtil.html#.UpdateSharedStateClockProperty">UpdateSharedStateClockProperty</a>.</li>
+</ul>
+<h4 id="components">Components</h4>
+<ul>
+<li><a href="../DMAppComponent.html">DMAppComponent</a>: DMApp component interface, this has many documented methods, members, etc. which are worth noting.</li>
+<li><a href="../DMAppComponentWrapper.html">DMAppComponentWrapper</a>: Wrap a generic HTML element as a component.</li>
+<li><a href="../CustomElementUtil.html">CustomElementUtil</a>: Utilities for custom elements/webcomponents and HTML imports.</li>
+<li>See methods of <a href="../DMAppLayout.html">DMAppLayout</a>, <a href="../ComponentContainer.html">ComponentContainer</a> for various local operations on components.</li>
+</ul>
+<h4 id="locallayout">Local layout</h4>
+<ul>
+<li><a href="../DMAppLayout.html">DMAppLayout</a>: General local layout handling.</li>
+<li><a href="../DMAppLayoutRegionCtl.html">DMAppLayoutRegionCtl</a>: Local layout region control.</li>
+</ul>
+<h4 id="debugging">Debugging</h4>
+<ul>
+<li>See <a href="../DMAppComponent.html#dumpDebugInfo">component dumpDebugInfo</a> and <a href="../DebugMiscUtil.DebugDumper.html">DebugDumper</a> for debug dumping from components (into the debug component, for example).</li>
+</ul>
+<h4 id="input">Input</h4>
+<ul>
+<li><a href="../InputDocument.html">InputDocument</a>: Input document handling and processing.</li>
+<li><a href="../InputUtil.html">InputUtil</a>: Input handling utilities: check if a string is in the list of permitted values, parse a string into a boolean.</li>
+</ul>
+<h4 id="testinterface">Test interface</h4>
+<ul>
+<li><a href="../TestComponents.TestConfigTestComponent.html">TestConfigTestComponent</a>: Test interface component and page: parameters, config, usage, etc.</li>
+</ul>
+<h4 id="media">Media</h4>
+<ul>
+<li><a href="../DMAppController.html#keyStore">Controller key store</a>: Key store for encryption keys on local device.</li>
+<li><a href="../DMAppAVPlayerComponent.html">DMAppAVPlayerComponent</a>: General interface for media player components.</li>
+<li><a href="component-params.html">Video/audio component</a>: General info and parameter documentation.</li>
+<li><a href="../DMAppController.html#muteAll">muteAll</a>: Convenient way to mute all media components.</li>
+</ul>
+<h4 id="errormanagement">Error management</h4>
+<ul>
+<li><a href="../ErrorUtil.html">ErrorUtil</a>: Error flags/signals, see various <code>errorSignals</code> and <code>userError*</code> members of <a href="../DMAppController.html">DMAppController</a>.</li>
+</ul>
+<h4 id="tvemulatordevice">TV emulator device</h4>
+<ul>
+<li><a href="../DMAppTvEmuController.html">DMAppTvEmuController</a>: TV emulator discovery server control and app2app functionality.</li>
+<li><a href="../DMAppTvEmuSync.html">DMAppTvEmuSync</a>: TV emulator DVB-CSS sync master functionality.</li>
+</ul>
+<h4 id="companiondevice">Companion device</h4>
+<ul>
+<li><a href="../DMAppComp.html">DMAppComp</a>: Companion device module/class.</li>
+<li><a href="../DMAppComp.html#setupCompanionPlatformSpecificDiscovery">setupCompanionPlatformSpecificDiscovery</a>: Method to setup discovery on companion.</li>
+<li><a href="../DMAppCompDiscoveryFilter.html">DMAppCompDiscoveryFilter</a>: Utility class to filter a set of discovered devices.</li>
+</ul>
+<h4 id="versioning">Versioning</h4>
+<ul>
+<li><a href="../VersionUtil.FeatureVersionSet.html">FeatureVersionSet</a>: Feature version set, each top-level module has one of these.</li>
+</ul>
+<h4 id="miscellaneous">Miscellaneous</h4>
+<ul>
+<li><a href="../global.html#argCheck">argCheck</a>: Function to do basic validation on function arguments.</li>
+<li><a href="../TimeoutHandler.html">TimeoutHandler</a>: Utility wrapper around setTimeout with cancellation.</li>
+<li><a href="../EnumUtil.html">EnumUtil</a>: Utilities for handling of enumeration types.</li>
+<li><a href="../MiscUtil.html">MiscUtil</a>: Various utilities.<ul>
+<li>Read-only wrappers</li>
+<li>Object stringification helper</li>
+<li>Efficient event forwarding</li></ul></li>
+</ul></html>
