@@ -68,7 +68,8 @@ To build all the things:
 Run `make all` from the root directory
 
 To build the jsdoc code documentation:
-Run `make docs` from the root directory, the output is written into the jsdoc/ directory. The [jsdoc/index.html file](./jsdoc/index.html) file can then be opened in a web browser.
+Run `make docs` from the root directory, the output is written into the jsdoc/ directory. The jsdoc/index.html file file can then be opened in a web browser.
+**A pre-built copy of the documentation is available [on GitHub](https://2-immerse.github.io/client-api/)**.
 
 To build just the vulcanized test pages and their dependencies:
 Run `make vulcanize` from the root directory
@@ -94,6 +95,8 @@ This includes:
 * [General utilities](doc/general-utilities.md)
 
 See [Test page readme](test/readme.md) for documentation of the test pages in the test directory.
+
+**A pre-built copy of the documentation is available [on GitHub](https://2-immerse.github.io/client-api/)**.
 
 
 ### Services
@@ -138,7 +141,7 @@ Run `make tarball` from the root directory, this is output in the `dist/` direct
 
 Client input documents are JSON files which can be used to launch a DMApp.
 
-The syntax is documented [here](./jsdoc/InputDocument.html#.InputDocumentObject).
+The syntax is documented [here](https://2-immerse.github.io/client-api/InputDocument.html#.InputDocumentObject).
 
 
 ### Code policy
