@@ -68,7 +68,8 @@ To build all the things:
 Run `make all` from the root directory
 
 To build the jsdoc code documentation:
-Run `make docs` from the root directory, the output is written into the jsdoc/ directory. The [jsdoc/index.html file](../jsdoc/index.html) file can then be opened in a web browser.
+Run `make docs` from the root directory, the output is written into the jsdoc/ directory. The jsdoc/index.html file file can then be opened in a web browser.
+**A pre-built copy of the documentation is available [on GitHub](https://2-immerse.github.io/client-api/)**.
 
 To build just the vulcanized test pages and their dependencies:
 Run `make vulcanize` from the root directory
@@ -94,6 +95,8 @@ This includes:
 * [General utilities](doc/general-utilities.html)
 
 See [Test page readme](test/readme.html) for documentation of the test pages in the test directory.
+
+**A pre-built copy of the documentation is available [on GitHub](https://2-immerse.github.io/client-api/)**.
 
 
 ### Services
@@ -138,7 +141,7 @@ Run `make tarball` from the root directory, this is output in the `dist/` direct
 
 Client input documents are JSON files which can be used to launch a DMApp.
 
-The syntax is documented [here](../jsdoc/InputDocument.html#.InputDocumentObject).
+The syntax is documented [here](https://2-immerse.github.io/client-api/InputDocument.html#.InputDocumentObject).
 
 
 ### Code policy
@@ -179,4 +182,4 @@ If you wish to contribute to this project, please get in touch with the authors.
 
 <img src="https://2immerse.eu/wp-content/uploads/2016/04/2-IMM_150x50.png" align="left"/><em>This project was originally developed as part of the <a href="https://2immerse.eu/">2-IMMERSE</a> project, co-funded by the European Commission’s <a hef="http://ec.europa.eu/programmes/horizon2020/">Horizon 2020</a> Research Programme</em>
 ### Version
-Generated from: 8a38266 (public-release)
+Generated from: 7f8e2b1 (public-release)
