@@ -57,7 +57,6 @@ const SharedStateClient = require('shared-state-client');
 const URI = require('urijs');
 const sprintf = require("sprintf-js").sprintf;
 const onetime = require('onetime');
-const socketIo = require('socket.io-client');
 const nanoEqual = require("nano-equal");
 const Promise = require("promise");
 const exprParser = require('expr-eval').Parser;
@@ -123,6 +122,7 @@ let singleControllerInstance = null;
  * @param {number=} options.initStickyDefaultClockWallclockRelative optional value to use to intialise the sticky default clock, as an offset from the wallclock at initialisation time
  * @param {number=} options.forceInitialClockUpdateValue optional value to use for the first clock update message to the layout service, this also delays subsequent clock update messages until the first component start time has been received
  * @param {boolean=} options.logToRingBuffer optional whether to store all log messages in a ring buffer, see {@link DMAppController#logRingBuffer}
+ * @param {string=} options.sessionIdTemplate optional default session ID template, see: {@link DMAppController#generateRandomIdStringFromTemplate}
  */
 function DMAppController(options) {
 	mostRecentController = this;
@@ -140,6 +140,7 @@ function DMAppController(options) {
 	this.initStickyDefaultClockWallclockRelative = null;
 	this.forceInitialClockUpdateValue = null;
 	this.logToRingBuffer = false;
+	this.sessionIdTemplate = null;
 
 	Object.defineProperties(this, {
 		initedWaitable:       { value: waitable() },
@@ -211,6 +212,7 @@ function DMAppController(options) {
 		if (options.initStickyDefaultClockWallclockRelative != null) this.initStickyDefaultClockWallclockRelative = options.initStickyDefaultClockWallclockRelative;
 		if (options.forceInitialClockUpdateValue != null) this.forceInitialClockUpdateValue = options.forceInitialClockUpdateValue;
 		if (options.logToRingBuffer != null) this.logToRingBuffer = options.logToRingBuffer;
+		if (options.sessionIdTemplate != null) this.sessionIdTemplate = options.sessionIdTemplate;
 	}
 	if (this.logWindowErrors === undefined) this.logWindowErrors = this.singleInstance;
 
@@ -222,7 +224,7 @@ function DMAppController(options) {
 
 	Object.defineProperties(this, {
 		instanceId:                { value: "/!" + this.generateRandomIdString(12) },
-		_defaultSessionId:         { value: "/S" + this.generateRandomIdString(12) },
+		_defaultSessionId:         { value: this.sessionIdTemplate ? this.generateRandomIdStringFromTemplate(this.sessionIdTemplate) : "/S" + this.generateRandomIdString(12) },
 		logger:                    { value: this.createNamedLogger("DMAppController") },
 		netLogger:                 { value: this.createNamedLogger("Network") },
 		devDialogLogger:           { value: this.createNamedLogger("Dev Dialog Box", true) }, // don't bother logging remotely
@@ -456,7 +458,7 @@ function DMAppController(options) {
 					'deviceType', 'touchInteraction', 'longFormConsoleLogging', 'networkLogLevel', 'networkLogSourcePostfix',
 					'displayWidth', 'displayHeight', 'displayResolution', 'advDebugMode', 'singleInstance',
 					'showUserErrorMessageUI', 'logWindowErrors', 'serviceAjaxCredentials', 'enableAnalytics', 'initStickyDefaultClockWallclockRelative', 'forceInitialClockUpdateValue',
-					'logToRingBuffer']);
+					'logToRingBuffer', 'sessionIdTemplate']);
 
 	if (this.logWindowErrors) {
 		window.addEventListener('error', function(event) {
@@ -660,11 +662,27 @@ DMAppController.prototype.getBaseUrlProtocol = function() {
 	}
 };
 
+/**
+ * Returns the base websocket protocol for the current controller instance.
+ * This is either "ws:" or "wss:"
+ *
+ * @returns {string} Protocol string
+ */
+DMAppController.prototype.getBaseWebsocketUrlProtocol = function() {
+	if (location.protocol === "http:") {
+		return "ws:";
+	} else {
+		return "wss:";
+	}
+};
+
 DMAppController.prototype._getUrl = function(prop) {
 	let name = this._urls[prop];
 	if (!name) return name;
 	if (name.substr(0, 2) === '//') {
 		name = this.getBaseUrlProtocol() + name;
+	} else if (name.substr(0, 3) === 'w//') {
+		name = this.getBaseWebsocketUrlProtocol() + name.slice(1);
 	}
 	return name;
 };
@@ -735,6 +753,17 @@ DMAppController.prototype.generateRandomIdString = function(length) {
 		}
 	}
 	return String.fromCharCode.apply(String, vals);
+};
+
+/**
+ * Generate a random ID string from a template
+ * '?' characters in the template are replaced
+ *
+ * @param {string} template Template string, '?' characters are replaced
+ * @returns {string} random ID string
+ */
+DMAppController.prototype.generateRandomIdStringFromTemplate = function(template) {
+	return template.replace(/\?/g, this.generateRandomIdString.bind(this, 1));
 };
 
 DMAppController.prototype._generateNewDeviceId = function(namespaceSuffix) /* -> device ID string */ {
@@ -978,7 +1007,7 @@ DMAppController.prototype.getSharedStateMappingService = function() {
 		const mappingService = SharedStateClient.MappingService(serviceUrl, {
 			userId: "client:" + self.getDeviceId(),
 			errorFunction: logger.deferredConcat('error', "Shared State Mapping: "),
-			socketIo: socketIo,
+			socketIo: MiscUtil.makeSocketIOClient,
 		});
 		const destroy = mappingService.destroy.bind(mappingService);
 		mappingService.destroy = function() {
@@ -1127,7 +1156,7 @@ DMAppController.prototype.createSharedStateFromGroupMapping = function(groupMapp
 			const ss = SharedStateClient.SharedState(data.group, {
 				userId: options.userId || "client:" + self.getDeviceId(),
 				errorFunction: logger.deferredConcat('error', "Shared State Client (" + groupMappingId + "): "),
-				socketIo: socketIo,
+				socketIo: MiscUtil.makeSocketIOClient,
 			});
 
 			let haveRegisteredRcCallback = false;
@@ -2013,7 +2042,7 @@ module.exports = DMAppController;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 07 2019 11:17:00 GMT+0000 (Greenwich Mean Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Mar 29 2019 10:44:58 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>

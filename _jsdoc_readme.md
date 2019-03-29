@@ -182,4 +182,4 @@ If you wish to contribute to this project, please get in touch with the authors.
 
 <img src="https://2immerse.eu/wp-content/uploads/2016/04/2-IMM_150x50.png" align="left"/><em>This project was originally developed as part of the <a href="https://2immerse.eu/">2-IMMERSE</a> project, co-funded by the European Commission’s <a hef="http://ec.europa.eu/programmes/horizon2020/">Horizon 2020</a> Research Programme</em>
 ### Version
-Generated from: 7f8e2b1 (public-release)
+Generated from: 6c51415 (public-release)
